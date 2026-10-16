@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Quando o domínio estiver definido, descomente a linha abaixo trocando o endereço:
+# Sitemap: https://www.a2click.com.br/sitemap.xml
