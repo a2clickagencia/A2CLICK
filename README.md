@@ -16,6 +16,7 @@ a2click-site/
 │   ├── super-cell/
 │   └── amaral-training/
 ├── robots.txt                 Orientações para o Google
+├── sitemap.xml                Mapa do site para o Google Search Console
 ├── _headers                   Cabeçalhos de segurança e cache (Cloudflare Pages)
 ├── .gitignore
 └── assets/
@@ -73,24 +74,24 @@ A cada `git push`, a Cloudflare publica a nova versão sozinha.
 
 ## Depois de ter o domínio
 
-Troque os endereços relativos pelo endereço completo em `index.html`, para o WhatsApp e as redes mostrarem a imagem certinho:
+(Já feito para a2click.com.br.) Os endereços completos ficam em `index.html`, para o WhatsApp e as redes mostrarem a imagem certinho:
 
 ```html
-<meta property="og:image" content="https://www.a2click.com.br/assets/img/og-a2click.png">
+<meta property="og:image" content="https://a2click.com.br/assets/img/og-a2click.png">
 ```
 
 Também vale adicionar, dentro do `<head>`:
 
 ```html
-<link rel="canonical" href="https://www.a2click.com.br/">
-<meta property="og:url" content="https://www.a2click.com.br/">
+<link rel="canonical" href="https://a2click.com.br/">
+<meta property="og:url" content="https://a2click.com.br/">
 ```
 
 E, quando o endereço físico sair no Google, atualizar os trechos "Endereço em breve no Google" no `index.html`.
 
 ## Ao alterar o CSS ou o JavaScript
 
-No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261016-2`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
+No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261016-3`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
 
 ## Onde mexer no dia a dia
 

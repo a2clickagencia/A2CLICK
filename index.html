@@ -13,7 +13,9 @@
   <meta property="og:site_name" content="Agência A2 Click">
   <meta property="og:title" content="A2 Click | Feito à mão, para ser encontrado">
   <meta property="og:description" content="Sites caprichados para padarias, salões, oficinas, lojas e consultórios aparecerem no Google.">
-  <meta property="og:image" content="assets/img/og-a2click.png">
+  <meta property="og:image" content="https://a2click.com.br/assets/img/og-a2click.png">
+  <meta property="og:url" content="https://a2click.com.br/">
+  <link rel="canonical" href="https://a2click.com.br/">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
@@ -28,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
   <link rel="preload" href="assets/fonts/stretch-pro.woff" as="font" type="font/woff" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261016-2">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261016-3">
 
   <!-- Dados estruturados para o Google -->
   <script type="application/ld+json">
@@ -42,7 +44,9 @@
       {"@type": "Person", "name": "Pedro Augusto"},
       {"@type": "Person", "name": "Igor Amaral"}
     ],
-    "areaServed": "BR"
+    "areaServed": "BR",
+    "url": "https://a2click.com.br/",
+    "image": "https://a2click.com.br/assets/img/og-a2click.png"
   }
   </script>
 </head>
@@ -224,13 +228,16 @@
     </div>
   </section>
 
-  <section class="sec campo" id="portfolio" aria-labelledby="port-t">
+  <section class="sec campo port" id="portfolio" aria-labelledby="port-t">
     <div class="wrap">
       <div class="cab">
-        <h2 id="port-t">O antes e o depois, de verdade.</h2>
-        <p class="lede">A União Paulista, de montagem e isolamento térmico, tinha um site de 2019. Arraste a alça e compare com o que fizemos. Os dois sites estão no ar, de verdade, aqui dentro.</p>
+        <h2 id="port-t">Sites que fizemos.</h2>
+        <p class="lede">Arraste a alça e compare o site antigo da União Paulista com o que fizemos. Ao lado, outros negócios que já estão no ar com a nossa mão.</p>
       </div>
-      <div class="cmp" id="cmp">
+      <div class="port-duo">
+        <div class="port-cmp">
+          <h3 class="port-sub">União Paulista: antes e depois</h3>
+          <div class="cmp" id="cmp">
         <div class="cmp-lado cmp-novo"><iframe src="portfolio/uniao-paulista/index.html" title="Site novo da União Paulista, feito pela A2 Click" loading="lazy" tabindex="-1"></iframe></div>
         <div class="cmp-lado cmp-antigo"><iframe src="https://uniaopaulistaisolamentos.com.br/" title="Site antigo da União Paulista" loading="lazy" tabindex="-1" referrerpolicy="no-referrer"></iframe></div>
         <span class="cmp-rot cmp-rot-a">Antes</span>
@@ -242,28 +249,28 @@
         <a href="https://uniaopaulistaisolamentos.com.br/" target="_blank" rel="noopener">Abrir o site antigo ↗</a>
         <a href="portfolio/uniao-paulista/index.html" target="_blank" rel="noopener">Abrir o site novo ↗</a>
       </div>
-
-      <div class="cab port-cab">
-        <h2>Outros sites feitos à mão.</h2>
-        <p class="lede">Cada negócio com a sua cara, a sua cor e o seu jeito de falar com o cliente. Clique e navegue.</p>
-      </div>
-      <div class="port-grade">
-        <a class="port-card" href="portfolio/minas-bar/index.html" target="_blank" rel="noopener">
+        </div>
+        <div class="port-lado">
+          <h3 class="port-sub">Outros sites feitos à mão</h3>
+          <div class="port-grade">
+            <a class="port-card" href="portfolio/minas-bar/index.html" target="_blank" rel="noopener">
           <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Minas Bar</span></div><img src="assets/img/portfolio/minas-bar.jpg" alt="Página inicial do site do Minas Bar" width="960" height="600" loading="lazy"></div>
           <h3>Minas Bar</h3><p class="nota">Salgados mineiros · Santa Bárbara d'Oeste-SP</p><span class="ver">Ver o site ↗</span>
         </a>
-        <a class="port-card" href="portfolio/aline-oliveira-podologia/index.html" target="_blank" rel="noopener">
+            <a class="port-card" href="portfolio/aline-oliveira-podologia/index.html" target="_blank" rel="noopener">
           <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Aline Oliveira</span></div><img src="assets/img/portfolio/aline-oliveira-podologia.jpg" alt="Página inicial do site da Aline Oliveira Podologia" width="960" height="600" loading="lazy"></div>
           <h3>Aline Oliveira Podologia</h3><p class="nota">Podologia e estética · Ipatinga-MG</p><span class="ver">Ver o site ↗</span>
         </a>
-        <a class="port-card" href="portfolio/super-cell/index.html" target="_blank" rel="noopener">
+            <a class="port-card" href="portfolio/super-cell/index.html" target="_blank" rel="noopener">
           <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Super Cell</span></div><img src="assets/img/portfolio/super-cell.jpg" alt="Página inicial do site da Super Cell Eletrônicos" width="960" height="600" loading="lazy"></div>
           <h3>Super Cell Eletrônicos</h3><p class="nota">Assistência técnica de celulares · Americana-SP</p><span class="ver">Ver o site ↗</span>
         </a>
-        <a class="port-card" href="portfolio/amaral-training/index.html" target="_blank" rel="noopener">
+            <a class="port-card" href="portfolio/amaral-training/index.html" target="_blank" rel="noopener">
           <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Amaral Training</span></div><img src="assets/img/portfolio/amaral-training.jpg" alt="Página inicial do site da Amaral Training Performance" width="960" height="600" loading="lazy"></div>
           <h3>Amaral Training Performance</h3><p class="nota">Assessoria esportiva · corrida e BMX</p><span class="ver">Ver o site ↗</span>
         </a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -285,26 +292,18 @@
     </div>
   </section>
 
-  <section class="sec" style="padding-top:0" aria-labelledby="chk-t">
-    <div class="wrap">
-      <div class="cab">
-        <h2 id="chk-t">Seu negócio está pronto para ser achado?</h2>
-        <p class="lede">Marque o que você já tem. Leva meio minuto e mostra por onde começar.</p>
+  <section class="sec ligue" aria-labelledby="ligue-t">
+    <div class="wrap ligue-grade">
+      <div>
+        <h2 id="ligue-t">Fale direto com a gente.</h2>
+        <p class="lede">Sem formulário, sem robô. Quem atende é o Pedro ou o Igor, e a primeira conversa é sem compromisso.</p>
       </div>
-      <div class="check">
-        <div class="perguntas" id="perguntas">
-          <label><input type="checkbox" id="c1">Meu negócio aparece no Google Maps</label>
-          <label><input type="checkbox" id="c2">O horário no Google está certo</label>
-          <label><input type="checkbox" id="c3">Tenho um site com o nome do meu negócio</label>
-          <label><input type="checkbox" id="c4">O cliente consegue me chamar no WhatsApp com um toque</label>
-          <label><input type="checkbox" id="c5">Tenho fotos boas e recentes do meu espaço</label>
-          <label><input type="checkbox" id="c6">Meu Instagram leva para um lugar com todas as informações</label>
-        </div>
-        <div class="placar" aria-live="polite">
-          <div class="num" id="placar-n">0<small>/6</small></div>
-          <div class="medidor"><i id="medidor"></i></div>
-          <p id="placar-t">Você está começando do zero, e tudo bem. É aí que a gente mais ajuda.</p>
-          <a class="btn btn-giz" id="placar-cta" href="https://wa.me/5519996022246" target="_blank" rel="noopener"><svg><use href="#i-zap"/></svg>Mandar meu resultado</a>
+      <div class="ligue-cartao">
+        <span class="ligue-rot">WhatsApp e telefone</span>
+        <a class="ligue-num" href="tel:+5519996022246">(19) 99602-2246</a>
+        <div class="ligue-acts">
+          <a class="btn btn-giz" href="https://wa.me/5519996022246?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20A2%20Click%20e%20quero%20conversar%20sobre%20um%20site." target="_blank" rel="noopener"><svg><use href="#i-zap"/></svg>Chamar no WhatsApp</a>
+          <a class="btn btn-claro" href="tel:+5519996022246"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>Ligar agora</a>
         </div>
       </div>
     </div>
@@ -338,8 +337,8 @@
 
   <section class="sec" id="perguntas" aria-labelledby="faq-t">
     <div class="wrap">
-      <div class="cab"><h2 id="faq-t">Perguntas de balcão.</h2><p class="lede">As dúvidas que mais ouvimos. Se a sua não estiver aqui, é só perguntar.</p></div>
-      <div class="faq">
+      <div class="cab cab-centro"><h2 id="faq-t">Perguntas de balcão.</h2><p class="lede">As dúvidas que mais ouvimos. Se a sua não estiver aqui, é só perguntar.</p></div>
+      <div class="faq faq-centro">
         <details><summary>Quanto custa um site?</summary><p>Depende do tamanho do que você precisa. Um site de uma página, simples e bem feito, custa bem menos do que se imagina. Conte para a gente sobre o seu negócio pelo WhatsApp e mandamos um orçamento claro, sem compromisso.</p></details>
         <details><summary>Eu não entendo nada de internet. Tem problema?</summary><p>Nenhum. Essa parte é com a gente. Você só precisa conhecer bem o seu negócio, e isso você já conhece melhor que ninguém.</p></details>
         <details><summary>Já tenho Instagram. Preciso mesmo de um site?</summary><p>O Instagram é ótimo para mostrar o dia a dia. O site é o seu endereço oficial: aparece no Google, passa mais credibilidade e é seu, não depende de algoritmo nenhum. Os dois juntos funcionam muito melhor.</p></details>
@@ -406,6 +405,6 @@
 
 <a class="flutua-zap" href="https://wa.me/5519996022246?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20A2%20Click." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp"><svg><use href="#i-zap"/></svg></a>
 
-<script src="assets/js/main.js?v=20261016-2" defer></script>
+<script src="assets/js/main.js?v=20261016-3" defer></script>
 </body>
 </html>

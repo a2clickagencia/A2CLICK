@@ -1134,107 +1134,6 @@ section {
   font-size: clamp(1.25rem,1.9vw,1.6rem);
 }
 
-/* checklist */
-.check {
-  display: grid;
-  gap: clamp(32px,5vw,72px);
-  grid-template-columns: 1fr;
-}
-
-@media(min-width:960px) {
-  .check {
-    grid-template-columns: 1.1fr .9fr;
-    align-items: start;
-  }
-}
-
-.perguntas {
-  display: grid;
-  gap: 10px;
-}
-
-.perguntas label {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  background: var(--card);
-  border-radius: 6px;
-  padding: 16px 18px;
-  cursor: pointer;
-  font-weight: 500;
-  min-height: 60px;
-}
-
-.perguntas input {
-  appearance: none;
-  width: 26px;
-  height: 26px;
-  flex: none;
-  border-radius: 6px;
-  background: var(--bg);
-  box-shadow: inset 0 0 0 2px var(--fg);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  margin: 0;
-}
-
-.perguntas input:checked {
-  background: var(--giz);
-  box-shadow: inset 0 0 0 2px #16231F;
-}
-
-.perguntas input:checked::after {
-  content: "";
-  width: 9px;
-  height: 14px;
-  border: solid #16231F;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg) translate(-1px,-2px);
-}
-
-.placar {
-  background: var(--campo);
-  color: var(--sobre-campo);
-  border-radius: 6px;
-  padding: clamp(24px,3vw,40px);
-  display: grid;
-  gap: 18px;
-  position: sticky;
-  top: 100px;
-}
-
-.placar .num {
-  font-family: var(--display);
-  font-size: clamp(3rem,7vw,5.2rem);
-  line-height: .9;
-  font-variant-numeric: tabular-nums;
-}
-
-.placar .num small {
-  font-size: .4em;
-}
-
-.medidor {
-  height: 14px;
-  border-radius: 999px;
-  background: var(--campo-2);
-  overflow: hidden;
-}
-
-.medidor i {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--giz);
-  border-radius: 999px;
-  transition: width .35s ease;
-}
-
-.placar p {
-  font-size: 1.08rem;
-}
-
 /* sócios */
 .socios {
   display: grid;
@@ -2095,4 +1994,184 @@ footer {
 .btn-ig svg {
   width: 18px;
   height: 18px;
+}
+
+
+/* ==========================================================
+   Fale direto com a gente (telefone)
+   ========================================================== */
+.ligue {
+  padding-top: 0;
+}
+
+.ligue-grade {
+  display: grid;
+  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .ligue-grade {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ligue-grade .lede {
+  margin-top: 18px;
+}
+
+.ligue-cartao {
+  background: var(--campo);
+  color: var(--sobre-campo);
+  border-radius: 6px;
+  padding: clamp(24px, 3.4vw, 44px);
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.ligue-rot {
+  font-weight: 600;
+  font-size: .95rem;
+  color: color-mix(in srgb, var(--sobre-campo) 75%, transparent);
+}
+
+.ligue-num {
+  font-family: var(--display);
+  font-size: clamp(1.35rem, 2.7vw, 2.4rem);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.ligue-num:hover {
+  color: var(--giz);
+}
+
+.ligue-acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+/* ==========================================================
+   Perguntas centralizadas
+   ========================================================== */
+.cab-centro {
+  grid-template-columns: 1fr !important;
+  justify-items: center;
+  text-align: center;
+}
+
+.cab-centro .lede {
+  margin-inline: auto;
+}
+
+.faq-centro {
+  margin-inline: auto;
+}
+
+/* ==========================================================
+   Portfólio compacto: antes/depois ao lado dos outros sites
+   ========================================================== */
+.port .cab h2 {
+  font-size: clamp(1.6rem, 3.2vw, 2.7rem);
+}
+
+.port-duo {
+  display: grid;
+  gap: clamp(36px, 4vw, 56px);
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+@media (min-width: 1000px) {
+  .port-duo {
+    grid-template-columns: 1.15fr 1fr;
+  }
+}
+
+.port-cmp,
+.port-lado {
+  min-width: 0;
+}
+
+.port-sub {
+  font-size: 1.05rem;
+  margin-bottom: 14px;
+}
+
+.port .cmp {
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 640px) {
+  .port .cmp {
+    aspect-ratio: 3 / 4;
+  }
+}
+
+.port .cmp-rot {
+  font-size: .78rem;
+  top: 10px;
+}
+
+.port .cmp-rot-a {
+  left: 10px;
+}
+
+.port .cmp-rot-b {
+  right: 10px;
+}
+
+.port .cmp .alca::after {
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+}
+
+.port .cmp-links {
+  font-size: .92rem;
+}
+
+.port .port-grade {
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 14px;
+}
+
+.port .port-card {
+  gap: 4px;
+}
+
+.port .port-card .navegador {
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.port .port-card .barra-n {
+  padding: 2px 4px 6px;
+}
+
+.port .port-card .barra-n span {
+  font-size: .62rem;
+}
+
+.port .port-card h3 {
+  font-family: var(--texto);
+  font-weight: 700;
+  font-size: .98rem;
+  margin-top: 6px;
+  line-height: 1.2;
+}
+
+.port .port-card .nota {
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
+.port .port-card .ver {
+  font-size: .85rem;
 }

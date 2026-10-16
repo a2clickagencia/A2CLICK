@@ -377,7 +377,7 @@
     var ajustar = function () {
       var largura = comparador.clientWidth;
       var altura = comparador.clientHeight;
-      var base = largura < 640 ? 400 : 1440;
+      var base = window.innerWidth < 640 ? 400 : 1280;
       var escala = largura / base;
       quadros.forEach(function (q) {
         q.style.width = base + 'px';
@@ -388,42 +388,6 @@
     ajustar();
     if (window.ResizeObserver) new ResizeObserver(ajustar).observe(comparador);
     else window.addEventListener('resize', ajustar);
-  }
-
-  /* ---------- Checklist "Seu negócio está pronto?" ---------- */
-  var itens = todos('#perguntas input');
-  var falas = [
-    'Você está começando do zero, e tudo bem. É aí que a gente mais ajuda.',
-    'Já tem um começo. Com um site e o perfil arrumado, o cliente passa a achar você.',
-    'Já tem um começo. Com um site e o perfil arrumado, o cliente passa a achar você.',
-    'Metade do caminho andado. Faltam alguns ajustes para o seu negócio passar mais confiança.',
-    'Está quase lá. Dá para deixar tudo redondo com pouco trabalho.',
-    'Está quase lá. Dá para deixar tudo redondo com pouco trabalho.',
-    'Que capricho! Seu negócio está bem cuidado. Se quiser, a gente ajuda a manter assim.'
-  ];
-  function atualizarPlacar() {
-    var marcados = itens.filter(function (c) {
-      return c.checked;
-    }).length;
-    var faltando = itens.filter(function (c) {
-      return !c.checked;
-    }).map(function (c) {
-      return '- ' + c.parentNode.textContent.trim();
-    });
-
-    $('placar-n').innerHTML = marcados + '<small>/6</small>';
-    $('medidor').style.width = (marcados / 6) * 100 + '%';
-    $('placar-t').textContent = falas[marcados];
-
-    var mensagem = 'Olá! Fiz o teste no site da A2 Click e marquei ' + marcados + ' de 6.';
-    if (faltando.length) mensagem += '\nAinda não tenho:\n' + faltando.join('\n');
-    $('placar-cta').href = linkWhatsApp(mensagem);
-  }
-  if (itens.length) {
-    itens.forEach(function (c) {
-      c.addEventListener('change', atualizarPlacar);
-    });
-    atualizarPlacar();
   }
 
   /* ---------- Quadrados dos sócios que giram para mostrar a foto ---------- */
