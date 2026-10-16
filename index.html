@@ -58,7 +58,7 @@
     <nav class="links" aria-label="Seções">
       <a href="#servicos">Serviços</a>
       <a href="#simulador">Simulador</a>
-      <a href="#modelos">Modelos</a>
+      <a href="#portfolio">Portfólio</a>
       <a href="#como-trabalhamos">Como trabalhamos</a>
       <a href="#quem-somos">Quem somos</a>
       <a href="#perguntas">Perguntas</a>
@@ -72,7 +72,7 @@
     <nav class="wrap" aria-label="Menu">
       <a href="#servicos">Serviços</a>
       <a href="#simulador">Simulador</a>
-      <a href="#modelos">Modelos</a>
+      <a href="#portfolio">Portfólio</a>
       <a href="#como-trabalhamos">Como trabalhamos</a>
       <a href="#quem-somos">Quem somos</a>
       <a href="#perguntas">Perguntas</a>
@@ -105,13 +105,7 @@
             <div class="d">Pão saindo o dia todo, café da manhã e encomendas para festas.</div>
           </div>
           <div class="fone-frame">
-            <div class="tela">
-              <div class="topo">Padaria Dona Rosa <i></i></div>
-              <div class="capa"><b>Pão quentinho desde 1998</b><span>Rua das Flores, 120 · Centro</span></div>
-              <div class="zap">Encomendar pelo WhatsApp</div>
-              <div class="info"><div><small>Hoje</small>6h às 20h</div><div><small>Entrega</small>No bairro</div></div>
-              <div class="lista"><div><span>Pão francês</span><span>kg</span></div><div><span>Bolo de fubá</span><span>un.</span></div><div><span>Café da manhã</span><span>mesa</span></div></div>
-            </div>
+            <div class="tela" id="hero-tela" data-ramo="Padaria" data-nome="Padaria Dona Rosa" data-lugar="Rua das Flores, 120 · Centro"></div>
           </div>
           <svg class="carimbo" viewBox="0 0 140 140"><defs><path id="circ" d="M70 70m-52 0a52 52 0 1 1 104 0a52 52 0 1 1-104 0"/></defs><text><textPath href="#circ">FEITO À MÃO · FEITO À MÃO · FEITO À MÃO ·</textPath></text><rect x="62" y="62" width="16" height="16" fill="currentColor"/></svg>
         </div>
@@ -179,7 +173,7 @@
     <div class="wrap">
       <div class="cab">
         <h2 id="sim-t">Veja o seu negócio no Google.</h2>
-        <p class="lede">Escreva o nome do seu comércio, escolha o ramo e uma cor. Na hora, você vê como ele pode aparecer numa pesquisa e no celular do cliente.</p>
+        <p class="lede">Escreva o nome do seu comércio e escolha o ramo. Na hora, você vê como ele pode aparecer numa pesquisa e um site com a cara do seu negócio no celular do cliente.</p>
       </div>
       <div class="sim">
         <div class="painel">
@@ -189,7 +183,7 @@
             </label>
             <label for="s-ramo-in">Ramo
               <select id="s-ramo-in">
-                <option>Padaria</option><option>Salão de beleza</option><option>Barbearia</option><option>Oficina mecânica</option><option>Restaurante</option><option>Loja de roupas</option><option>Pet shop</option><option>Consultório</option><option>Loja de materiais</option>
+                <option>Padaria</option><option>Salão de beleza</option><option>Barbearia</option><option>Oficina mecânica</option><option>Restaurante</option><option>Loja de roupas</option><option>Pet shop</option><option>Consultório</option><option>Loja de materiais</option><option>Escritório de advocacia</option>
               </select>
             </label>
             <label for="s-lugar-in">Bairro ou cidade
@@ -223,70 +217,54 @@
             <div class="ficha"><span>Horários</span><span>Como chegar</span><span>WhatsApp</span><span>Fotos</span></div>
           </div>
           <div class="mini" aria-hidden="true">
-            <div class="tela">
-              <div class="topo"><span id="m-nome">Padaria Dona Rosa</span><i></i></div>
-              <div class="capa" id="m-capa"><b id="m-frase">Pão quentinho o dia todo</b><span id="m-lugar">Centro</span></div>
-              <div class="zap">Chamar no WhatsApp</div>
-              <div class="info"><div><small>Hoje</small>Aberto</div><div><small>Onde</small>Ver no mapa</div></div>
-            </div>
+            <div class="tela" id="m-tela"></div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="sec" style="padding-top:0" aria-labelledby="ad-t">
+  <section class="sec campo" id="portfolio" aria-labelledby="port-t">
     <div class="wrap">
       <div class="cab">
-        <h2 id="ad-t">O antes e o depois.</h2>
-        <p class="lede">Arraste a alça e compare. É a mesma padaria, com o mesmo pão bom. A diferença está no que o cliente encontra.</p>
+        <h2 id="port-t">O antes e o depois, de verdade.</h2>
+        <p class="lede">A União Paulista, de montagem e isolamento térmico, tinha um site de 2019. Arraste a alça e compare com o que fizemos. Os dois sites estão no ar, de verdade, aqui dentro.</p>
       </div>
-      <div class="ad" id="ad">
-        <div class="lado-a">
-          <span class="rot">Antes</span>
-          <div class="ficha-ad"><b>padaria dona rosa</b><small>Sem site · 3 fotos antigas</small><span class="falta">Horário não informado</span><span class="falta">Telefone desatualizado</span><span class="falta">Endereço sem número</span></div>
-        </div>
-        <div class="lado-b" aria-hidden="true">
-          <span class="rot" style="justify-self:end">Com a A2 Click</span>
-          <div class="ficha-ad"><b>Padaria Dona Rosa</b><small>padariadonarosa.com.br · Padaria no Centro</small><span class="tem">Aberto agora · 6h às 20h</span><span class="tem">WhatsApp e encomendas</span><span class="tem">Rua das Flores, 120 · rota no mapa</span></div>
-        </div>
+      <div class="cmp" id="cmp">
+        <div class="cmp-lado cmp-novo"><iframe src="portfolio/uniao-paulista/index.html" title="Site novo da União Paulista, feito pela A2 Click" loading="lazy" tabindex="-1"></iframe></div>
+        <div class="cmp-lado cmp-antigo"><iframe src="https://uniaopaulistaisolamentos.com.br/" title="Site antigo da União Paulista" loading="lazy" tabindex="-1" referrerpolicy="no-referrer"></iframe></div>
+        <span class="cmp-rot cmp-rot-a">Antes</span>
+        <span class="cmp-rot cmp-rot-b">Depois, com a A2 Click</span>
         <div class="alca"></div>
-        <input type="range" id="ad-range" min="5" max="95" value="50" aria-label="Comparar antes e depois">
+        <input type="range" id="ad-range" min="0" max="100" value="50" aria-label="Arraste para comparar o site antigo com o novo">
       </div>
-      <div class="ad-leg"><span>Antes</span><span>Depois</span></div>
-    </div>
-  </section>
+      <div class="cmp-links">
+        <a href="https://uniaopaulistaisolamentos.com.br/" target="_blank" rel="noopener">Abrir o site antigo ↗</a>
+        <a href="portfolio/uniao-paulista/index.html" target="_blank" rel="noopener">Abrir o site novo ↗</a>
+      </div>
 
-  <section class="sec campo" id="modelos" aria-labelledby="mod-t">
-    <div class="wrap">
-      <div class="cab">
-        <h2 id="mod-t">Cada comércio, com a sua cara.</h2>
-        <p class="lede">Nenhum site sai igual ao outro. Veja três modelos que desenhamos para mostrar como o estilo muda com o negócio.</p>
+      <div class="cab port-cab">
+        <h2>Outros sites feitos à mão.</h2>
+        <p class="lede">Cada negócio com a sua cara, a sua cor e o seu jeito de falar com o cliente. Clique e navegue.</p>
       </div>
-      <div class="vitrine">
-        <article class="modelo m1">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>padariadonarosa.com.br</span></div>
-            <div class="pag"><header>Dona Rosa <em>Encomendas</em></header><div class="h"><b>Pão quentinho desde 1998.</b><span>Café da manhã, bolos e salgados.</span><span class="bt">Encomendar</span></div><div class="p3"><div>Pães</div><div>Bolos</div><div>Salgados</div></div></div>
-          </div>
-          <h3>Padaria de bairro</h3>
-          <p class="nota">Cores quentes, como a fornada. Destaque para encomendas e horário de abertura.</p>
-        </article>
-        <article class="modelo m2">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>barbeariadotonho.com.br</span></div>
-            <div class="pag"><header>Tonho <em>Agendar</em></header><div class="h"><b>Corte, barba e boa conversa.</b><span>Atendimento com hora marcada.</span><span class="bt">Agendar horário</span></div><div class="p3"><div>Corte</div><div>Barba</div><div>Combo</div></div></div>
-          </div>
-          <h3>Barbearia</h3>
-          <p class="nota">Escuro e elegante. O botão de agendar fica sempre à mão.</p>
-        </article>
-        <article class="modelo m3">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>oficinaboaroda.com.br</span></div>
-            <div class="pag"><header>Boa Roda <em>Orçamento</em></header><div class="h"><b>Mecânica honesta, preço combinado.</b><span>Revisão, freios e suspensão.</span><span class="bt">Pedir orçamento</span></div><div class="p3"><div>Revisão</div><div>Freios</div><div>Suspensão</div></div></div>
-          </div>
-          <h3>Oficina mecânica</h3>
-          <p class="nota">Azul de confiança e amarelo de atenção. Serviços claros e pedido de orçamento.</p>
-        </article>
+      <div class="port-grade">
+        <a class="port-card" href="portfolio/minas-bar/index.html" target="_blank" rel="noopener">
+          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Minas Bar</span></div><img src="assets/img/portfolio/minas-bar.jpg" alt="Página inicial do site do Minas Bar" width="960" height="600" loading="lazy"></div>
+          <h3>Minas Bar</h3><p class="nota">Salgados mineiros · Santa Bárbara d'Oeste-SP</p><span class="ver">Ver o site ↗</span>
+        </a>
+        <a class="port-card" href="portfolio/aline-oliveira-podologia/index.html" target="_blank" rel="noopener">
+          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Aline Oliveira</span></div><img src="assets/img/portfolio/aline-oliveira-podologia.jpg" alt="Página inicial do site da Aline Oliveira Podologia" width="960" height="600" loading="lazy"></div>
+          <h3>Aline Oliveira Podologia</h3><p class="nota">Podologia e estética · Ipatinga-MG</p><span class="ver">Ver o site ↗</span>
+        </a>
+        <a class="port-card" href="portfolio/super-cell/index.html" target="_blank" rel="noopener">
+          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Super Cell</span></div><img src="assets/img/portfolio/super-cell.jpg" alt="Página inicial do site da Super Cell Eletrônicos" width="960" height="600" loading="lazy"></div>
+          <h3>Super Cell Eletrônicos</h3><p class="nota">Assistência técnica de celulares · Americana-SP</p><span class="ver">Ver o site ↗</span>
+        </a>
+        <a class="port-card" href="portfolio/amaral-training/index.html" target="_blank" rel="noopener">
+          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Amaral Training</span></div><img src="assets/img/portfolio/amaral-training.jpg" alt="Página inicial do site da Amaral Training Performance" width="960" height="600" loading="lazy"></div>
+          <h3>Amaral Training Performance</h3><p class="nota">Assessoria esportiva · corrida e BMX</p><span class="ver">Ver o site ↗</span>
+        </a>
       </div>
-      <p class="aviso nota">Modelos de demonstração com nomes fictícios.</p>
     </div>
   </section>
 
@@ -344,11 +322,11 @@
       <div class="socios">
         <article class="socio" style="color:var(--fg)">
           <div class="monog" tabindex="0" role="button" aria-label="Ver foto de Pedro Augusto"><div class="gira"><div class="face frente"><svg viewBox="0 0 67.4 83.2" aria-hidden="true"><path d="M65.4 56.70000000000001V28.800000000000004C65.4 22.200000000000003 64.2 17.300000000000004 61.900000000000006 14.100000000000009C59.2 10.400000000000006 54.60000000000001 6.400000000000006 48.10000000000001 2.1000000000000085L37.400000000000006 9.400000000000006V2.0H35.1V11.000000000000007L30.2 13.900000000000006C29.5 6.800000000000004 25.3 2.200000000000003 18.4 2.200000000000003C14.0 2.200000000000003 9.799999999999999 3.9000000000000057 5.7 7.200000000000003V8.500000000000007C8.0 7.800000000000004 10.2 7.400000000000006 12.2 7.400000000000006C13.7 7.400000000000006 15.0 7.700000000000003 16.3 8.200000000000003C19.0 9.500000000000007 20.3 12.300000000000004 20.2 16.800000000000004L20.1 21.800000000000004L3.8 33.10000000000001C8.6 35.80000000000001 12.2 38.7 14.6 41.60000000000001C17.400000000000002 45.00000000000001 19.2 49.2 19.9 54.10000000000001C11.8 56.60000000000001 5.9 60.80000000000001 2.0 66.50000000000001L2.6 67.30000000000001C9.2 64.7 15.0 63.400000000000006 20.1 63.400000000000006L20.2 81.20000000000002L28.7 80.9L37.300000000000004 81.20000000000002L37.400000000000006 64.50000000000001C41.800000000000004 65.30000000000001 46.300000000000004 66.7 50.900000000000006 68.60000000000001ZM54.50000000000001 27.000000000000007C52.2 29.300000000000004 49.300000000000004 30.500000000000007 45.800000000000004 30.500000000000007C42.300000000000004 30.500000000000007 39.400000000000006 29.300000000000004 37.300000000000004 26.800000000000004V11.900000000000006L38.900000000000006 10.700000000000003C43.2 10.700000000000003 46.900000000000006 12.300000000000004 49.900000000000006 15.600000000000009C53.00000000000001 18.800000000000004 54.50000000000001 22.60000000000001 54.50000000000001 27.000000000000007ZM54.400000000000006 42.400000000000006C51.300000000000004 41.00000000000001 48.2 40.30000000000001 45.300000000000004 40.30000000000001C42.60000000000001 40.30000000000001 39.900000000000006 41.00000000000001 37.400000000000006 42.400000000000006V29.800000000000004C39.900000000000006 31.300000000000004 42.7 32.10000000000001 45.60000000000001 32.10000000000001C48.50000000000001 32.10000000000001 51.50000000000001 31.300000000000004 54.400000000000006 29.800000000000004ZM54.50000000000001 45.00000000000001 54.400000000000006 58.50000000000001C51.50000000000001 57.20000000000001 48.60000000000001 56.20000000000001 45.800000000000004 55.400000000000006C44.900000000000006 55.10000000000001 42.00000000000001 54.400000000000006 37.300000000000004 53.30000000000001V44.400000000000006C39.900000000000006 42.7 42.60000000000001 41.900000000000006 45.50000000000001 41.900000000000006C48.7 41.900000000000006 51.7 42.900000000000006 54.50000000000001 45.00000000000001ZM20.0 35.50000000000001 12.2 29.10000000000001 20.0 24.10000000000001ZM35.1 78.50000000000001H30.7V15.900000000000006L35.1 13.300000000000004Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><b>A</b></div><div class="face verso"><img src="assets/img/equipe/pedro-augusto.jpg" alt="Pedro Augusto" width="280" height="280" loading="lazy"><b>A</b></div></div></div>
-          <div><h3>Pedro Augusto</h3><p class="papel">Sócio-fundador</p><p>Cuida da conversa com o cliente, da estratégia e de colocar o seu negócio no mapa do Google.</p></div>
+          <div><h3>Pedro Augusto</h3><p class="papel">Sócio-fundador</p><p>Cuida da conversa com o cliente, da estratégia e de colocar o seu negócio no mapa do Google.</p><a class="btn-ig" href="https://www.instagram.com/pedroaugustooa/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>@pedroaugustooa</a></div>
         </article>
         <article class="socio" style="color:var(--fg)">
           <div class="monog" tabindex="0" role="button" aria-label="Ver foto de Igor Amaral"><div class="gira"><div class="face frente"><svg viewBox="0 0 50.8 70.9" aria-hidden="true"><path d="M48.800000000000004 2.799999999999997V2.0999999999999943C39.0 2.0999999999999943 34.1 8.899999999999999 34.1 22.4C34.1 26.799999999999997 35.0 34.9 36.9 46.6C36.9 47.7 37.0 49.3 37.300000000000004 51.5C37.6 53.7 37.7 55.300000000000004 37.7 56.400000000000006C37.7 61.2 36.5 64.2 32.900000000000006 64.9L31.8 65.10000000000001C28.3 65.10000000000001 24.5 62.7 20.3 57.800000000000004C27.400000000000002 57.800000000000004 30.900000000000002 54.1 30.900000000000002 46.6C30.900000000000002 45.5 30.3 40.5 29.1 31.6C28.6 28.1 28.400000000000002 24.9 28.400000000000002 21.9C28.400000000000002 13.399999999999999 31.200000000000003 6.799999999999997 36.7 2.299999999999997L36.6 2.0C32.900000000000006 2.9000000000000057 30.200000000000003 3.4000000000000057 28.6 3.4000000000000057C28.1 3.4000000000000057 26.0 3.0999999999999943 22.400000000000002 2.5C20.8 2.200000000000003 19.2 2.0999999999999943 17.5 2.0999999999999943H16.8C10.9 2.0999999999999943 6.5 6.600000000000001 5.2 12.600000000000001L5.800000000000001 12.700000000000003C7.300000000000001 9.600000000000001 9.2 8.100000000000001 11.4 8.100000000000001H12.0C13.0 8.100000000000001 14.5 8.299999999999997 16.4 8.700000000000003C18.400000000000002 9.0 19.900000000000002 9.200000000000003 20.8 9.200000000000003C22.8 9.200000000000003 25.400000000000002 8.5 28.6 7.0C25.5 10.600000000000001 23.3 13.799999999999997 22.200000000000003 16.5C21.1 19.200000000000003 20.3 22.9 19.8 27.799999999999997C13.9 27.799999999999997 8.8 30.800000000000004 7.300000000000001 36.3C10.6 35.1 13.200000000000001 34.5 15.0 34.5C17.1 34.5 18.7 35.0 19.8 36.1C22.0 38.1 23.1 41.900000000000006 23.1 47.400000000000006C23.1 49.5 22.900000000000002 51.5 22.400000000000002 53.400000000000006C21.5 55.5 19.400000000000002 56.400000000000006 15.9 56.300000000000004L13.700000000000001 56.2L11.5 56.300000000000004C5.5 57.2 2.0 62.7 2.0 68.8L2.2 68.9C4.1 65.60000000000001 6.6000000000000005 63.900000000000006 9.8 63.900000000000006C11.4 63.900000000000006 15.100000000000001 64.9 20.900000000000002 67.0C24.3 68.10000000000001 27.200000000000003 68.7 29.5 68.7H30.6C36.2 68.7 40.5 65.8 43.5 59.900000000000006C45.400000000000006 56.2 46.300000000000004 51.6 46.300000000000004 46.1C46.300000000000004 43.1 45.5 36.0 43.800000000000004 24.799999999999997C43.2 19.200000000000003 42.800000000000004 15.299999999999997 42.7 13.0L42.6 11.299999999999997C42.5 9.0 42.900000000000006 7.100000000000001 43.900000000000006 5.700000000000003C44.7 4.600000000000001 46.300000000000004 3.5999999999999943 48.800000000000004 2.799999999999997Z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><b>A</b></div><div class="face verso"><img src="assets/img/equipe/igor-amaral.jpg" alt="Igor Amaral" width="280" height="280" loading="lazy"><b>A</b></div></div></div>
-          <div><h3>Igor Amaral</h3><p class="papel">Sócio-fundador</p><p>Cuida da construção do site, do visual e de cada detalhe que faz a página funcionar bem no celular.</p></div>
+          <div><h3>Igor Amaral</h3><p class="papel">Sócio-fundador</p><p>Cuida da construção do site, do visual e de cada detalhe que faz a página funcionar bem no celular.</p><a class="btn-ig" href="https://www.instagram.com/igaoamaral_/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg>@igaoamaral_</a></div>
         </article>
       </div>
       <div class="nome-orig" style="color:var(--fg)">
@@ -419,7 +397,7 @@
     <div class="fim"><img src="assets/img/logo/a2click-agencia-negativo.svg" alt="Agência A2 Click" width="1200" height="282"></div>
     <div class="rod">
       <p style="max-width:42ch">Sites feitos à mão para pequenos e médios comércios aparecerem no Google e receberem bem cada cliente.</p>
-      <div><h4>Navegue</h4><a href="#servicos">Serviços</a><a href="#simulador">Simulador</a><a href="#modelos">Modelos</a><a href="#perguntas">Perguntas</a></div>
+      <div><h4>Navegue</h4><a href="#servicos">Serviços</a><a href="#simulador">Simulador</a><a href="#portfolio">Portfólio</a><a href="#perguntas">Perguntas</a></div>
       <div><h4>Fale com a gente</h4><a href="https://wa.me/5519996022246" target="_blank" rel="noopener">WhatsApp (19) 99602-2246</a><span class="nota" style="display:block;padding:.2em 0">Endereço em breve no Google</span></div>
     </div>
     <div class="base nota"><span>Agência A2 Click · Pedro Augusto e Igor Amaral</span><span>Feito à mão, desde 2026.</span></div>

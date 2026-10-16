@@ -9,6 +9,12 @@ Site institucional da Agência A2 Click, de Pedro Augusto e Igor Amaral.
 a2click-site/
 ├── index.html                 Página principal (todo o conteúdo e textos)
 ├── 404.html                   Página de "não encontrada"
+├── portfolio/                 Sites de clientes, publicados como vitrine (sem indexação no Google)
+│   ├── uniao-paulista/        Usado no "antes e depois" (comparado ao site antigo, ao vivo)
+│   ├── minas-bar/
+│   ├── aline-oliveira-podologia/
+│   ├── super-cell/
+│   └── amaral-training/
 ├── robots.txt                 Orientações para o Google
 ├── _headers                   Cabeçalhos de segurança e cache (Cloudflare Pages)
 ├── .gitignore
@@ -87,6 +93,8 @@ E, quando o endereço físico sair no Google, atualizar os trechos "Endereço em
 - **Textos:** tudo está no `index.html`, em português, na ordem em que aparece na tela.
 - **Número do WhatsApp:** aparece no `index.html` (links `wa.me/5519996022246`) e na constante `WHATSAPP`, no início do `assets/js/main.js`.
 - **Cores:** variáveis no início do `assets/css/style.css` (`--pinho`, `--campo`, `--giz`...).
+- **Portfólio:** para incluir um site novo, crie uma pasta em `portfolio/` com o `index.html` do cliente, coloque uma imagem 960 × 600 em `assets/img/portfolio/` e copie um dos cartões `port-card` no `index.html`.
+- **Modelos do simulador:** cada ramo (cores, textos, ícones da telinha) fica no objeto `RAMOS`, no `assets/js/main.js`. Para criar um ramo novo, copie um bloco e adicione a opção no `<select id="s-ramo-in">`.
 - **Fotos da equipe:** substitua os arquivos em `assets/img/equipe/` mantendo os mesmos nomes (quadradas, de preferência 480 × 480 px).
 
 ## Licenças das fontes
