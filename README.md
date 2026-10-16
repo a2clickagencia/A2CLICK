@@ -88,6 +88,10 @@ Também vale adicionar, dentro do `<head>`:
 
 E, quando o endereço físico sair no Google, atualizar os trechos "Endereço em breve no Google" no `index.html`.
 
+## Ao alterar o CSS ou o JavaScript
+
+No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261016-2`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
+
 ## Onde mexer no dia a dia
 
 - **Textos:** tudo está no `index.html`, em português, na ordem em que aparece na tela.
