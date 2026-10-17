@@ -377,7 +377,7 @@
     var ajustar = function () {
       var largura = comparador.clientWidth;
       var altura = comparador.clientHeight;
-      var base = window.innerWidth < 640 ? 400 : 1280;
+      var base = window.innerWidth < 640 ? 400 : (window.innerWidth < 1100 ? 1024 : 1280);
       var escala = largura / base;
       quadros.forEach(function (q) {
         q.style.width = base + 'px';

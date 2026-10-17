@@ -2232,3 +2232,320 @@ a.numero svg {
   width: 20px;
   height: 20px;
 }
+
+/* ==========================================================
+   AJUSTES RESPONSIVOS (celular e tablet)
+   Ficam no fim do arquivo para valer sobre as regras acima.
+   ========================================================== */
+
+/* Nenhum bloco de grade empurra a página para os lados */
+.grid2 > *,
+.hero-grid > *,
+.sim > *,
+.saida > *,
+.port-duo > *,
+.ligue-grade > *,
+.contato .grid2 > * {
+  min-width: 0;
+}
+
+/* Textos longos quebram em vez de vazar */
+h1, h2, h3, p, a, span, li, summary {
+  overflow-wrap: break-word;
+}
+
+/* Duas colunas só em telas largas; no tablet, uma embaixo da outra */
+@media (min-width: 960px) and (max-width: 1099px) {
+  .grid2 {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+/* Simulador: três colunas só a partir de 1200px */
+@media (min-width: 1000px) and (max-width: 1199px) {
+  .sim {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1199px) {
+  .saida {
+    grid-template-columns: 1.3fr .7fr;
+    align-items: start;
+  }
+}
+
+/* Bolinhas de cor visíveis também no modo escuro */
+.cores span {
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, .45);
+}
+
+/* Sócios: um embaixo do outro até 960px */
+@media (max-width: 959px) {
+  .socios {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Portfólio no tablet: cartões deitados (imagem ao lado do texto) */
+@media (min-width: 640px) and (max-width: 999px) {
+  .port .port-grade {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .port .port-card {
+    grid-template-columns: 1.1fr 1fr;
+    column-gap: 22px;
+    align-items: start;
+  }
+
+  .port .port-card .navegador {
+    grid-row: 1 / span 5;
+  }
+
+  .port .port-card h3 {
+    margin-top: 0;
+  }
+}
+
+/* Antes e depois: arrastar na horizontal, rolar a página na vertical */
+.cmp input {
+  touch-action: pan-y;
+}
+
+/* Contato: número sempre cabe na coluna */
+.contato .numero,
+a.numero {
+  font-size: clamp(1.25rem, 6.4vw, 2.6rem);
+  max-width: 100%;
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+  .contato .numero,
+  a.numero {
+    font-size: clamp(1.25rem, 2.6vw, 2.2rem);
+  }
+}
+
+.contato h2 {
+  font-size: clamp(1.6rem, 7vw, 3.4rem);
+}
+
+/* ---------- Celular (até 639px) ---------- */
+@media (max-width: 639px) {
+  body {
+    font-size: 17px;
+  }
+
+  .sec {
+    padding-block: 72px;
+  }
+
+  h2 {
+    font-size: clamp(1.55rem, 7.4vw, 2.2rem);
+  }
+
+  .lede {
+    font-size: 1.05rem;
+  }
+
+  /* Topo */
+  .hero {
+    padding-top: 36px;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 9vw, 2.6rem);
+  }
+
+  .hero .acts {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero .acts .btn {
+    width: 100%;
+  }
+
+  .hero .acts .btn-ghost {
+    justify-content: center;
+  }
+
+  .selos span {
+    font-size: .82rem;
+  }
+
+  .palco {
+    min-height: 0;
+    padding-top: 96px;
+  }
+
+  .fone-frame {
+    width: min(250px, 72vw);
+    transform: translateY(32px);
+  }
+
+  .card-g {
+    left: 50%;
+    top: 0;
+    width: min(300px, 90%);
+    transform: translateX(-50%);
+    padding: 12px 14px;
+    animation: none;
+  }
+
+  .card-g .t {
+    font-size: .95rem;
+  }
+
+  .card-g .d {
+    display: none;
+  }
+
+  .faixa li {
+    font-size: 1rem;
+  }
+
+  /* Abas de serviços roláveis */
+  .abas {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scrollbar-width: none;
+  }
+
+  .abas::-webkit-scrollbar {
+    display: none;
+  }
+
+  .abas button {
+    flex: none;
+  }
+
+  .aba {
+    padding: 22px 18px;
+  }
+
+  /* Simulador */
+  .painel {
+    padding: 20px 16px;
+  }
+
+  .mini {
+    max-width: 220px;
+  }
+
+  #sim-cta {
+    width: 100%;
+  }
+
+  /* Portfólio */
+  .port-cta {
+    flex-direction: column;
+  }
+
+  .port-cta .btn {
+    width: 100%;
+  }
+
+  .cmp-rot {
+    font-size: .72rem !important;
+    padding: .4em .8em;
+  }
+
+  .cmp-links {
+    font-size: .9rem;
+  }
+
+  /* Etapas */
+  .passos li {
+    min-height: 0;
+  }
+
+  /* Fale direto */
+  .ligue-acts .btn {
+    flex: 1 1 100%;
+  }
+
+  /* Sócios */
+  .socio {
+    grid-template-columns: 1fr;
+    padding: 22px 18px;
+  }
+
+  .nome-orig {
+    padding: 20px 18px;
+  }
+
+  /* Perguntas */
+  .faq summary {
+    font-size: 1.05rem;
+    padding-block: 16px;
+  }
+
+  /* Contato */
+  .contato .painel {
+    padding: 20px 16px;
+  }
+
+  .chips span {
+    font-size: .86rem;
+  }
+
+  /* Rodapé */
+  .rod {
+    gap: 24px;
+  }
+
+  .base {
+    flex-direction: column;
+  }
+
+  /* Botão flutuante não cobre o conteúdo do fim da página */
+  .flutua-zap {
+    width: 54px;
+    height: 54px;
+    right: calc(14px + env(safe-area-inset-right, 0px));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+
+  footer {
+    padding-bottom: 88px;
+  }
+}
+
+/* ---------- Telas bem estreitas (até 374px) ---------- */
+@media (max-width: 374px) {
+  .nav .marca svg,
+  .nav .marca img {
+    height: 28px;
+  }
+
+  .tpl {
+    font-size: 11px;
+  }
+
+  .socio .monog {
+    width: 88px;
+  }
+}
+
+/* ---------- Tablet (640px a 959px) ---------- */
+@media (min-width: 640px) and (max-width: 959px) {
+  .palco {
+    min-height: 0;
+    padding-top: 40px;
+  }
+
+  .card-g {
+    left: 4%;
+  }
+
+  .ligue-grade {
+    grid-template-columns: 1fr;
+  }
+}
