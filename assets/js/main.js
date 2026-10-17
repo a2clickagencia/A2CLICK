@@ -457,27 +457,4 @@
     montarMensagem();
   }
 
-  /* ---------- Copiar o número ---------- */
-  var botaoCopiar = $('copiar');
-  if (botaoCopiar) {
-    botaoCopiar.addEventListener('click', function () {
-      var aviso = $('copiado');
-      function copiado() {
-        aviso.textContent = 'Número copiado.';
-      }
-      function selecionar() {
-        var faixa = document.createRange();
-        faixa.selectNodeContents($('numero'));
-        var selecao = window.getSelection();
-        selecao.removeAllRanges();
-        selecao.addRange(faixa);
-        aviso.textContent = 'Número selecionado. É só copiar.';
-      }
-      try {
-        navigator.clipboard.writeText('(19) 99602-2246').then(copiado, selecionar);
-      } catch (e) {
-        selecionar();
-      }
-    });
-  }
 })();

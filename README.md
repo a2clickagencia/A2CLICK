@@ -11,9 +11,8 @@ a2click-site/
 ├── 404.html                   Página de "não encontrada"
 ├── portfolio/                 Sites de clientes, publicados como vitrine (sem indexação no Google)
 │   ├── uniao-paulista/        Usado no "antes e depois" (comparado ao site antigo, ao vivo)
-│   ├── minas-bar/
+│   ├── mecanica-suica/
 │   ├── aline-oliveira-podologia/
-│   ├── super-cell/
 │   └── amaral-training/
 ├── robots.txt                 Orientações para o Google
 ├── sitemap.xml                Mapa do site para o Google Search Console
@@ -91,7 +90,7 @@ E, quando o endereço físico sair no Google, atualizar os trechos "Endereço em
 
 ## Ao alterar o CSS ou o JavaScript
 
-No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261016-3`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
+No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261017-1`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
 
 ## Onde mexer no dia a dia
 

@@ -30,7 +30,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&display=swap">
   <link rel="preload" href="assets/fonts/stretch-pro.woff" as="font" type="font/woff" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css?v=20261016-3">
+  <link rel="stylesheet" href="assets/css/style.css?v=20261017-1">
 
   <!-- Dados estruturados para o Google -->
   <script type="application/ld+json">
@@ -45,6 +45,7 @@
       {"@type": "Person", "name": "Igor Amaral"}
     ],
     "areaServed": "BR",
+    "sameAs": ["https://www.instagram.com/a2clickagencia/"],
     "url": "https://a2click.com.br/",
     "image": "https://a2click.com.br/assets/img/og-a2click.png"
   }
@@ -230,14 +231,12 @@
 
   <section class="sec campo port" id="portfolio" aria-labelledby="port-t">
     <div class="wrap">
-      <div class="cab">
-        <h2 id="port-t">Sites que fizemos.</h2>
-        <p class="lede">Arraste a alça e compare o site antigo da União Paulista com o que fizemos. Ao lado, outros negócios que já estão no ar com a nossa mão.</p>
+      <div class="cab cab-centro">
+        <h2 id="port-t">O mesmo negócio. Outra impressão.</h2>
+        <p class="lede">Quem pesquisa decide em segundos se confia ou não. Arraste a alça e veja a União Paulista, de isolamento térmico industrial, antes e depois de passar pelas nossas mãos.</p>
       </div>
-      <div class="port-duo">
-        <div class="port-cmp">
-          <h3 class="port-sub">União Paulista: antes e depois</h3>
-          <div class="cmp" id="cmp">
+      <div class="port-destaque">
+        <div class="cmp" id="cmp">
         <div class="cmp-lado cmp-novo"><iframe src="portfolio/uniao-paulista/index.html" title="Site novo da União Paulista, feito pela A2 Click" loading="lazy" tabindex="-1"></iframe></div>
         <div class="cmp-lado cmp-antigo"><iframe src="https://uniaopaulistaisolamentos.com.br/" title="Site antigo da União Paulista" loading="lazy" tabindex="-1" referrerpolicy="no-referrer"></iframe></div>
         <span class="cmp-rot cmp-rot-a">Antes</span>
@@ -245,31 +244,39 @@
         <div class="alca"></div>
         <input type="range" id="ad-range" min="0" max="100" value="50" aria-label="Arraste para comparar o site antigo com o novo">
       </div>
-      <div class="cmp-links">
-        <a href="https://uniaopaulistaisolamentos.com.br/" target="_blank" rel="noopener">Abrir o site antigo ↗</a>
-        <a href="portfolio/uniao-paulista/index.html" target="_blank" rel="noopener">Abrir o site novo ↗</a>
-      </div>
+        <div class="cmp-links">
+          <a href="https://uniaopaulistaisolamentos.com.br/" target="_blank" rel="noopener">Ver o site antigo ↗</a>
+          <a href="portfolio/uniao-paulista/index.html" target="_blank" rel="noopener">Ver o site novo ↗</a>
         </div>
-        <div class="port-lado">
-          <h3 class="port-sub">Outros sites feitos à mão</h3>
-          <div class="port-grade">
-            <a class="port-card" href="portfolio/minas-bar/index.html" target="_blank" rel="noopener">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Minas Bar</span></div><img src="assets/img/portfolio/minas-bar.jpg" alt="Página inicial do site do Minas Bar" width="960" height="600" loading="lazy"></div>
-          <h3>Minas Bar</h3><p class="nota">Salgados mineiros · Santa Bárbara d'Oeste-SP</p><span class="ver">Ver o site ↗</span>
-        </a>
-            <a class="port-card" href="portfolio/aline-oliveira-podologia/index.html" target="_blank" rel="noopener">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Aline Oliveira</span></div><img src="assets/img/portfolio/aline-oliveira-podologia.jpg" alt="Página inicial do site da Aline Oliveira Podologia" width="960" height="600" loading="lazy"></div>
-          <h3>Aline Oliveira Podologia</h3><p class="nota">Podologia e estética · Ipatinga-MG</p><span class="ver">Ver o site ↗</span>
-        </a>
-            <a class="port-card" href="portfolio/super-cell/index.html" target="_blank" rel="noopener">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Super Cell</span></div><img src="assets/img/portfolio/super-cell.jpg" alt="Página inicial do site da Super Cell Eletrônicos" width="960" height="600" loading="lazy"></div>
-          <h3>Super Cell Eletrônicos</h3><p class="nota">Assistência técnica de celulares · Americana-SP</p><span class="ver">Ver o site ↗</span>
-        </a>
-            <a class="port-card" href="portfolio/amaral-training/index.html" target="_blank" rel="noopener">
-          <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Amaral Training</span></div><img src="assets/img/portfolio/amaral-training.jpg" alt="Página inicial do site da Amaral Training Performance" width="960" height="600" loading="lazy"></div>
-          <h3>Amaral Training Performance</h3><p class="nota">Assessoria esportiva · corrida e BMX</p><span class="ver">Ver o site ↗</span>
-        </a>
-          </div>
+      </div>
+      <div class="port-mais">
+        <h3 class="port-sub">Cada cliente com a sua cara, nenhum site igual ao outro.</h3>
+        <div class="port-grade">
+          <a class="port-card" href="portfolio/mecanica-suica/index.html" target="_blank" rel="noopener">
+            <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Auto Mecânica Suíça</span></div><img src="assets/img/portfolio/mecanica-suica.jpg" alt="Página inicial do site da Auto Mecânica Suíça" width="960" height="600" loading="lazy"></div>
+            <h3>Auto Mecânica Suíça</h3>
+            <p class="port-ramo">Oficina mecânica · Bragança Paulista-SP</p>
+            <p class="nota">30 anos de confiança agora visíveis: horário aberto na hora, botão de ligar e de WhatsApp sempre à mão.</p>
+            <span class="ver">Ver o site ↗</span>
+          </a>
+          <a class="port-card" href="portfolio/aline-oliveira-podologia/index.html" target="_blank" rel="noopener">
+            <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Aline Oliveira Podologia</span></div><img src="assets/img/portfolio/aline-oliveira-podologia.jpg" alt="Página inicial do site da Aline Oliveira Podologia" width="960" height="600" loading="lazy"></div>
+            <h3>Aline Oliveira Podologia</h3>
+            <p class="port-ramo">Podologia e estética · Ipatinga-MG</p>
+            <p class="nota">Um atendimento delicado com um site à altura: tratamentos explicados e agendamento com um toque.</p>
+            <span class="ver">Ver o site ↗</span>
+          </a>
+          <a class="port-card" href="portfolio/amaral-training/index.html" target="_blank" rel="noopener">
+            <div class="navegador"><div class="barra-n"><i></i><i></i><i></i><span>Amaral Training Performance</span></div><img src="assets/img/portfolio/amaral-training.jpg" alt="Página inicial do site da Amaral Training Performance" width="960" height="600" loading="lazy"></div>
+            <h3>Amaral Training Performance</h3>
+            <p class="port-ramo">Assessoria esportiva · corrida e BMX</p>
+            <p class="nota">Método, resultados e vídeos em um site com energia de pódio, feito para gerar lista de espera.</p>
+            <span class="ver">Ver o site ↗</span>
+          </a>
+        </div>
+        <div class="port-cta">
+          <p>O próximo pode ser o seu.</p>
+          <a class="btn btn-giz" href="https://wa.me/5519996022246?text=Ol%C3%A1%2C%20vi%20o%20portf%C3%B3lio%20da%20A2%20Click%20e%20quero%20um%20site%20para%20o%20meu%20neg%C3%B3cio." target="_blank" rel="noopener"><svg><use href="#i-zap"/></svg>Quero um site assim</a>
         </div>
       </div>
     </div>
@@ -352,14 +359,10 @@
 
   <section class="sec contato" id="contato" aria-labelledby="contato-t">
     <div class="wrap grid2">
-      <div>
+      <div class="contato-texto">
         <h2 id="contato-t">Vamos conversar sobre o seu negócio?</h2>
         <p class="lede" style="margin-top:22px">Preencha ao lado e a mensagem já vai pronta para o nosso WhatsApp. Respondemos pessoalmente, com calma e sem compromisso.</p>
-        <p class="numero" id="numero">(19) 99602-2246</p>
-        <div class="acts">
-          <button class="btn btn-linha" id="copiar" type="button">Copiar número</button>
-        </div>
-        <p class="copiado" id="copiado" aria-live="polite"></p>
+        <a class="numero" href="https://wa.me/5519996022246?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20A2%20Click%20e%20quero%20conversar%20sobre%20um%20site." target="_blank" rel="noopener" aria-label="Chamar no WhatsApp: (19) 99602-2246"><svg><use href="#i-zap"/></svg>(19) 99602-2246</a>
         <div class="info">
           <span>Atendimento presencial na nossa região e online para todo o Brasil.</span>
           <span>Endereço em breve no Google.</span>
@@ -397,7 +400,7 @@
     <div class="rod">
       <p style="max-width:42ch">Sites feitos à mão para pequenos e médios comércios aparecerem no Google e receberem bem cada cliente.</p>
       <div><h4>Navegue</h4><a href="#servicos">Serviços</a><a href="#simulador">Simulador</a><a href="#portfolio">Portfólio</a><a href="#perguntas">Perguntas</a></div>
-      <div><h4>Fale com a gente</h4><a href="https://wa.me/5519996022246" target="_blank" rel="noopener">WhatsApp (19) 99602-2246</a><span class="nota" style="display:block;padding:.2em 0">Endereço em breve no Google</span></div>
+      <div><h4>Fale com a gente</h4><a href="https://wa.me/5519996022246" target="_blank" rel="noopener">WhatsApp (19) 99602-2246</a><span class="nota" style="display:block;padding:.2em 0">Endereço em breve no Google</span><a class="rod-ig" href="https://www.instagram.com/a2clickagencia/" target="_blank" rel="noopener" aria-label="Instagram da A2 Click: @a2clickagencia"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.3" fill="currentColor"/></svg><span>@a2clickagencia</span></a></div>
     </div>
     <div class="base nota"><span>Agência A2 Click · Pedro Augusto e Igor Amaral</span><span>Feito à mão, desde 2026.</span></div>
   </div>
@@ -405,6 +408,6 @@
 
 <a class="flutua-zap" href="https://wa.me/5519996022246?text=Ol%C3%A1%2C%20vim%20pelo%20site%20da%20A2%20Click." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp"><svg><use href="#i-zap"/></svg></a>
 
-<script src="assets/js/main.js?v=20261016-3" defer></script>
+<script src="assets/js/main.js?v=20261017-1" defer></script>
 </body>
 </html>
