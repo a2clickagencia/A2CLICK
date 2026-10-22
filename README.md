@@ -52,6 +52,26 @@ Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas p
 6. **Security:** Bot Fight Mode ligado; Security Level Medium. Não ative Web Analytics/Zaraz sem atualizar a Política de Privacidade (o site declara que não usa estatísticas nem cookies).
 7. **Email Obfuscation:** desligado (o e-mail é um link `mailto:` comum e o recurso injeta script, bloqueado pela CSP).
 
+## Google Ads: página /obrigado
+
+Todo botão de WhatsApp do site (e o formulário) leva primeiro para `/obrigado?phone=...&text=...`.
+Essa página mostra "Obrigado pelo contato!", registra a conversão do Google Ads e, em cerca de 2 segundos,
+abre o WhatsApp do Pedro ou do Igor com a mensagem pronta. Se não abrir sozinho, há um botão manual.
+Só os números do Pedro e do Igor são aceitos; visita direta à /obrigado mostra os dois botões e não conta conversão.
+
+Para ligar a contagem:
+1. No Google Ads: Metas → Conversões → Nova ação de conversão → Site → digite `a2click.com.br` →
+   "Adicionar uma ação de conversão manualmente" → categoria **Contato** (ou Lead), valor opcional, contagem **Uma**.
+2. Em "Configuração da tag" → "Instalar a tag você mesmo", copie o **ID da conversão** (`AW-123456789`)
+   e o **rótulo da conversão** (o texto depois da barra em `send_to: 'AW-123456789/AbCdEf...'`).
+3. Em `obrigado.html`, preencha na tag `<body>`: `data-aw-id="AW-123456789"` e `data-aw-label="AbCdEf..."`.
+   Envie para o GitHub. Enquanto os dois estiverem vazios, a página só abre o WhatsApp, sem carregar nada do Google.
+4. Nos anúncios, use a página inicial como URL final e deixe a **codificação automática (gclid)** ligada.
+   O site guarda o gclid do anúncio e o repassa para a /obrigado, para a conversão ser atribuída ao anúncio certo.
+5. Teste: clique num botão de WhatsApp do site e confira em Google Ads → Conversões o status da tag (pode levar algumas horas).
+
+Atalhos que também contam conversão: `a2click.com.br/whatsapp-pedro` e `a2click.com.br/whatsapp-igor`.
+
 ## Depois de publicar
 
 - Rode https://pagespeed.web.dev/ para `/` e `/quem-somos` (celular).

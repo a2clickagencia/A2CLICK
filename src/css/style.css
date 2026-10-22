@@ -3133,3 +3133,148 @@ a.numero small {
   display: inline-block;
   padding-block: 8px;
 }
+
+/* ==========================================================
+   Página /obrigado (redirecionamento para o WhatsApp)
+   ========================================================== */
+.obg {
+  background: var(--campo);
+  color: var(--sobre-campo);
+}
+
+.obg-tela {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 20px;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 16px max(24px, env(safe-area-inset-bottom, 0px));
+}
+
+.obg-cartao {
+  width: min(560px, 100%);
+  background: var(--campo-2);
+  border-radius: 6px;
+  padding: clamp(28px, 6vw, 48px);
+  display: grid;
+  gap: 18px;
+  text-align: center;
+  justify-items: center;
+}
+
+.obg-logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+
+.obg-selo {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  background: var(--giz);
+  color: #16231F;
+  font-weight: 700;
+  font-size: .9rem;
+  padding: .45em 1em;
+  border-radius: 999px;
+  margin-top: 8px;
+}
+
+.obg h1 {
+  font-size: clamp(1.8rem, 7vw, 2.8rem);
+  line-height: 1.05;
+}
+
+.obg .lede {
+  max-width: 40ch;
+  margin-inline: auto;
+}
+
+.obg-redir,
+.obg-escolha {
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  width: 100%;
+}
+
+.obg-redir {
+  display: none;
+}
+
+.com-escolha .obg-redir {
+  display: grid;
+}
+
+.com-escolha .obg-escolha {
+  display: none;
+}
+
+.obg-barra {
+  width: min(320px, 100%);
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sobre-campo) 18%, transparent);
+  overflow: hidden;
+}
+
+.obg-barra i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--giz);
+  border-radius: inherit;
+  transform-origin: left;
+  animation: obg-carrega 1.8s linear both;
+}
+
+@keyframes obg-carrega {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.obg-abrir,
+.obg-op {
+  width: min(360px, 100%);
+}
+
+.obg-op span {
+  display: grid;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.obg-op small {
+  font-weight: 500;
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.obg-ops {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  justify-items: center;
+}
+
+.obg-nota,
+.obg-rodape {
+  font-size: .9rem;
+  color: color-mix(in srgb, var(--sobre-campo) 75%, transparent);
+}
+
+.obg-voltar a,
+.obg-rodape a {
+  color: inherit;
+  text-underline-offset: .2em;
+}
+
+.obg-voltar {
+  font-weight: 600;
+}
+
+.obg-rodape {
+  text-align: center;
+}

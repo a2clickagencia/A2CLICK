@@ -3,5 +3,6 @@ Allow: /
 # Sites de clientes publicados como vitrine e páginas de apoio: fora da busca
 Disallow: /portfolio/
 Disallow: /offline
+Disallow: /obrigado
 
 Sitemap: https://a2click.com.br/sitemap.xml

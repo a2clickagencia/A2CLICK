@@ -106,17 +106,25 @@ def css_embutido():
 
 
 def js_com_hash():
-    js = minificar_js(ler(RAIZ / 'src/js/main.js'))
-    nome = 'main.%s.js' % hash8(js)
+    """Cada arquivo de src/js vira assets/js/<nome>.<hash>.js. Devolve o nome do main e o tamanho total."""
     pasta = RAIZ / 'assets/js'
     pasta.mkdir(parents=True, exist_ok=True)
-    for velho in pasta.glob('main*.js'):
-        velho.unlink()
-    gravar(pasta / nome, js)
+    nomes, total = {}, 0
+    for fonte in sorted((RAIZ / 'src/js').glob('*.js')):
+        base = fonte.stem
+        js = minificar_js(ler(fonte))
+        nome = '%s.%s.js' % (base, hash8(js))
+        for velho in pasta.glob(base + '.*.js'):
+            velho.unlink()
+        gravar(pasta / nome, js)
+        nomes[base] = nome
+        total += len(js.encode('utf-8'))
     for pagina in PAGINAS:
-        html = re.sub(r'/assets/js/main(\.[0-9a-f]{8})?\.js', '/assets/js/' + nome, ler(pagina))
+        html = ler(pagina)
+        for base, nome in nomes.items():
+            html = re.sub(r'/assets/js/%s(\.[0-9a-f]{8})?\.js' % re.escape(base), '/assets/js/' + nome, html)
         gravar(pagina, html)
-    return nome, len(js.encode('utf-8'))
+    return nomes['main'], total
 
 
 def atualizar_sw(nome_js):

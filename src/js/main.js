@@ -18,9 +18,41 @@
     return Array.prototype.slice.call((raiz || document).querySelectorAll(seletor));
   }
 
-  function linkWhatsApp(numero, texto) {
-    return 'https://wa.me/' + numero + '?text=' + encodeURIComponent(texto);
+  /* Todo botão de WhatsApp passa pela página /obrigado, que registra a conversão do Google Ads
+     e abre o WhatsApp. O identificador do clique no anúncio (gclid) vai junto para a conversão ser atribuída. */
+  var CLIQUE_ANUNCIO = ['gclid', 'gbraid', 'wbraid'];
+  var NOVENTA_DIAS = 90 * 24 * 60 * 60 * 1000;
+  (function guardarClique() {
+    var p = new URLSearchParams(location.search);
+    var achou = {};
+    CLIQUE_ANUNCIO.forEach(function (k) { if (p.get(k)) achou[k] = p.get(k); });
+    if (!Object.keys(achou).length) return;
+    try { localStorage.setItem('a2-anuncio', JSON.stringify({ v: achou, t: Date.now() })); } catch (e) {}
+  })();
+  function cliqueAnuncio() {
+    try {
+      var d = JSON.parse(localStorage.getItem('a2-anuncio') || 'null');
+      if (d && Date.now() - d.t < NOVENTA_DIAS) return d.v;
+    } catch (e) {}
+    return {};
   }
+
+  function linkWhatsApp(numero, texto) {
+    return '/obrigado?phone=' + numero + '&text=' + encodeURIComponent(texto);
+  }
+
+  function comAnuncio(url) {
+    var extra = cliqueAnuncio();
+    var u = new URL(url, location.origin);
+    Object.keys(extra).forEach(function (k) { u.searchParams.set(k, extra[k]); });
+    return u.pathname + u.search;
+  }
+
+  // Na hora do clique, acrescenta o gclid aos links para /obrigado
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="/obrigado"]');
+    if (a) a.href = comAnuncio(a.getAttribute('href'));
+  }, true);
 
   var raiz = document.documentElement;
   var economia = !!(navigator.connection && navigator.connection.saveData);
@@ -433,7 +465,7 @@
   }
 
   /* ---------- Formulário de contato que monta a mensagem do WhatsApp ----------
-     Sem JavaScript, o formulário envia direto para api.whatsapp.com com o texto
+     Sem JavaScript, o formulário envia para /obrigado (que abre o WhatsApp) com o texto
      digitado. Com JavaScript, a mensagem é montada com todos os campos. */
   var formContato = $('contato-form');
   if (formContato) {
@@ -468,7 +500,20 @@
     };
     formContato.addEventListener('input', montarMensagem);
     formContato.addEventListener('change', montarMensagem);
-    formContato.addEventListener('submit', montarMensagem);
+    formContato.addEventListener('submit', function () {
+      montarMensagem();
+      var extra = cliqueAnuncio();
+      Object.keys(extra).forEach(function (k) {
+        var campo = formContato.querySelector('input[name="' + k + '"]');
+        if (!campo) {
+          campo = document.createElement('input');
+          campo.type = 'hidden';
+          campo.name = k;
+          formContato.appendChild(campo);
+        }
+        campo.value = extra[k];
+      });
+    });
     montarMensagem();
   }
 

@@ -1,7 +1,6 @@
 # Cabeçalhos do Cloudflare Pages (segurança e cache)
 # Regra geral: valem para todas as páginas e arquivos.
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action https://api.whatsapp.com; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -11,9 +10,33 @@
 # HTML sem Cache-Control aqui: o padrão do Cloudflare Pages já é "public, max-age=0, must-revalidate".
 # (Se o mesmo cabeçalho aparecesse aqui e numa regra abaixo, os valores seriam somados.)
 
-# Sites de clientes do portfólio: têm scripts e fontes próprios, então ficam sem a CSP do site principal.
+# CSP das páginas do site (fica em cada página, e não em /*, para a /obrigado poder ter a sua).
+# Os sites de clientes em /portfolio/ têm scripts e fontes próprios e ficam sem CSP.
+
+/
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/quem-somos
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/politica-de-privacidade
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/termos-de-uso
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/offline
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/404
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+# Página de confirmação: libera só o necessário para a tag de conversão do Google Ads.
+/obrigado
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://www.google.com https://www.google.com.br https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net; font-src 'self'; connect-src 'self' https://www.googletagmanager.com https://www.google.com https://www.google.com.br https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net; frame-src https://td.doubleclick.net https://www.googletagmanager.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Robots-Tag: noindex, nofollow
+
 /portfolio/*
-  ! Content-Security-Policy
   X-Robots-Tag: noindex
 
 # JavaScript com hash no nome (muda a cada versão): pode ficar guardado por 1 ano.
