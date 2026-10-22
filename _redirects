@@ -1,0 +1,15 @@
+# Redirecionamentos do Cloudflare Pages.
+# HTTPS e www -> sem www são configurados no painel da Cloudflare (veja o README).
+# A página 404.html é usada automaticamente para endereços que não existem.
+
+# Atalhos fáceis de divulgar (cartão, Instagram, QR code)
+/whatsapp-pedro  https://wa.me/5519996022246?text=Ol%C3%A1%2C%20Pedro%2C%20vim%20pelo%20site%20da%20A2%20Click%20e%20quero%20conversar%20sobre%20um%20site.  302
+/whatsapp-igor   https://wa.me/5519988659584?text=Ol%C3%A1%2C%20Igor%2C%20vim%20pelo%20site%20da%20A2%20Click%20e%20quero%20conversar%20sobre%20um%20site.  302
+/whatsapp        /#fale  302
+/instagram       https://www.instagram.com/a2clickagencia/  302
+
+# Endereços antigos
+/index.html      /  301
+/sobre           /quem-somos  301
+/privacidade     /politica-de-privacidade  301
+/termos          /termos-de-uso  301

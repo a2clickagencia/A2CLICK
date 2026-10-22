@@ -1,108 +1,65 @@
-# Agência A2 Click — site
+# Agência A2 Click: site
 
-Site institucional da Agência A2 Click, de Pedro Augusto e Igor Amaral.
-É um site estático: só HTML, CSS e JavaScript, sem instalação e sem etapa de build.
+Site estático (HTML, CSS e JavaScript, sem bibliotecas) publicado no Cloudflare Pages em https://a2click.com.br.
 
 ## Estrutura
 
 ```
-a2click-site/
-├── index.html                 Página principal (todo o conteúdo e textos)
-├── 404.html                   Página de "não encontrada"
-├── portfolio/                 Sites de clientes, publicados como vitrine (sem indexação no Google)
-│   ├── uniao-paulista/        Usado no "antes e depois" (comparado ao site antigo, ao vivo)
-│   ├── mecanica-suica/
-│   ├── aline-oliveira-podologia/
-│   └── amaral-training/
-├── robots.txt                 Orientações para o Google
-├── sitemap.xml                Mapa do site para o Google Search Console
-├── _headers                   Cabeçalhos de segurança e cache (Cloudflare Pages)
-├── .gitignore
-└── assets/
-    ├── css/style.css          Visual do site. Cores e fontes no início, em :root
-    ├── js/main.js             Interações (menu, simulador, abas, fotos que giram, formulário)
-    ├── fonts/stretch-pro.woff Fonte dos títulos
-    └── img/
-        ├── equipe/            Fotos do Pedro e do Igor
-        ├── logo/              Todas as versões da logo em SVG
-        ├── favicon.svg        Ícone da aba do navegador
-        ├── favicon-32.png
-        ├── apple-touch-icon.png
-        ├── icon-512.png
-        └── og-a2click.png     Imagem que aparece ao compartilhar o link no WhatsApp
+index.html, quem-somos.html, politica-de-privacidade.html, termos-de-uso.html, 404.html, offline.html
+partials/        Cabeçalho, rodapé e botão flutuante (copiados para as páginas pelo build)
+src/css/         style.css: fonte do visual (cores no início, em :root)
+src/js/          main.js: fonte das interações (simulador, abas, formulário, menus)
+assets/js/       main.<hash>.js gerado pelo build (não edite à mão)
+assets/fonts/    Bricolage Grotesque e Stretch Pro em WOFF2 (só caracteres latinos)
+assets/img/      Fotos em WebP (várias larguras), logos em SVG, ícones
+portfolio/       Sites de clientes publicados como vitrine (fora do Google)
+tools/build.py   Build (só Python 3, sem instalar nada)
+sw.js            Modo offline
+_headers         Segurança e cache (Cloudflare Pages)
+_redirects       Atalhos (/whatsapp-pedro, /whatsapp-igor, /instagram) e endereços antigos
 ```
 
-## Ver o site no computador
+## Alterar o site
 
-Basta abrir o `index.html` no navegador.
-Para testar exatamente como ficará no ar (com a página 404 e os caminhos certos), rode dentro da pasta:
+1. Edite o texto direto nas páginas `.html`, o visual em `src/css/style.css` ou o comportamento em `src/js/main.js`.
+   Cabeçalho, rodapé e botão flutuante: edite em `partials/` (vale para todas as páginas).
+2. Rode na raiz do projeto:
 
-```
-python3 -m http.server 8000
-```
+   ```
+   python3 tools/build.py
+   ```
 
-e acesse http://localhost:8000.
+   Ele copia os parciais, embute o CSS minificado nas páginas, gera o JS com hash no nome e atualiza o `sw.js`.
+3. Para ver no computador: `npx serve .` (URLs limpas, como no Cloudflare) e abra http://localhost:3000.
 
-## Subir para o GitHub
+Números de WhatsApp: Pedro `5519996022246`, Igor `5519988659584`. Aparecem nas páginas, em `partials/` e no objeto `FUNDADORES` de `src/js/main.js`.
 
-1. Crie um repositório novo no GitHub (por exemplo, `a2click-site`).
-2. Na pasta do projeto, rode:
+Fotos novas: exporte em WebP (qualidade ~82) nas mesmas larguras dos arquivos atuais e mantenha os nomes.
+Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas por 1 ano no navegador).
 
-```
-git init
-git add .
-git commit -m "Site da Agência A2 Click"
-git branch -M main
-git remote add origin https://github.com/SEU-USUARIO/a2click-site.git
-git push -u origin main
-```
+## Publicar (Cloudflare Pages)
 
-Se preferir sem terminal: no GitHub, abra o repositório vazio, clique em "uploading an existing file" e arraste todo o conteúdo desta pasta (não a pasta em si).
+- Framework preset: **None** · Build command: **em branco** · Output directory: **/**
+- Os arquivos gerados já estão no repositório; rode o build antes de cada envio.
 
-## Publicar no Cloudflare Pages
+### Configurações no painel da Cloudflare (domínio a2click.com.br)
 
-1. No painel da Cloudflare, vá em **Workers & Pages → Create → Pages → Connect to Git** e escolha o repositório.
-2. Configuração do build:
-   - Framework preset: **None**
-   - Build command: deixe **em branco**
-   - Build output directory: **/** (a raiz)
-3. Clique em **Save and Deploy**. Em instantes o site fica no ar num endereço `*.pages.dev`.
-4. Para usar o domínio próprio (ex.: `a2click.com.br`): no projeto, vá em **Custom domains → Set up a custom domain** e siga os passos.
+1. **SSL/TLS → Overview:** modo **Full (strict)**.
+2. **SSL/TLS → Edge Certificates:** Always Use HTTPS **ligado**; Automatic HTTPS Rewrites **ligado**; Minimum TLS **1.2**; TLS 1.3 **ligado**; HSTS só depois de confirmar que tudo abre em HTTPS (o `_headers` já envia HSTS de 1 ano).
+3. **www → sem www:** Rules → Redirect Rules → modelo "Redirect from WWW to root" (301), e um registro DNS `www` com proxy laranja. Em Workers & Pages → projeto → Custom domains, adicione `a2click.com.br` e `www.a2click.com.br`.
+4. **Speed → Optimization:** Brotli ligado; Early Hints ligado; HTTP/3 ligado (Network). Deixe Rocket Loader **desligado** (quebra a CSP).
+5. **Caching → Configuration:** Browser Cache TTL em **Respect Existing Headers**.
+6. **Security:** Bot Fight Mode ligado; Security Level Medium. Não ative Web Analytics/Zaraz sem atualizar a Política de Privacidade (o site declara que não usa estatísticas nem cookies).
+7. **Email Obfuscation:** desligado (o e-mail é um link `mailto:` comum e o recurso injeta script, bloqueado pela CSP).
 
-A cada `git push`, a Cloudflare publica a nova versão sozinha.
+## Depois de publicar
 
-## Depois de ter o domínio
+- Rode https://pagespeed.web.dev/ para `/` e `/quem-somos` (celular).
+- Google Search Console: verifique o domínio (registro TXT no DNS da Cloudflare), envie `https://a2click.com.br/sitemap.xml`, peça indexação de `/` e `/quem-somos`.
+- Perfil da Empresa no Google: categoria "Web designer" ou "Agência de marketing"; área atendida Americana/SP e região; site `https://a2click.com.br`; telefone principal do Pedro e adicional do Igor; mesmos horários e descrição do site; fotos dos fundadores e de trabalhos.
 
-(Já feito para a2click.com.br.) Os endereços completos ficam em `index.html`, para o WhatsApp e as redes mostrarem a imagem certinho:
+## Licenças
 
-```html
-<meta property="og:image" content="https://a2click.com.br/assets/img/og-a2click.png">
-```
-
-Também vale adicionar, dentro do `<head>`:
-
-```html
-<link rel="canonical" href="https://a2click.com.br/">
-<meta property="og:url" content="https://a2click.com.br/">
-```
-
-E, quando o endereço físico sair no Google, atualizar os trechos "Endereço em breve no Google" no `index.html`.
-
-## Ao alterar o CSS ou o JavaScript
-
-No `index.html`, os arquivos de estilo e de script têm uma "versão" no fim do endereço (`style.css?v=20261017-2`). Sempre que mudar o `style.css` ou o `main.js`, troque esse número (por exemplo, para a data do dia). Assim o navegador de quem já visitou o site baixa a versão nova, em vez de usar a antiga guardada.
-
-## Onde mexer no dia a dia
-
-- **Textos:** tudo está no `index.html`, em português, na ordem em que aparece na tela.
-- **Número do WhatsApp:** aparece no `index.html` (links `wa.me/5519996022246`) e na constante `WHATSAPP`, no início do `assets/js/main.js`.
-- **Cores:** variáveis no início do `assets/css/style.css` (`--pinho`, `--campo`, `--giz`...).
-- **Portfólio:** para incluir um site novo, crie uma pasta em `portfolio/` com o `index.html` do cliente, coloque uma imagem 960 × 600 em `assets/img/portfolio/` e copie um dos cartões `port-card` no `index.html`.
-- **Modelos do simulador:** cada ramo (cores, textos, ícones da telinha) fica no objeto `RAMOS`, no `assets/js/main.js`. Para criar um ramo novo, copie um bloco e adicione a opção no `<select id="s-ramo-in">`.
-- **Fotos da equipe:** substitua os arquivos em `assets/img/equipe/` mantendo os mesmos nomes (quadradas, de preferência 480 × 480 px).
-
-## Licenças das fontes
-
-- **Stretch Pro** (títulos): a versão usada é gratuita **apenas para uso pessoal**. Antes de colocar o site no ar com fins comerciais, compre a licença comercial da fonte.
-- **Old London** (o "A" da logo e as iniciais P e I): distribuída gratuitamente pelo autor; as letras já estão convertidas em desenho dentro dos SVGs.
-- **Bricolage Grotesque** (textos): Google Fonts, licença livre (OFL), carregada direto do Google.
+- **Bricolage Grotesque:** SIL Open Font License, auto-hospedada.
+- **Stretch Pro:** a versão usada é gratuita **apenas para uso pessoal**. Compre a licença comercial (com uso em web) antes de manter o site no ar.
+- **Old London** (o "A" da logo e as iniciais P e I): distribuída gratuitamente pelo autor; já convertida em desenho dentro dos SVGs.

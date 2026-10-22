@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+# Sites de clientes publicados como vitrine e páginas de apoio: fora da busca
 Disallow: /portfolio/
+Disallow: /offline
 
 Sitemap: https://a2click.com.br/sitemap.xml
