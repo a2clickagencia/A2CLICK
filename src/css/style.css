@@ -3007,13 +3007,6 @@ a.numero small {
   text-underline-offset: .2em;
 }
 
-.aviso-ia {
-  background: var(--giz);
-  color: #16231F;
-  border-radius: 6px;
-  padding: 14px 18px;
-  margin: 8px 0 12px;
-}
 
 .doc-sumario {
   background: var(--card);
