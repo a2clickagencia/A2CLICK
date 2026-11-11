@@ -40,12 +40,12 @@ Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas p
 
 ## A² LABS (/labs)
 
-Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). É uma vitrine de **cards**: ao passar o mouse, o card mostra uma prévia (pontos principais e botões); em tela de toque a prévia fica sempre visível. "Ver detalhes" abre uma **ficha** com abas (Cabeçudos FC: Jogar, O jogo, Modos e controles, Por dentro; Urbis: Baixar, Galeria, A cidade, Versões). O Cabeçudos FC joga dentro da ficha, carregado só ao clicar.
+Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). É uma vitrine de **4 cards** (Cabeçudos FC, Urbis, ATP e "O próximo experimento"): ao passar o mouse, o card mostra uma prévia (pontos principais e botões); em tela de toque a prévia fica sempre visível. "Ver detalhes" abre uma **ficha** com abas (Cabeçudos FC: Jogar, O jogo, Modos e controles, Por dentro; Urbis: Baixar, Galeria, A cidade, Versões). O Cabeçudos FC joga dentro da ficha, carregado só ao clicar. O ATP é um sistema fechado (login): a ficha mostra telas de demonstração, sem dados de alunos, e o botão "Acessar" leva a https://atp-app-two.vercel.app/.
 
 - Fonte da página: `build/labs_page.py` (fora do repositório publicado), `src/css/labs.css` e `src/js/labs.js`. Edite e rode o gerador e o `python3 tools/build.py`. Quem edita só o `labs.html` pode alterar textos direto.
 - Botão "LABS" no topo do site, ao lado do WhatsApp, e faixa "Entrar no A² LABS" no fim da página inicial.
 - `_headers` tem um bloco `/labs` com a CSP que libera o jogo (`frame-src https://cabecudosfcfinal.netlify.app`).
-- Endereços diretos: `/labs#cabecudos` e `/labs#urbis` abrem a ficha; `/cabecudos`, `/urbis` e `/baixar/urbis` estão no `_redirects`.
+- Endereços diretos: `/labs#cabecudos`, `/labs#urbis` e `/labs#atp` abrem a ficha; `/cabecudos`, `/urbis`, `/atp` e `/baixar/urbis` estão no `_redirects`.
 
 ### Instalador do Urbis (78 MB)
 

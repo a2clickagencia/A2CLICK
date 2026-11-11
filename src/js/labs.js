@@ -78,6 +78,7 @@
     var h = location.hash;
     if (h === '#cabecudos') abrir('ficha-cabecudos', 'jogar');
     else if (h === '#urbis') abrir('ficha-urbis', 'baixar');
+    else if (h === '#atp') abrir('ficha-atp', 'visao');
   }
   porEndereco();
 
