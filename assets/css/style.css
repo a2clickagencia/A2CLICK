@@ -2567,3 +2567,15 @@ a.numero {
   display: block !important;
   margin-top: 15px !important; /* Adiciona um pequeno espaço em cima do subtítulo */
 }
+/* Reduz o buraco vazio apenas da seção de busca, sem quebrar as outras grades */
+@media(min-width: 960px) {
+  .grid2:has(.busca) {
+    gap: 40px !important;
+  }
+  
+  .busca {
+    justify-self: start;
+    width: 100%;
+    max-width: 500px;
+  }
+}
