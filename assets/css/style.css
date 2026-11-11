@@ -2555,11 +2555,15 @@ a.numero {
   }
 }
 #h1.texto-central {
-  text-align: center;
-  width: 100%;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: block !important;
+  margin: 0 auto !important;
 }
 
 #h1.texto-central .h1-sub {
-  text-align: center;
-  display: block; /* Garante que o subtítulo também fica centralizado e na sua própria linha */
+  text-align: center !important;
+  display: block !important;
+  margin-top: 15px !important; /* Adiciona um pequeno espaço em cima do subtítulo */
 }
