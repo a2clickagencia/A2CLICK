@@ -2554,3 +2554,12 @@ a.numero {
     white-space: nowrap;
   }
 }
+#h1.texto-central {
+  text-align: center;
+  width: 100%;
+}
+
+#h1.texto-central .h1-sub {
+  text-align: center;
+  display: block; /* Garante que o subtítulo também fica centralizado e na sua própria linha */
+}
