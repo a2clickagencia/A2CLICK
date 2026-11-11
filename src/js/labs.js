@@ -1,4 +1,4 @@
-/* A² LABS: pequenos comportamentos da página. Tudo aqui é melhoria: sem JavaScript os links e botões continuam funcionando. */
+/* A² LABS: comportamentos da página. Tudo aqui é melhoria: sem JavaScript os links dos cards continuam funcionando. */
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -12,69 +12,129 @@
     });
   });
 
-  // Jogo dentro da página: o jogo só é carregado quando a pessoa pede (nada é baixado de terceiros antes disso)
-  var jogo = $('#jogo');
-  if (jogo) {
-    var capa = $('.jogo-capa', jogo);
-    var abrirBtn = $('#jogar');
-    var telaCheia = $('#tela-cheia');
-    var frame = null;
-
-    var abrir = function () {
-      if (frame) return frame;
-      frame = document.createElement('iframe');
-      frame.src = jogo.getAttribute('data-src');
-      frame.title = 'Cabeçudos FC, jogo de futebol de cabeção';
-      frame.setAttribute('allow', 'fullscreen; autoplay; gamepad; clipboard-write');
-      frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-      jogo.appendChild(frame);
-      if (capa) capa.hidden = true;
-      frame.focus();
-      return frame;
-    };
-
-    if (abrirBtn) {
-      abrirBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        abrir();
-      });
-    }
-    if (telaCheia) {
-      telaCheia.hidden = false;
-      telaCheia.addEventListener('click', function () {
-        var f = abrir();
-        var pedir = f.requestFullscreen || f.webkitRequestFullscreen;
-        if (pedir) pedir.call(f);
-      });
-    }
+  // ---------- abas de cada ficha ----------
+  function escolherAba(ficha, nome, foco) {
+    var abas = $$('[role="tab"]', ficha);
+    var alvo = null;
+    abas.forEach(function (b) {
+      var ativo = b.getAttribute('data-aba') === nome;
+      if (ativo) alvo = b;
+      b.setAttribute('aria-selected', ativo ? 'true' : 'false');
+      b.tabIndex = ativo ? 0 : -1;
+      var p = document.getElementById(b.getAttribute('aria-controls'));
+      if (p) p.hidden = !ativo;
+    });
+    var pn = $('.paineis', ficha);
+    if (pn) pn.scrollTop = 0;
+    if (alvo && foco) alvo.focus();
   }
 
-  // Galeria do Urbis: o clique troca a foto grande; sem JavaScript cada miniatura abre a imagem
-  var grande = $('#foto-grande');
-  var legenda = $('#foto-legenda');
-  var miniaturas = $$('.mini a');
-  if (grande && miniaturas.length) {
-    miniaturas.forEach(function (a) {
+  $$('.ficha').forEach(function (ficha) {
+    var abas = $$('[role="tab"]', ficha);
+    abas.forEach(function (b, i) {
+      b.addEventListener('click', function () { escolherAba(ficha, b.getAttribute('data-aba'), false); });
+      b.addEventListener('keydown', function (e) {
+        var k = e.key, n = null;
+        if (k === 'ArrowRight') n = (i + 1) % abas.length;
+        else if (k === 'ArrowLeft') n = (i - 1 + abas.length) % abas.length;
+        else if (k === 'Home') n = 0;
+        else if (k === 'End') n = abas.length - 1;
+        if (n === null) return;
+        e.preventDefault();
+        escolherAba(ficha, abas[n].getAttribute('data-aba'), true);
+      });
+    });
+
+    // fechar: botão, clique fora da janela
+    $$('[data-fechar]', ficha).forEach(function (b) { b.addEventListener('click', function () { ficha.close(); }); });
+    ficha.addEventListener('click', function (e) { if (e.target === ficha) ficha.close(); });
+    ficha.addEventListener('close', function () {
+      if (ficha.id === 'ficha-cabecudos') fecharJogo();
+    });
+  });
+
+  // ---------- abrir a ficha pelos botões dos cards ----------
+  var ultimo = null;
+  function abrir(id, aba) {
+    var f = document.getElementById(id);
+    if (!f || typeof f.showModal !== 'function') return false;
+    ultimo = document.activeElement;
+    escolherAba(f, aba || $('[role="tab"]', f).getAttribute('data-aba'), false);
+    if (!f.open) f.showModal();
+    return true;
+  }
+  $$('[data-abrir]').forEach(function (el) {
+    el.hidden = false;
+    el.addEventListener('click', function (e) {
+      if (abrir(el.getAttribute('data-abrir'), el.getAttribute('data-aba'))) e.preventDefault();
+    });
+  });
+  $$('.ficha').forEach(function (f) {
+    f.addEventListener('close', function () { if (ultimo && ultimo.focus) ultimo.focus(); });
+  });
+
+  // atalhos de endereço: /labs#cabecudos e /labs#urbis abrem a ficha
+  function porEndereco() {
+    var h = location.hash;
+    if (h === '#cabecudos') abrir('ficha-cabecudos', 'jogar');
+    else if (h === '#urbis') abrir('ficha-urbis', 'baixar');
+  }
+  porEndereco();
+
+  // ---------- jogo dentro da ficha: só carrega quando a pessoa pede ----------
+  var jogo = $('#jogo');
+  var capa = jogo && $('.jogo-capa', jogo);
+  var frame = null;
+  function abrirJogo() {
+    if (frame || !jogo) return frame;
+    frame = document.createElement('iframe');
+    frame.src = jogo.getAttribute('data-src');
+    frame.title = 'Cabeçudos FC, jogo de futebol de cabeção';
+    frame.setAttribute('allow', 'fullscreen; autoplay; gamepad; clipboard-write');
+    frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    jogo.appendChild(frame);
+    if (capa) capa.hidden = true;
+    frame.focus();
+    return frame;
+  }
+  function fecharJogo() {
+    if (!frame) return;
+    frame.remove();
+    frame = null;
+    if (capa) capa.hidden = false;
+  }
+  var btnJogar = $('#jogar');
+  if (btnJogar) btnJogar.addEventListener('click', function (e) { e.preventDefault(); abrirJogo(); });
+  var tela = $('#tela-cheia');
+  if (tela) {
+    tela.hidden = false;
+    tela.addEventListener('click', function () {
+      var f = abrirJogo();
+      var pedir = f && (f.requestFullscreen || f.webkitRequestFullscreen);
+      if (pedir) pedir.call(f);
+    });
+  }
+
+  // ---------- galerias: o clique troca a foto grande; sem JavaScript a miniatura abre a imagem ----------
+  $$('[data-galeria]').forEach(function (g) {
+    var grande = $('[data-grande]', g);
+    var legenda = $('[data-legenda]', g);
+    var minis = $$('.mini a', g);
+    minis.forEach(function (a) {
       a.addEventListener('click', function (e) {
         e.preventDefault();
         var base = a.getAttribute('data-base');
         grande.src = base + '-1280w.webp';
         grande.srcset = base + '-640w.webp 640w, ' + base + '-1280w.webp 1280w';
         grande.alt = a.getAttribute('data-alt') || '';
-        if (legenda) legenda.textContent = a.getAttribute('data-legenda') || '';
-        miniaturas.forEach(function (m) { m.removeAttribute('aria-current'); });
+        if (legenda) legenda.textContent = a.getAttribute('data-alt') || '';
+        minis.forEach(function (m) { m.removeAttribute('aria-current'); });
         a.setAttribute('aria-current', 'true');
       });
     });
-  }
+  });
 
-  // O instalador é só para Windows: quem está em outro sistema recebe o aviso
+  // o instalador é só para Windows
   var avisoSistema = $('#aviso-sistema');
   if (avisoSistema && !/Windows/i.test(navigator.userAgent)) avisoSistema.hidden = false;
-
-  // O botão de download leva de volta para cá enquanto o instalador não estiver publicado
-  var avisoBaixar = $('#aviso-baixar');
-  if (avisoBaixar && /(^|[?&])baixar=aguardando(&|$)/.test(location.search)) {
-    avisoBaixar.hidden = false;
-  }
 })();

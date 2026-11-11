@@ -40,24 +40,23 @@ Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas p
 
 ## A² LABS (/labs)
 
-Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). Abriga o Cabeçudos FC (jogável dentro da página, carregado só ao clicar) e o Urbis (galeria, download e versão no navegador).
+Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). É uma vitrine de **cards**: ao passar o mouse, o card mostra uma prévia (pontos principais e botões); em tela de toque a prévia fica sempre visível. "Ver detalhes" abre uma **ficha** com abas (Cabeçudos FC: Jogar, O jogo, Modos e controles, Por dentro; Urbis: Baixar, Galeria, A cidade, Versões). O Cabeçudos FC joga dentro da ficha, carregado só ao clicar.
 
-- Fonte da página: `build/labs_page.py` (fora do repositório publicado) e `src/css/labs.css`, `src/js/labs.js`. Edite o texto e rode o gerador e o `python3 tools/build.py`.
+- Fonte da página: `build/labs_page.py` (fora do repositório publicado), `src/css/labs.css` e `src/js/labs.js`. Edite e rode o gerador e o `python3 tools/build.py`. Quem edita só o `labs.html` pode alterar textos direto.
 - Botão "LABS" no topo do site, ao lado do WhatsApp, e faixa "Entrar no A² LABS" no fim da página inicial.
 - `_headers` tem um bloco `/labs` com a CSP que libera o jogo (`frame-src https://cabecudosfcfinal.netlify.app`).
+- Endereços diretos: `/labs#cabecudos` e `/labs#urbis` abrem a ficha; `/cabecudos`, `/urbis` e `/baixar/urbis` estão no `_redirects`.
 
-### Publicar o instalador do Urbis (82 MB)
+### Instalador do Urbis (78 MB)
 
-O Cloudflare Pages aceita até 25 MiB por arquivo, então o instalador fica no **GitHub Releases**:
-1. No repositório: Releases → Draft a new release → tag `urbis-v1.2.0`.
-2. Envie `Urbis Setup 1.2.0.exe` renomeado para **`Urbis-Setup.exe`**. Publique.
-3. Em `_redirects`, troque a linha `/baixar/urbis ...` por:
-   `/baixar/urbis https://github.com/SEU-USUARIO/SEU-REPOSITORIO/releases/latest/download/Urbis-Setup.exe 302`
-4. Enquanto isso não for feito, o botão leva de volta à /labs com um aviso.
+O Cloudflare Pages aceita até 25 MiB por arquivo, então o instalador fica no **GitHub Releases** (repositório a2clickagencia/A2CLICK), com o nome exato **`Urbis-Setup.exe`**. O `_redirects` já aponta `/baixar/urbis` para `releases/latest/download/Urbis-Setup.exe`. Versão nova: publique outro Release com o mesmo nome de arquivo; o link não muda.
 O instalador não é assinado: o Windows pode mostrar o SmartScreen ("Mais informações" → "Executar assim mesmo").
 
 ### Novo projeto no LABS
-Duplique um bloco `<section class="jogo">` em `labs_page.py`, inclua o link no menu da `.barra`, no `JSON-LD` e no `sitemap.xml`. Se for embutir um site de terceiros, acrescente o endereço em `frame-src` no `_headers`.
+1. Em `labs_page.py`, crie um card com a função `card(...)` e uma ficha (`<dialog class="ficha">`) com suas abas, copiando as do Urbis.
+2. Coloque as imagens (WebP, 640 e 1280 px) em `assets/img/labs/`.
+3. Se for embutir um site de terceiros, acrescente o endereço em `frame-src` no `_headers`. Projetos que rodam no próprio site ficam em `jogos/nome/` (arquivos até 25 MiB).
+4. Inclua o projeto no JSON-LD e no `sitemap.xml`, rode o gerador e o `tools/build.py`.
 
 ## Publicar (Cloudflare Pages)
 
