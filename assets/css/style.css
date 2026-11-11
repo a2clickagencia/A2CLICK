@@ -2549,3 +2549,8 @@ a.numero {
     grid-template-columns: 1fr;
   }
 }
+@media (min-width: 768px) {
+  .texto-junto {
+    white-space: nowrap;
+  }
+}
