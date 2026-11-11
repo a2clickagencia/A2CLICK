@@ -105,6 +105,18 @@ def css_embutido():
     return len(css.encode('utf-8'))
 
 
+def css_labs():
+    """O LABS tem folha de estilo própria (src/css/labs.css), embutida só em labs.html (entre <!-- @csslabs --> e <!-- /@csslabs -->)."""
+    css = minificar_css(ler(RAIZ / 'src/css/labs.css'))
+    for pagina in PAGINAS:
+        html = ler(pagina)
+        novo = re.sub(r'<!-- @csslabs -->.*?<!-- /@csslabs -->',
+                      lambda m: '<!-- @csslabs --><style>%s</style><!-- /@csslabs -->' % css, html, flags=re.S)
+        if novo != html:
+            gravar(pagina, novo)
+    return len(css.encode('utf-8'))
+
+
 def js_com_hash():
     """Cada arquivo de src/js vira assets/js/<nome>.<hash>.js. Devolve o nome do main e o tamanho total."""
     pasta = RAIZ / 'assets/js'
@@ -130,7 +142,7 @@ def js_com_hash():
 def atualizar_sw(nome_js):
     sw = RAIZ / 'sw.js'
     texto = ler(sw)
-    guardar = ['/', '/quem-somos', '/offline', '/assets/js/' + nome_js,
+    guardar = ['/', '/quem-somos', '/labs', '/offline', '/assets/js/' + nome_js,
                '/assets/fonts/stretch-pro-latin.woff2', '/assets/fonts/bricolage-grotesque-latin.woff2',
                '/assets/img/logo/a2click-horizontal-negativo.svg', '/assets/img/favicon.svg']
     impressao = hashlib.sha256(''.join(ler(p) for p in PAGINAS).encode('utf-8') + nome_js.encode()).hexdigest()[:10]
@@ -144,9 +156,10 @@ def atualizar_sw(nome_js):
 if __name__ == '__main__':
     incluir_parciais()
     tam_css = css_embutido()
+    tam_css_labs = css_labs()
     nome_js, tam_js = js_com_hash()
     versao = atualizar_sw(nome_js)
     print('Páginas: %s' % ', '.join(p.name for p in PAGINAS))
-    print('CSS embutido: %.1f KB' % (tam_css / 1024))
+    print('CSS embutido: %.1f KB (LABS: %.1f KB)' % (tam_css / 1024, tam_css_labs / 1024))
     print('JS: assets/js/%s (%.1f KB)' % (nome_js, tam_js / 1024))
     print('Service worker: versão a2-%s' % versao)

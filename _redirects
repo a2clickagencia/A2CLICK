@@ -8,6 +8,15 @@
 /whatsapp        /#fale  302
 /instagram       https://www.instagram.com/a2clickagencia/  302
 
+# A² LABS: atalhos fáceis de divulgar e o download do instalador do Urbis.
+# O instalador tem 78 MB e o Cloudflare Pages só aceita arquivos de até 25 MB. Por isso ele fica no GitHub Releases
+# (ou outro endereço) e o site aponta para ele por aqui. Trocar de versão é mudar só esta linha (veja o README).
+# O Release do GitHub (arquivo Urbis-Setup.exe) precisa existir antes de este arquivo ir ao ar; veja o manual.
+/baixar/urbis    https://github.com/a2clickagencia/A2CLICK/releases/latest/download/Urbis-Setup.exe  302
+/urbis           /labs#urbis  302
+/cabecudos       /labs#cabecudos  302
+/laboratorio     /labs  301
+
 # Endereços antigos
 /index.html      /  301
 /sobre           /quem-somos  301

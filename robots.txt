@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 # Sites de clientes publicados como vitrine e páginas de apoio: fora da busca
 Disallow: /portfolio/
+Disallow: /jogos/
+Disallow: /baixar/
 Disallow: /offline
 Disallow: /obrigado
 

@@ -3278,3 +3278,105 @@ a.numero small {
 .obg-rodape {
   text-align: center;
 }
+
+/* A² LABS: botão no topo e faixa no fim da página */
+.nav .btn-labs {
+  display: inline-flex;
+  align-items: center;
+  gap: .55em;
+  min-height: 44px;
+  padding: .55em 1.05em;
+  border-radius: 999px;
+  background: var(--campo-2);
+  color: var(--sobre-campo);
+  font-weight: 700;
+  font-size: .95rem;
+  text-decoration: none;
+  transition: background-color .15s ease,transform .15s ease;
+}
+
+.nav .btn-labs img {
+  width: auto;
+  height: 20px;
+  flex: none;
+}
+
+.nav .btn-labs:hover {
+  background: #34594E;
+}
+
+.nav .btn-labs:active {
+  transform: scale(.97);
+}
+
+@media(max-width:420px) {
+  .nav .btn-labs span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .nav .btn-labs {
+    padding: .55em .85em;
+  }
+}
+
+.labs-faixa {
+  background: #16231F;
+  color: var(--sobre-campo);
+  padding-block: clamp(72px,9vw,136px);
+}
+
+.labs-faixa-grid {
+  display: grid;
+  gap: clamp(32px,5vw,64px);
+  align-items: center;
+}
+
+@media(min-width:960px) {
+  .labs-faixa-grid {
+    grid-template-columns: 1.05fr .95fr;
+  }
+}
+
+.labs-faixa-logo {
+  width: min(300px,70%);
+  height: auto;
+  margin-bottom: 28px;
+}
+
+.labs-faixa h2 {
+  margin-bottom: 20px;
+  font-size: clamp(1.7rem,3.2vw,2.8rem);
+}
+
+.labs-faixa .lede {
+  max-width: 34ch;
+  margin-bottom: 28px;
+}
+
+.labs-faixa-img {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+  background: var(--campo);
+}
+
+.labs-faixa-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .6s ease;
+}
+
+.labs-faixa-img:hover img {
+  transform: scale(1.04);
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .labs-faixa-img img {
+    transition: none;
+  }
+}

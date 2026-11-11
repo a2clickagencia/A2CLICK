@@ -2,10 +2,11 @@
    Páginas: busca na rede primeiro; sem internet, usa a cópia guardada ou a página offline.
    Demais arquivos: entrega a cópia guardada na hora e atualiza em segundo plano
    (stale-while-revalidate). VERSAO e GUARDAR são atualizados por tools/build.py. */
-const VERSAO = 'a2-224a7eb761';
+const VERSAO = 'a2-af17fb8d76';
 const GUARDAR = [
   '/',
   '/quem-somos',
+  '/labs',
   '/offline',
   '/assets/js/main.e29914c7.js',
   '/assets/fonts/stretch-pro-latin.woff2',
@@ -32,6 +33,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;           // WhatsApp, Instagram etc. não passam por aqui
   if (url.pathname.startsWith('/portfolio/')) return;   // sites de clientes: sempre da rede
+  if (url.pathname.startsWith('/jogos/') || url.pathname.startsWith('/baixar/')) return;   // jogos do LABS e download: sempre da rede
 
   if (req.mode === 'navigate') {
     e.respondWith(

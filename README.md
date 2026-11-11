@@ -5,15 +5,16 @@ Site estático (HTML, CSS e JavaScript, sem bibliotecas) publicado no Cloudflare
 ## Estrutura
 
 ```
-index.html, quem-somos.html, politica-de-privacidade.html, termos-de-uso.html, 404.html, offline.html
+index.html, labs.html, quem-somos.html, politica-de-privacidade.html, termos-de-uso.html, 404.html, offline.html
 partials/        Cabeçalho, rodapé e botão flutuante (copiados para as páginas pelo build)
-src/css/         style.css: fonte do visual (cores no início, em :root)
+src/css/         style.css (site) e labs.css (A² LABS): fonte do visual, cores no início, em :root
 src/js/          main.js: fonte das interações (simulador, abas, formulário, menus)
 assets/js/       main.<hash>.js gerado pelo build (não edite à mão)
 assets/fonts/    Bricolage Grotesque e Stretch Pro em WOFF2 (só caracteres latinos)
 assets/img/      Fotos em WebP (várias larguras), logos em SVG, ícones
 portfolio/       Sites de clientes publicados como vitrine (fora do Google)
 tools/build.py   Build (só Python 3, sem instalar nada)
+jogos/urbis/     Urbis rodando no navegador (/jogos/urbis/)
 sw.js            Modo offline
 _headers         Segurança e cache (Cloudflare Pages)
 _redirects       Atalhos (/whatsapp-pedro, /whatsapp-igor, /instagram) e endereços antigos
@@ -36,6 +37,27 @@ Números de WhatsApp: Pedro `5519996022246`, Igor `5519988659584`. Aparecem nas 
 
 Fotos novas: exporte em WebP (qualidade ~82) nas mesmas larguras dos arquivos atuais e mantenha os nomes.
 Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas por 1 ano no navegador).
+
+## A² LABS (/labs)
+
+Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). Abriga o Cabeçudos FC (jogável dentro da página, carregado só ao clicar) e o Urbis (galeria, download e versão no navegador).
+
+- Fonte da página: `build/labs_page.py` (fora do repositório publicado) e `src/css/labs.css`, `src/js/labs.js`. Edite o texto e rode o gerador e o `python3 tools/build.py`.
+- Botão "LABS" no topo do site, ao lado do WhatsApp, e faixa "Entrar no A² LABS" no fim da página inicial.
+- `_headers` tem um bloco `/labs` com a CSP que libera o jogo (`frame-src https://cabecudosfcfinal.netlify.app`).
+
+### Publicar o instalador do Urbis (82 MB)
+
+O Cloudflare Pages aceita até 25 MiB por arquivo, então o instalador fica no **GitHub Releases**:
+1. No repositório: Releases → Draft a new release → tag `urbis-v1.2.0`.
+2. Envie `Urbis Setup 1.2.0.exe` renomeado para **`Urbis-Setup.exe`**. Publique.
+3. Em `_redirects`, troque a linha `/baixar/urbis ...` por:
+   `/baixar/urbis https://github.com/SEU-USUARIO/SEU-REPOSITORIO/releases/latest/download/Urbis-Setup.exe 302`
+4. Enquanto isso não for feito, o botão leva de volta à /labs com um aviso.
+O instalador não é assinado: o Windows pode mostrar o SmartScreen ("Mais informações" → "Executar assim mesmo").
+
+### Novo projeto no LABS
+Duplique um bloco `<section class="jogo">` em `labs_page.py`, inclua o link no menu da `.barra`, no `JSON-LD` e no `sitemap.xml`. Se for embutir um site de terceiros, acrescente o endereço em `frame-src` no `_headers`.
 
 ## Publicar (Cloudflare Pages)
 
