@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Urbis</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="inmenu">
+<canvas id="game"></canvas>
+
+<div id="topbar" class="ui">
+  <div class="tb-left"><div class="logo">URBIS</div><div class="city"><b id="hCity">—</b><small id="hDate">—</small></div></div>
+  <div class="tb-mid">
+    <div class="hv" title="Caixa"><small>Caixa</small><b id="hMoney">$0</b></div>
+    <div class="hv" title="População"><small>👥 População</small><b id="hPop">0</b></div>
+    <div class="rci" title="Demanda: Residencial / Comercial / Industrial">
+      <div class="bar"><i id="dR" class="r"></i><span>R</span></div>
+      <div class="bar"><i id="dC" class="c"></i><span>C</span></div>
+      <div class="bar"><i id="dI" class="i"></i><span>I</span></div>
+    </div>
+    <div class="hv" title="Aprovação do prefeito"><small>👍 Aprovação</small><b id="hAppr">—</b></div>
+    <div class="hv sm" title="Energia: produção / consumo (MW)"><small>⚡ Energia</small><b id="hPow">0</b></div>
+    <div class="hv sm" title="Água: produção / consumo"><small>💧 Água</small><b id="hWat">0</b></div>
+    <div class="hv sm" title="Clima"><small>Clima</small><b id="hWeather">☀️</b></div>
+  </div>
+  <div class="tb-right">
+    <div class="speeds">
+      <button class="spd" data-s="0" title="Pausar (Espaço)">⏸</button>
+      <button class="spd" data-s="1" title="Normal (1)">▶</button>
+      <button class="spd" data-s="2" title="Rápido (2)">▶▶</button>
+      <button class="spd" data-s="3" title="Muito rápido (3)">▶▶▶</button>
+      <button class="spd" data-s="4" title="Ultra (4)">⚡</button>
+    </div>
+    <button class="pbtn" data-p="budget" title="Orçamento">💰</button>
+    <button class="pbtn" data-p="stats" title="Estatísticas da cidade">📊</button>
+    <button class="pbtn" data-p="policies" title="Políticas">📜</button>
+    <button class="pbtn" data-p="maps" title="Mapas de dados (M)">🗺️</button>
+    <button class="pbtn" data-p="neighbors" title="Região e contratos">🤝</button>
+    <button class="pbtn" data-p="ach" title="Conquistas e marcos">🏆</button>
+    <button class="pbtn" data-p="settings" title="Opções, salvar e carregar">⚙️</button>
+  </div>
+</div>
+
+<div id="toolbar" class="ui"></div>
+<div id="flyout" class="ui"></div>
+<div id="toolLabel" class="ui">🔍 Inspecionar</div>
+<div id="panel" class="ui"></div>
+<div id="inspect" class="ui"></div>
+<div id="legend" class="ui"></div>
+<div id="pauseBadge" class="ui">⏸ PAUSADO</div>
+<div id="hFps" class="ui"></div>
+
+<div id="bottom" class="ui">
+  <div id="ticker"><span class="tlabel">📰</span><div class="tview"><span id="tickerText">Bem-vindo ao Urbis!</span></div></div>
+</div>
+<div id="mmwrap" class="ui"><canvas id="minimap" width="260" height="140"></canvas></div>
+<div id="viewbar" class="ui">
+  <button class="vbtn" data-a="rl" title="Girar câmera (Q)">⟲</button>
+  <button class="vbtn" data-a="rr" title="Girar câmera (E)">⟳</button>
+  <button class="vbtn" data-v="lens" title="Lente raio-X no cursor (X)">🔎</button>
+  <button class="vbtn" data-v="trans" title="Prédios translúcidos (T)">◐</button>
+  <button class="vbtn" data-v="hide" title="Ocultar prédios — planta da cidade (O)">▦</button>
+</div>
+
+<div id="toasts"></div>
+<div id="tip"></div>
+
+<div id="menu"><canvas id="skyline"></canvas></div>
+<div id="modal"></div>
+
+<script src="data.js"></script>
+<script src="world.js"></script>
+<script src="sim.js"></script>
+<script src="buildings.js"></script>
+<script src="streets.js"></script>
+<script src="parks.js"></script>
+<script src="traffic.js"></script>
+<script src="render.js"></script>
+<script src="audio.js"></script>
+<script src="ui.js"></script>
+</body>
+</html>

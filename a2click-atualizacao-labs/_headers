@@ -1,0 +1,67 @@
+# Cabeçalhos do Cloudflare Pages (segurança e cache)
+# Regra geral: valem para todas as páginas e arquivos.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  X-Frame-Options: DENY
+# HTML sem Cache-Control aqui: o padrão do Cloudflare Pages já é "public, max-age=0, must-revalidate".
+# (Se o mesmo cabeçalho aparecesse aqui e numa regra abaixo, os valores seriam somados.)
+
+# CSP das páginas do site (fica em cada página, e não em /*, para a /obrigado poder ter a sua).
+# Os sites de clientes em /portfolio/ têm scripts e fontes próprios e ficam sem CSP.
+
+/
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/quem-somos
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+# A² LABS: igual às outras, mais a permissão para mostrar o jogo Cabeçudos FC (frame-src) dentro da página.
+/labs
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://cabecudosfcfinal.netlify.app; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/politica-de-privacidade
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/termos-de-uso
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/offline
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+/404
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests
+
+# Página de confirmação: libera só o necessário para a tag de conversão do Google Ads.
+/obrigado
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.googletagmanager.com https://www.google.com https://www.google.com.br https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net; font-src 'self'; connect-src 'self' https://www.googletagmanager.com https://www.google.com https://www.google.com.br https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net; frame-src https://td.doubleclick.net https://www.googletagmanager.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Robots-Tag: noindex, nofollow
+
+/portfolio/*
+  X-Robots-Tag: noindex
+
+# Jogos do LABS rodando no navegador (o Urbis tem seus próprios scripts e estilos, por isso sem CSP aqui).
+/jogos/*
+  X-Robots-Tag: noindex
+
+# JavaScript com hash no nome (muda a cada versão): pode ficar guardado por 1 ano.
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fontes: o nome do arquivo muda se a fonte mudar.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Imagens: 30 dias, e o navegador confere em segundo plano depois disso.
+/assets/img/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+# O service worker precisa ser conferido sempre.
+/sw.js
+  Cache-Control: no-cache
+
+/site.webmanifest
+  Cache-Control: public, max-age=86400
