@@ -37,6 +37,7 @@ function renderInit() {
   ovCanvas = document.createElement('canvas'); ovCanvas.width = N; ovCanvas.height = N; ovCtx = ovCanvas.getContext('2d');
   ovDirty = true; minimapDirty = true;
   BHT = new Uint16Array(N2);
+  computeWaterDepth();
   GN = new Uint8Array(N2);
   const nz = makeNoise((G.seed | 0) + 99);
   for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) GN[y * N + x] = clamp(fbm(nz, x * 0.07, y * 0.07, 3) * 300 - 20, 0, 255);
@@ -73,6 +74,16 @@ function setRotation(r) {
 // ---------- Cores do terreno ----------
 const WATER = [], WATER_SH = [], SAND = '#dcc993';
 for (let k = 0; k < 6; k++) { WATER.push('hsl(' + (205 + k) + ',58%,' + (32 + k * 0.9) + '%)'); WATER_SH.push('hsl(' + (192 + k) + ',52%,' + (45 + k) + '%)'); }
+// v1.3: paleta de água por profundidade (0 = beira, 7 = fundo), 3 variações cada
+const WATER_DEPTH = []; for (let d = 0; d < 16; d++) { const t = d / 15, row = []; for (let v = 0; v < 3; v++) row.push('hsl(' + (192 + t * 18 + v) + ',' + (54 - t * 2) + '%,' + (43 - t * 15 + v * 0.8).toFixed(1) + '%)'); WATER_DEPTH.push(row); }
+let WDEP = null;
+function computeWaterDepth() {
+  if (!G || !N2) return;
+  WDEP = new Uint8Array(N2).fill(255); const q = new Int32Array(N2); let h = 0, tl = 0;
+  for (let i = 0; i < N2; i++) if (!G.terr[i]) { WDEP[i] = 0; } else { const x = i % N, y = (i / N) | 0; let shore = false; for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny) && !G.terr[ny * N + nx]) shore = true; } if (shore) { WDEP[i] = 0; q[tl++] = i; } }
+  while (h < tl) { const i = q[h++], d0 = WDEP[i]; if (d0 >= 15) continue; const x = i % N, y = (i - x) / N; for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (nx < 0 || ny < 0 || nx >= N || ny >= N) continue; const j = ny * N + nx; if (G.terr[j] && WDEP[j] > d0 + 1) { WDEP[j] = d0 + 1; q[tl++] = j; } } }
+  for (let i = 0; i < N2; i++) if (WDEP[i] === 255) WDEP[i] = 15;
+}
 const GRASS16 = []; for (let k = 0; k < 16; k++) GRASS16.push('hsl(' + (88 + k * 1.6) + ',' + (36 + (k % 5)) + '%,' + (35 + k * 0.62).toFixed(1) + '%)');
 function grassColor(i) { return GRASS16[GN[i] >> 4]; }
 const ZONE_TINT = { 1: 'rgba(80,220,120,', 2: 'rgba(80,150,255,', 3: 'rgba(250,200,60,' };
@@ -93,9 +104,11 @@ function drawGround(g, x, y) {
   if (G.terr[i]) {
     let landMask = 0;
     for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny) && !G.terr[ny * N + nx]) landMask |= 1 << d; }
-    g.fillStyle = landMask ? WATER_SH[h % 6] : WATER[h % 6]; diamond(g, wx, wy, 0.6); g.fill();
+    // v1.3: cor pela profundidade (distância até a margem): turquesa rasa → azul profundo
+    const dep = WDEP ? WDEP[i] : (landMask ? 0 : 8);
+    g.fillStyle = WATER_DEPTH[Math.min(15, dep)][h % 3]; diamond(g, wx, wy, 0.6); g.fill();
     if (LOD >= 1) {
-      if ((h & 7) < 3) { g.strokeStyle = 'rgba(255,255,255,0.12)'; g.lineWidth = 0.8; g.beginPath(); const ox = ((h >>> 4) % 20) - 10, oy = ((h >>> 9) % 10) + 8; g.moveTo(wx + ox - 6, wy + oy); g.quadraticCurveTo(wx + ox, wy + oy - 2, wx + ox + 6, wy + oy); g.stroke(); }
+      if ((h & 7) < 4) { g.strokeStyle = dep < 2 ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.12)'; g.lineWidth = 0.8; g.beginPath(); const ox = ((h >>> 4) % 20) - 10, oy = ((h >>> 9) % 10) + 8; g.moveTo(wx + ox - 6, wy + oy); g.quadraticCurveTo(wx + ox, wy + oy - 2, wx + ox + 6, wy + oy); if ((h & 1) && LOD >= 2) { g.moveTo(wx - ox - 4, wy + 26 - oy); g.quadraticCurveTo(wx - ox, wy + 24 - oy, wx - ox + 4, wy + 26 - oy); } g.stroke(); }
       if (landMask && !isRoadT(t) && t !== T_BRIDGE) { // espuma na margem
         const lm = rotMask(landMask);
         g.strokeStyle = 'rgba(235,248,255,0.55)'; g.lineWidth = 1.3; g.beginPath();
@@ -110,6 +123,15 @@ function drawGround(g, x, y) {
       for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny) && G.terr[ny * N + nx]) { col = SAND; break; } }
     } else if (t === T_RUBBLE) col = '#7a6e62';
     g.fillStyle = col || grassColor(i); diamond(g, wx, wy, 0.6); g.fill();
+    if (col === SAND && LOD >= 1) {   // v1.3: areia molhada na beira d'água
+      let wm = 0; for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny) && G.terr[ny * N + nx]) wm |= 1 << d; }
+      wm = rotMask(wm); g.fillStyle = 'rgba(150,120,70,0.28)'; g.beginPath();
+      if (wm & 1) gq(g, x, y, x + 1, y + 0.22, 0); if (wm & 2) gq(g, x + 0.78, y, x + 1, y + 1, 0); if (wm & 4) gq(g, x, y + 0.78, x + 1, y + 1, 0); if (wm & 8) gq(g, x, y, x + 0.22, y + 1, 0);
+      g.fill();
+    }
+    if (LOD >= 1 && !col && (t === T_EMPTY || t === T_PLINE) && GRASS_TEX) {   // v1.3: textura da grama (acumulada; 1 preenchimento por ladrilho)
+      GRASS_TEX.moveTo(wx, wy); GRASS_TEX.lineTo(wx + HW, wy + HH); GRASS_TEX.lineTo(wx, wy + 2 * HH); GRASS_TEX.lineTo(wx - HW, wy + HH); GRASS_TEX.closePath();
+    }
     if (LOD >= 2 && !col && (t === T_EMPTY || t === T_ZONE) && (h & 31) < 4) { // flores / tufos
       g.fillStyle = ['#f3e27a', '#ffffff', '#e98ad0', '#9fd36a'][(h >>> 6) & 3];
       for (let k = 0; k < 5; k++) { const r1 = hash32(h + k); const gx = x + 0.15 + (r1 & 255) / 255 * 0.7, gy = y + 0.15 + ((r1 >>> 8) & 255) / 255 * 0.7; g.fillRect(PX(gx, gy) - 0.6, PY(gx, gy, 0) - 0.6, 1.2, 1.2); }
@@ -249,38 +271,78 @@ function forCellsInRect(X0, Y0, X1, Y1, fn) {
     for (let u = u0; u <= u1; u++) fn(u, d - u);
   }
 }
-let OBJ_ANY = false, TILE_R = [0, 0, 0, 0];
+let OBJ_ANY = false, TILE_R = [0, 0, 0, 0], GRASS_TEX = null, GRASS_PAT = null, LAST_STALE = -9;
+function grassPattern(g) {
+  if (!GRASS_PAT) {
+    const c = document.createElement('canvas'); c.width = 96; c.height = 48; const x = c.getContext('2d'), r = mulberry(31);
+    for (let k = 0; k < 90; k++) { x.fillStyle = r() < 0.55 ? 'rgba(0,45,0,0.16)' : 'rgba(255,255,190,0.12)'; x.fillRect(r() * 96, r() * 48, 1.8, 0.8); }
+    GRASS_PAT = c;
+  }
+  return g.createPattern(GRASS_PAT, 'repeat');
+}
 function prepTile(e, key, px) {
   let c = e[key]; if (!c) { c = document.createElement('canvas'); e[key] = c; }
   if (c.width !== px || c.height !== px) { c.width = px; c.height = px; }
   const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, px, px); return g;
 }
-function renderTile(e, level, k, which) {
+// v1.3: o desenho de um ladrilho é um GERADOR — pode ser feito de uma vez (renderTile)
+// ou em fatias de poucos ms por quadro (tarefa TJOB), trocando o canvas só quando termina.
+let TILE_DEADLINE = Infinity, TJOB = null;
+const TILE_POOL = [];
+function* renderTileGen(level, k, which, c) {
   const s = LEVELS[level], px = Math.round(TS * s), tx = Math.floor(k / 512) - 128, ty = (k % 512) - 128;
   const X0 = tx * TS, Y0 = ty * TS, X1 = X0 + TS, Y1 = Y0 + TS;
-  LOD = s >= 1 ? 2 : s >= 0.5 ? 1 : 0;
-  if (which === 'g') {
-    const g = prepTile(e, 'g', px); g.setTransform(s, 0, 0, s, -X0 * s, -Y0 * s); NIGHT = false;
-    forCellsInRect(X0 - HW - 40, Y0 - 40, X1 + HW + 40, Y1 + 40, (u, v) => drawGround(g, worldCellX(u, v), worldCellY(u, v)));
-    e.gv = (TVG.get(k) || 0); e.gep = EPOCH;
-  } else {
-    const night = which === 'n', key = night ? 'n' : 'o';
-    const g = prepTile(e, key, px); g.setTransform(s, 0, 0, s, -X0 * s, -Y0 * s); NIGHT = night;
-    OBJ_ANY = false; TILE_R[0] = X0; TILE_R[1] = Y0; TILE_R[2] = X1; TILE_R[3] = Y1;
-    const mx = 4 * HW + MX;
-    forCellsInRect(X0 - mx, Y0 - 40, X1 + mx, Y1 + 620, (u, v) => {
-      const x = worldCellX(u, v), y = worldCellY(u, v), i = y * N + x;
-      const reach = objReach(i);
-      if (reach === 0) { if (G.own[i] < 0) BHT[i] = 0; return; }
-      const base = (u + v) * HH, cx = (u - v) * HW;
-      if (base - reach > Y1 || base + 2 * HH + 30 < Y0 || cx + mx < X0 || cx - mx > X1) return;
-      drawObjects(g, x, y); OBJ_ANY = true;
-    });
-    NIGHT = false;
-    if (!OBJ_ANY) { e[key].width = 0; e[key] = null; }
-    e[key + 'E'] = !OBJ_ANY; e[key + 'v'] = (TVO.get(k) || 0); e[key + 'ep'] = EPOCH;
+  const lod = s >= 1 ? 2 : s >= 0.5 ? 1 : 0, night = which === 'n';
+  if (c.width !== px || c.height !== px) { c.width = px; c.height = px; }
+  const g = c.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, px, px); g.setTransform(s, 0, 0, s, -X0 * s, -Y0 * s);
+  const cells = [], mx = 4 * HW + MX;
+  if (which === 'g') forCellsInRect(X0 - HW - 40, Y0 - 40, X1 + HW + 40, Y1 + 40, (u, v) => cells.push(u, v));
+  else forCellsInRect(X0 - mx, Y0 - 40, X1 + mx, Y1 + 620, (u, v) => cells.push(u, v));
+  const tex = which === 'g' && lod >= 1 ? new Path2D() : null;
+  let any = false;
+  for (let n = 0; n < cells.length; n += 2) {
+    if ((n & 31) === 0 && performance.now() > TILE_DEADLINE) { setRotCoeffs(); NIGHT = false; GRASS_TEX = null; yield; }
+    LOD = lod; NIGHT = night; const u = cells[n], v = cells[n + 1], x = worldCellX(u, v), y = worldCellY(u, v);
+    if (which === 'g') { GRASS_TEX = tex; drawGround(g, x, y); continue; }
+    const i = y * N + x, reach = objReach(i);
+    if (reach === 0) { if (G.own[i] < 0) BHT[i] = 0; continue; }
+    const base = (u + v) * HH, cx = (u - v) * HW;
+    if (base - reach > Y1 || base + 2 * HH + 30 < Y0 || cx + mx < X0 || cx - mx > X1) continue;
+    drawObjects(g, x, y); any = true;
   }
-  setRotCoeffs();
+  GRASS_TEX = null; NIGHT = false; setRotCoeffs();
+  if (tex) { g.fillStyle = grassPattern(g); g.fill(tex); any = true; }
+  return any;
+}
+// aplica o resultado no cache (versões capturadas no início do desenho)
+function applyTile(e, which, c, any, ver, ep) {
+  const key = which;
+  const old = e[key];
+  if (which !== 'g' && !any) { e[key] = null; e[key + 'E'] = true; if (c) TILE_POOL.push(c); }
+  else { e[key] = c; e[key + 'E'] = false; }
+  if (old && old !== c) { if (TILE_POOL.length < 6) TILE_POOL.push(old); else old.width = 0; }
+  if (which === 'g') { e.gv = ver; e.gep = ep; } else { e[key + 'v'] = ver; e[key + 'ep'] = ep; }
+}
+function hasFallback(k, which, level) { for (let l = 0; l < 3; l++) { if (l === level) continue; const o = CACHE[l].get(k); if (o && (which === 'g' ? o.g : (o.o || o.oE))) return true; } return false; }
+const tileVer = (k, which) => which === 'g' ? (TVG.get(k) || 0) : (TVO.get(k) || 0);
+function renderTile(e, level, k, which) {           // de uma vez (ladrilho que ainda não existe)
+  const c = TILE_POOL.pop() || document.createElement('canvas');
+  const ver = tileVer(k, which), ep = EPOCH, it = renderTileGen(level, k, which, c);
+  const saved = TILE_DEADLINE; TILE_DEADLINE = Infinity; let r; do { r = it.next(); } while (!r.done); TILE_DEADLINE = saved;
+  applyTile(e, which, c, r.value, ver, ep);
+}
+function startTileJob(e, level, k, which) {
+  const c = TILE_POOL.pop() || document.createElement('canvas');
+  TJOB = { e, level, k, which, c, ver: tileVer(k, which), ep: EPOCH, it: renderTileGen(level, k, which, c) };
+}
+function stepTileJob(budgetMs) {
+  if (!TJOB) return;
+  TILE_DEADLINE = performance.now() + budgetMs;
+  const r = TJOB.it.next(); TILE_DEADLINE = Infinity;
+  if (!r.done) return;
+  const J = TJOB; TJOB = null;
+  if (CACHE[J.level].get(J.k) !== J.e) { TILE_POOL.push(J.c); return; }   // ladrilho saiu do cache
+  applyTile(J.e, J.which, J.c, r.value, J.ver, J.ep);
 }
 const tileFresh = (e, k, which) => which === 'g' ? (e.g && e.gv === (TVG.get(k) || 0) && e.gep === EPOCH)
   : ((e[which] || e[which + 'E']) && e[which + 'v'] === (TVO.get(k) || 0) && e[which + 'ep'] === EPOCH);
@@ -426,7 +488,7 @@ function render(dt) {
   let shx = 0, shy = 0;
   if (SHAKE > 0) { shx = (Math.random() - 0.5) * 14 * SHAKE; shy = (Math.random() - 0.5) * 10 * SHAKE; SHAKE = Math.max(0, SHAKE - dt * 1.2); }
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.fillStyle = '#1f4f7c'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'hsl(208,56%,29%)'; ctx.fillRect(0, 0, W, H);
   const level = z <= 0.3 ? 0 : z <= 0.6 ? 1 : 2;
   const night = SETTINGS.daynight && nightF > 0.02;
   // de dia, as camadas noturnas são liberadas (economiza memória de vídeo)
@@ -450,15 +512,24 @@ function render(dt) {
   //    no máximo UM ladrilho desatualizado é refeito por quadro (o mais perto do centro).
   const redrawMin = UI.speed >= 3 ? 1.0 : REDRAW_MIN;
   vis.sort((a, b) => (a.cx * a.cx + a.cy * a.cy) - (b.cx * b.cx + b.cy * b.cy));
-  let best = null;
+  const cands = [];
   for (const t of vis) {
     const e = t.e;
     for (const w of ['g', 'o']) {
-      if (!tileHas(e, w)) { if (performance.now() - t0 < 35) { renderTile(e, level, t.k, w); e.lastF = frameT; rendered++; } }
-      else if (!best && !tileFresh(e, t.k, w) && frameT - e.lastF > redrawMin) best = [e, t.k, w];
+      if (!tileHas(e, w) && hasFallback(t.k, w, level)) { if (cands.length < 8) cands.push([e, t.k, w]); }   // mostra outro zoom e gera em fatias
+      else if (!tileHas(e, w)) { if (performance.now() - t0 < 16) { renderTile(e, level, t.k, w); e.lastF = frameT; rendered++; } }
+      else if (cands.length < 8 && !tileFresh(e, t.k, w) && frameT - e.lastF > redrawMin) cands.push([e, t.k, w]);
     }
   }
-  if (best && rendered === 0) { renderTile(best[0], level, best[1], best[2]); if (best[2] === 'o') { const e2 = best[0]; if (!tileFresh(e2, best[1], 'g')) renderTile(e2, level, best[1], 'g'); } best[0].lastF = frameT; rendered++; }
+  // fila de ladrilhos a gerar/atualizar em fatias: ~6 ms por quadro no total
+  {
+    const tEnd = performance.now() + (rendered ? 2 : 6); let ci = 0;
+    while (performance.now() < tEnd) {
+      if (!TJOB) { while (ci < cands.length && (cands[ci][0] === null)) ci++; if (ci >= cands.length) break; const c = cands[ci++]; if (tileHas(c[0], c[2]) && tileFresh(c[0], c[1], c[2])) continue; startTileJob(c[0], level, c[1], c[2]); c[0].lastF = frameT; }
+      stepTileJob(Math.max(0.5, tEnd - performance.now()));
+    }
+  }
+  // ladrilhos desatualizados: redesenho FATIADO (~5 ms por quadro), sem travar
   // substitutos de outro nível de zoom enquanto o ladrilho não existe
   for (const t of vis) { if (!t.e.g || (!t.e.o && !t.e.oE)) for (let l = 2; l >= 0; l--) { if (l === level) continue; const o = CACHE[l].get(t.k); if (o) { if (!t.e.g && o.g) t.fg = o.g; if (!t.e.o && !t.e.oE && o.o) t.fo = o.o; } } }
   // 1) chão
@@ -471,8 +542,9 @@ function render(dt) {
   if (!VIS.hide) drawObjLayer(vis, 'o', 1, null);
   // 3b) carros sobre os viadutos
   worldT(); drawElevatedTraffic();
-  // 4) efeitos
-  worldT(); drawEffects();
+  // 4) efeitos, pássaros e sombras de nuvens
+  worldT(); drawEffects(); drawBirds();
+  drawClouds(true);
   // 5) noite
   if (night) {
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
@@ -484,7 +556,8 @@ function render(dt) {
     let nr = 0;
     for (const t of vis) {
       const e = t.e; if (!tileFresh(e, t.k, 'o')) continue;
-      if (!tileHas(e, 'n') ? performance.now() - t0 < 35 : (nr === 0 && rendered === 0 && !tileFresh(e, t.k, 'n') && frameT - e.lastN > redrawMin)) { renderTile(e, level, t.k, 'n'); e.lastN = frameT; nr++; }
+      if (!tileHas(e, 'n')) { if (performance.now() - t0 < 30) { renderTile(e, level, t.k, 'n'); e.lastN = frameT; nr++; } }
+      else if (!TJOB && !tileFresh(e, t.k, 'n') && frameT - e.lastN > redrawMin) { startTileJob(e, level, t.k, 'n'); e.lastN = frameT; stepTileJob(3); }
     }
     if (!VIS.hide) {
       if (lensOn() || VIS.trans) drawObjLayer(vis, 'n', Math.min(1, k * 1.3), 'lighter');
@@ -509,6 +582,7 @@ function render(dt) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (lensOn() && !VIS.hide) { const [mx, my] = UI.mouse; ctx.strokeStyle = 'rgba(120,220,255,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(mx, my, VIS.lensR, 0, 6.283); ctx.stroke(); ctx.setLineDash([]); }
   drawWeather(dt);
+  drawClouds(false); drawHazeVignette();
   evictCache();
   renderStats.rendered = rendered; renderStats.chunks = drawn; renderStats.ms = performance.now() - tStart;
   fpsAcc += dt; fpsN++; if (fpsAcc > 0.5) { renderStats.fps = Math.round(fpsN / fpsAcc); fpsAcc = 0; fpsN = 0; }
@@ -602,6 +676,75 @@ function drawMetroLines() {
   }
   ctx.stroke(); ctx.setLineDash([]);
   ctx.fillStyle = '#fff'; for (const m of ms) { ctx.beginPath(); ctx.arc(m % N + 0.5, ((m / N) | 0) + 0.5, 0.45, 0, 6.283); ctx.fill(); }
+}
+// ===================== ATMOSFERA (v1.3) — tudo barato: poucos drawImage por quadro =====================
+let CLOUD_SPR = null, CLOUD_DARK = null, VIGN = null, VIGN_KEY = '';
+function cloudSprite(dark) {
+  if (dark && CLOUD_DARK) return CLOUD_DARK; if (!dark && CLOUD_SPR) return CLOUD_SPR;
+  const c = document.createElement('canvas'); c.width = 256; c.height = 128; const g = c.getContext('2d');
+  const r = mulberry(7);
+  for (let k = 0; k < 9; k++) {
+    const x = 50 + r() * 156, y = 40 + r() * 48, rad = 26 + r() * 30;
+    const gr = g.createRadialGradient(x, y, 0, x, y, rad); const cc = dark ? '20,30,55' : '255,255,255'; gr.addColorStop(0, 'rgba(' + cc + ',0.9)'); gr.addColorStop(1, 'rgba(' + cc + ',0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 128);
+  }
+  if (dark) CLOUD_DARK = c; else CLOUD_SPR = c; return c;
+}
+// sombras de nuvens deslizando pela cidade (dia) e nuvens visíveis com zoom afastado
+function drawClouds(shadowPass) {
+  if (!SETTINGS.weather || nightF > 0.6) return;
+  const spr = cloudSprite(shadowPass), z = cam.z, tm = frameT;
+  const k = weather.kind, dens = k === 'sol' ? 0.55 : k === 'nublado' ? 1 : 1.2;
+  const span = 2 * N * HW;
+  ctx.setTransform(z * DPR, 0, 0, z * DPR, (W / 2 - cam.x * z) * DPR, (H / 2 - cam.y * z) * DPR);
+  const n = Math.round(10 + N / 24);
+  for (let c = 0; c < n; c++) {
+    const h = hash32(c * 977 + 5);
+    if ((h & 255) / 255 > dens) continue;
+    const sz = 700 + (h >>> 8 & 511) * 1.2, wx = ((((h >>> 4) & 4095) / 4095) * span + tm * 14) % span - N * HW, wy = ((h >>> 16) & 4095) / 4095 * 2 * N * HH;
+    if (shadowPass) {
+      if (!onScreen(wx + sz / 2, wy + sz * 0.25, sz)) continue;
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = (k === 'sol' ? 0.13 : 0.2) * (1 - nightF);
+      ctx.drawImage(spr, wx, wy, sz, sz * 0.5);
+    } else if (z < 0.55) {
+      const alt = 260, sx = wx, sy = wy - alt;
+      if (!onScreen(sx + sz / 2, sy + sz * 0.25, sz)) continue;
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = Math.min(0.55, (0.55 - z) * 1.6) * (1 - nightF);
+      ctx.drawImage(spr, sx, sy, sz, sz * 0.5);
+    }
+  }
+  ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+}
+// pássaros em bando (dia, zoom próximo)
+function drawBirds() {
+  if (cam.z < 0.6 || nightF > 0.4) return;
+  const tm = frameT, g = ctx; g.strokeStyle = 'rgba(40,40,50,0.8)'; g.lineWidth = 0.9; g.beginPath();
+  for (let f = 0; f < 3; f++) {
+    const h = hash32(f * 31 + 9), span = 2 * N * HW;
+    const bx = (((h & 4095) / 4095) * span + tm * (30 + (h >>> 12 & 15))) % span - N * HW, by = ((h >>> 16) & 4095) / 4095 * 2 * N * HH * 0.8 + 100 - 120;
+    if (!onScreen(bx, by, 200)) continue;
+    for (let b = 0; b < 7; b++) {
+      const ox = bx - Math.abs(b - 3) * 9, oy = by + (b - 3) * 6, fl = Math.sin(tm * 9 + b + f) * 2.2;
+      g.moveTo(ox - 3.5, oy - fl); g.lineTo(ox, oy); g.lineTo(ox + 3.5, oy - fl);
+    }
+  }
+  g.stroke();
+}
+// névoa de distância (zoom afastado) e vinheta suave nas bordas
+function drawHazeVignette() {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  if (cam.z < 0.75) {
+    const a = Math.min(0.45, (0.75 - cam.z) * 0.8) * (1 - nightF * 0.6);
+    const gr = ctx.createLinearGradient(0, 0, 0, H * 0.7); gr.addColorStop(0, 'rgba(205,225,245,' + a + ')'); gr.addColorStop(1, 'rgba(205,225,245,0)');
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H * 0.7);
+  }
+  const key = W + 'x' + H;
+  if (VIGN_KEY !== key) {
+    VIGN_KEY = key; VIGN = document.createElement('canvas'); VIGN.width = Math.max(1, W >> 2); VIGN.height = Math.max(1, H >> 2);
+    const g = VIGN.getContext('2d'), w = VIGN.width, h = VIGN.height, gr = g.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.35, w / 2, h / 2, Math.hypot(w, h) * 0.55);
+    gr.addColorStop(0, 'rgba(0,0,20,0)'); gr.addColorStop(1, 'rgba(0,0,20,0.32)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  }
+  ctx.drawImage(VIGN, 0, 0, W, H);
 }
 function drawWeather(dt) {
   if (!SETTINGS.weather) return;

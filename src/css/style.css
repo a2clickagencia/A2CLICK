@@ -3349,7 +3349,7 @@ a.numero small {
 
 .labs-faixa h2 {
   margin-bottom: 20px;
-  font-size: clamp(1.7rem,3.2vw,2.8rem);
+  font-size: clamp(1.5rem,2.5vw,2.2rem);
 }
 
 .labs-faixa .lede {
@@ -3357,26 +3357,128 @@ a.numero small {
   margin-bottom: 28px;
 }
 
-.labs-faixa-img {
+/* ---------- carrossel (usado no LABS e na página inicial) ---------- */
+.car {
+  position: relative;
   display: block;
+  background: #0F1A16;
   overflow: hidden;
-  aspect-ratio: 16/10;
-  background: var(--campo);
 }
 
-.labs-faixa-img img {
+.car-slides {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+.car-s {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity .7s ease;
+  pointer-events: none;
+}
+
+.car-s.is-ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.car-s img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .6s ease;
 }
 
-.labs-faixa-img:hover img {
-  transform: scale(1.04);
+.car-s figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: rgba(10,18,15,.82);
+  color: #F2EFE4;
+  font-size: .86rem;
+  line-height: 1.35;
 }
 
-@media(prefers-reduced-motion:reduce) {
-  .labs-faixa-img img {
+.car-ctl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+  pointer-events: none;
+}
+
+.car-ctl[hidden] {
+  display: none;
+}
+
+.car-ctl button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: rgba(10,18,15,.78);
+  color: #F2EFE4;
+  font: 700 1.2rem/1 sans-serif;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.car-ctl button:hover {
+  background: #0A120F;
+}
+
+.car-ctl button:focus-visible {
+  outline: 3px solid #F2EFE4;
+  outline-offset: 2px;
+}
+
+.car-pontos {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.car-pontos button {
+  width: 24px;
+  height: 44px;
+  background: none;
+  position: relative;
+}
+
+.car-pontos button::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 20px;
+  height: 4px;
+  background: rgba(242,239,228,.45);
+}
+
+.car-pontos button[aria-current="true"]::after {
+  background: #F2EFE4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .car-s {
     transition: none;
   }
 }
+
+.labs-car .car-s figcaption {
+  font-size: .92rem;
+}
+

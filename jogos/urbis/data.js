@@ -99,7 +99,7 @@ const TOOL_DEFS = {
   zI1: { n: 'Industrial Baixa', cost: 5, zt: ZI, zd: 1, icon: '🏚️' },
   zI2: { n: 'Industrial Média', cost: 10, zt: ZI, zd: 2, icon: '🏭' },
   zI3: { n: 'Industrial Alta', cost: 20, zt: ZI, zd: 3, icon: '⚙️' },
-  dezone: { n: 'Remover Zona', cost: 1, icon: '⬜', d: 'Remove o zoneamento de lotes vazios.' },
+  dezone: { n: 'Remover Zona', cost: 1, icon: '⬜', d: 'Remove o zoneamento (e demole o prédio, se houver). Arraste sobre a área.' },
   trees: { n: 'Plantar Árvores', cost: 3, icon: '🌳', d: 'Reduzem poluição e valorizam.' },
   tWater: { n: 'Criar Água', cost: 50, icon: '🌊', d: 'Escava lagos e canais.' },
   tLand: { n: 'Aterrar', cost: 50, icon: '⛰️', d: 'Transforma água em terra.' },

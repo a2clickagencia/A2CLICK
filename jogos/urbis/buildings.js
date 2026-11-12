@@ -90,6 +90,7 @@ function windows(x0, y0, x1, y1, z0, z1, nf, cpt, wc, seed, litP, opt) {
     g.beginPath(); q4(x0, y1, z0, x1, y1, z0, x1, y1, z1, x0, y1, z1); q4(x1, y1, z0, x1, y0, z0, x1, y0, z1, x1, y1, z1); g.fill(); return;
   }
   const r = mulberry(seed);
+  if (NIGHT && !band) { nightWindows(x0, y0, x1, y1, z0, fh, hf, wf, nf, ncL, ncR, r, litP); return; }
   for (let face = 0; face < 2; face++) {
     const nc = face ? ncR : ncL;
     if (NIGHT) { g.fillStyle = face ? 'rgb(235,190,110)' : 'rgb(255,214,140)'; }
@@ -112,7 +113,7 @@ function windows(x0, y0, x1, y1, z0, z1, nf, cpt, wc, seed, litP, opt) {
     }
     g.fill();
     // reflexo do céu na parte de cima de cada janela (só de dia, com zoom próximo)
-    if (!NIGHT && LOD >= 2 && !band && fh >= 5 && SETTINGS.hq) {   // reflexos só no modo alta qualidade
+    if (!NIGHT && LOD >= 2 && !band && fh >= 5 && SETTINGS.hq) {   // reflexo do céu: só no modo alta qualidade (custo alto ao redesenhar)
       g.fillStyle = 'rgba(255,255,255,0.16)'; g.beginPath();
       for (let f = 0; f < nf; f++) {
         const za = z0 + f * fh + fh * (1 - hf) * 0.6 + fh * hf * 0.62, zb = z0 + f * fh + fh * (1 - hf) * 0.6 + fh * hf;
@@ -124,6 +125,77 @@ function windows(x0, y0, x1, y1, z0, z1, nf, cpt, wc, seed, litP, opt) {
       }
       g.fill();
     }
+  }
+}
+// v1.3: janelas acesas com cores variadas (luz quente, luz fria, TV azulada) — 3 lotes por face
+const NIGHT_WIN = [['rgb(255,214,140)', 'rgb(235,190,110)'], ['rgb(240,240,225)', 'rgb(210,214,205)'], ['rgb(150,190,255)', 'rgb(120,160,230)']];
+function nightWindows(x0, y0, x1, y1, z0, fh, hf, wf, nf, ncL, ncR, r, litP) {
+  const g = _g;
+  for (let face = 0; face < 2; face++) {
+    const nc = face ? ncR : ncL;
+    const paths = [new Path2D(), new Path2D(), new Path2D()];
+    for (let f = 0; f < nf; f++) {
+      const za = z0 + f * fh + fh * (1 - hf) * 0.6, zb = za + fh * hf;
+      for (let c = 0; c < nc; c++) {
+        const rv = r(); if (rv > litP) continue;
+        const kind = rv < litP * 0.7 ? 0 : rv < litP * 0.92 ? 1 : 2, p = paths[kind];
+        const u0 = (c + (1 - wf) / 2) / nc, u1 = (c + (1 + wf) / 2) / nc;
+        let a, b;
+        if (face === 0) { a = x0 + (x1 - x0) * u0; b = x0 + (x1 - x0) * u1; p.moveTo(PX(a, y1), PY(a, y1, za)); p.lineTo(PX(b, y1), PY(b, y1, za)); p.lineTo(PX(b, y1), PY(b, y1, zb)); p.lineTo(PX(a, y1), PY(a, y1, zb)); }
+        else { a = y1 - (y1 - y0) * u0; b = y1 - (y1 - y0) * u1; p.moveTo(PX(x1, a), PY(x1, a, za)); p.lineTo(PX(x1, b), PY(x1, b, za)); p.lineTo(PX(x1, b), PY(x1, b, zb)); p.lineTo(PX(x1, a), PY(x1, a, zb)); }
+        p.closePath();
+      }
+    }
+    for (let k = 0; k < 3; k++) { g.fillStyle = NIGHT_WIN[k][face]; g.fill(paths[k]); }
+  }
+}
+// v1.3: linhas de laje entre andares (fachada mais arquitetônica)
+function floorBands(x0, y0, x1, y1, z0, z1, nf, c) {
+  if (NIGHT || LOD < 2 || nf < 3) return;
+  const g = _g, fh = (z1 - z0) / nf;
+  g.strokeStyle = sh(c, 1.18); g.lineWidth = 0.45; g.beginPath();
+  for (let f = 1; f < nf; f++) { const z = z0 + f * fh; mv(x0, y1, z); ln(x1, y1, z); ln(x1, y0, z); }
+  g.stroke();
+}
+// v1.3: térreo comercial (vitrine de vidro + marquise colorida) — prédios altos
+function storefront(x0, y0, x1, y1, h, colr) {
+  if (LOD < 1) return;
+  const g = _g;
+  if (NIGHT) { if (!LIT || ABAND) return; g.fillStyle = 'rgba(255,225,160,0.9)'; g.beginPath(); q4(x0 + 0.02, y1, 0.5, x1 - 0.02, y1, 0.5, x1 - 0.02, y1, h - 1, x0 + 0.02, y1, h - 1); q4(x1, y1 - 0.02, 0.5, x1, y0 + 0.02, 0.5, x1, y0 + 0.02, h - 1, x1, y1 - 0.02, h - 1); g.fill(); return; }
+  fillQ('rgba(170,210,235,0.92)', x0 + 0.02, y1, 0.5, x1 - 0.02, y1, 0.5, x1 - 0.02, y1, h - 1, x0 + 0.02, y1, h - 1);
+  fillQ('rgba(120,160,190,0.92)', x1, y1 - 0.02, 0.5, x1, y0 + 0.02, 0.5, x1, y0 + 0.02, h - 1, x1, y1 - 0.02, h - 1);
+  fillQ(sh(colr, 0.95), x0, y1, h, x1, y1, h, x1, y1 + 0.07, h - 1.5, x0, y1 + 0.07, h - 1.5);
+  fillQ(sh(colr, 0.72), x1, y1, h, x1, y0, h, x1 + 0.07, y0, h - 1.5, x1 + 0.07, y1, h - 1.5);
+}
+// v1.3: telhados variados — mureta, ar-condicionado, caixa d'água, painéis solares, jardim, piscina, heliponto, antena
+function rooftop(a, x0, y0, x1, y1, H, r, l, isCom) {
+  const g = _g, w = x1 - x0, d = y1 - y0, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+  if (!NIGHT && LOD >= 1) { g.strokeStyle = 'rgba(255,255,255,0.35)'; g.lineWidth = 0.9; g.beginPath(); q4(x0 + 0.02, y0 + 0.02, H + 0.6, x1 - 0.02, y0 + 0.02, H + 0.6, x1 - 0.02, y1 - 0.02, H + 0.6, x0 + 0.02, y1 - 0.02, H + 0.6); g.stroke(); }
+  const pickF = r();
+  if (pickF < 0.17 && w > 0.4) {            // jardim no terraço
+    if (!NIGHT) { flat(x0 + w * 0.1, y0 + d * 0.1, x1 - w * 0.1, y1 - d * 0.1, H + 0.3, '#5f9e4a'); flat(x0 + w * 0.42, y0 + d * 0.1, x0 + w * 0.58, y1 - d * 0.1, H + 0.4, '#cfc4a4'); }
+    treeAt(x0 + w * 0.25, y0 + d * 0.28, 3.6, a % 97, H); treeAt(x0 + w * 0.7, y0 + d * 0.3, 3.2, (a + 7) % 97, H); treeAt(x1 - w * 0.25, y1 - d * 0.28, 3.6, (a + 3) % 97, H);
+    if (!NIGHT) { g.strokeStyle = '#3f7a33'; g.lineWidth = 1.4; g.beginPath(); q4(x0 + w * 0.1, y0 + d * 0.1, H + 1, x1 - w * 0.1, y0 + d * 0.1, H + 1, x1 - w * 0.1, y1 - d * 0.1, H + 1, x0 + w * 0.1, y1 - d * 0.1, H + 1); g.stroke(); }
+    if (NIGHT && LIT) beacon(a, cx, cy, H + 2, '#ffe9b0');
+  } else if (pickF < 0.40 && w > 0.4) {     // piscina com deck
+    if (!NIGHT) { flat(x0 + w * 0.12, y0 + d * 0.15, x1 - w * 0.12, y1 - d * 0.15, H + 0.3, '#d9cdb0'); flat(x0 + w * 0.2, y0 + d * 0.3, x1 - w * 0.2, y1 - d * 0.45, H + 0.4, '#38b6e6'); flat(x0 + w * 0.22, y0 + d * 0.32, x1 - w * 0.4, y0 + d * 0.38, H + 0.5, 'rgba(255,255,255,0.5)'); }
+    box(x0 + w * 0.2, y1 - d * 0.32, x0 + w * 0.42, y1 - d * 0.18, H, H + 5, [235, 235, 230]);
+  } else if (pickF < 0.58) {                // painéis solares
+    if (!NIGHT) for (let k = 0; k < 4; k++) { const u = x0 + w * (0.12 + k * 0.2); fillQ('#27497d', u, y0 + d * 0.15, H + 2.2, u + w * 0.15, y0 + d * 0.15, H + 2.2, u + w * 0.15, y1 - d * 0.15, H + 0.6, u, y1 - d * 0.15, H + 0.6); }
+  } else if (pickF < 0.78) {                // máquinas de ar-condicionado
+    for (let k = 0; k < 3; k++) { const u = x0 + w * (0.15 + k * 0.25); box(u, y0 + d * 0.2, u + w * 0.14, y0 + d * 0.38, H, H + 3.5, [168, 170, 172], [190, 192, 194]); }
+    box(x1 - w * 0.35, y1 - d * 0.35, x1 - w * 0.12, y1 - d * 0.12, H, H + 7, [150, 150, 150]);
+  } else {                                  // caixa d'água + casa de máquinas
+    box(x0 + w * 0.15, y0 + d * 0.2, x0 + w * 0.42, y0 + d * 0.45, H, H + 6, [150, 150, 150]);
+    cyl(x0 + w * 0.72, y0 + d * 0.3, Math.min(0.09, w * 0.12), H, H + 10, [120, 90, 70]);
+  }
+  if (l >= 9) {
+    if (isCom && r() < 0.5) {               // coroa iluminada (luz colorida à noite)
+      const cc = [[80, 220, 255], [255, 90, 200], [255, 200, 80]][(a >>> 3) % 3];
+      if (NIGHT && LIT) { g.strokeStyle = 'rgb(' + cc + ')'; g.lineWidth = 1.6; g.beginPath(); mv(x0, y1, H - 2); ln(x1, y1, H - 2); ln(x1, y0, H - 2); g.stroke(); }
+      else if (!NIGHT) { g.strokeStyle = 'rgba(' + cc + ',0.55)'; g.lineWidth = 1.1; g.beginPath(); mv(x0, y1, H - 2); ln(x1, y1, H - 2); ln(x1, y0, H - 2); g.stroke(); }
+    }
+    line3(cx + w * 0.1, cy + d * 0.1, H, cx + w * 0.1, cy + d * 0.1, H + 30, '#888', 1.2); beacon(a, cx + w * 0.1, cy + d * 0.1, H + 30, '#ff3030');
   }
 }
 function cyl(gx, gy, r, z0, z1, c, topC) {
@@ -171,8 +243,8 @@ function gable(x0, y0, x1, y1, h, rh, wall, roof, alongX) {
 }
 function flat(x0, y0, x1, y1, z, col) { if (NIGHT) return; fillQ(col, x0, y0, z, x1, y0, z, x1, y1, z, x0, y1, z); }
 function line3(gx0, gy0, z0, gx1, gy1, z1, col, w) { if (NIGHT) return; _g.strokeStyle = col; _g.lineWidth = w || 1; _g.beginPath(); mv(gx0, gy0, z0); ln(gx1, gy1, z1); _g.stroke(); }
-function treeAt(gx, gy, sz, seed) {
-  const g = _g, sx = PX(gx, gy), sy = PY(gx, gy, 0);
+function treeAt(gx, gy, sz, seed, z) {
+  const g = _g, sx = PX(gx, gy), sy = PY(gx, gy, z || 0);
   if (NIGHT) return;
   if (LOD === 0) { g.fillStyle = '#2f6b2a'; g.beginPath(); g.arc(sx, sy - sz, sz * 1.1, 0, 6.283); g.fill(); return; }
   // sombra projetada (mesma direção das sombras dos prédios)
@@ -188,9 +260,13 @@ function treeAt(gx, gy, sz, seed) {
     return;
   }
   g.fillStyle = '#5b3d22'; g.fillRect(sx - 0.8, sy - sz * 0.9, 1.6, sz * 0.9);
-  g.fillStyle = 'hsl(' + hue + ',44%,' + (lt - 4) + '%)'; g.beginPath(); g.arc(sx + sz * 0.25, sy - sz * 1.35, sz * 0.85, 0, 6.283); g.fill();
-  g.fillStyle = 'hsl(' + hue + ',46%,' + lt + '%)'; g.beginPath(); g.arc(sx - sz * 0.15, sy - sz * 1.5, sz * 0.9, 0, 6.283); g.fill();
-  g.fillStyle = 'hsl(' + hue + ',52%,' + (lt + 10) + '%)'; g.beginPath(); g.arc(sx - sz * 0.38, sy - sz * 1.78, sz * 0.48, 0, 6.283); g.fill();
+  // v1.3: ipês floridos (rosa e amarelo) e algumas copas outonais
+  const special = seed % 53 === 0 ? [320, 62, 62] : seed % 61 === 0 ? [48, 88, 55] : seed % 71 === 0 ? [24, 70, 46] : null;
+  const H0 = special ? special[0] : hue, S0 = special ? special[1] : 46, L0 = special ? special[2] - 6 : lt;
+  g.fillStyle = 'hsl(' + H0 + ',' + (S0 - 2) + '%,' + (L0 - 4) + '%)'; g.beginPath(); g.arc(sx + sz * 0.25, sy - sz * 1.35, sz * 0.85, 0, 6.283); g.fill();
+  g.fillStyle = 'hsl(' + H0 + ',' + S0 + '%,' + L0 + '%)'; g.beginPath(); g.arc(sx - sz * 0.15, sy - sz * 1.5, sz * 0.9, 0, 6.283); g.fill();
+  g.fillStyle = 'hsl(' + H0 + ',' + (S0 + 6) + '%,' + (L0 + 10) + '%)'; g.beginPath(); g.arc(sx - sz * 0.38, sy - sz * 1.78, sz * 0.48, 0, 6.283); g.fill();
+  if (LOD >= 2) { g.fillStyle = 'rgba(255,255,255,0.18)'; g.beginPath(); g.arc(sx - sz * 0.5, sy - sz * 1.95, sz * 0.22, 0, 6.283); g.fill(); }
 }
 function beacon(a, gx, gy, z, c) { const arr = BEACONS.get(a) || []; arr.push({ x: PX(gx, gy), y: PY(gx, gy, z), c }); BEACONS.set(a, arr); }
 function smokeAt(a, gx, gy, z) { const arr = SMOKE_SRC.get(a) || []; arr.push({ x: PX(gx, gy), y: PY(gx, gy, z) }); SMOKE_SRC.set(a, arr); }
@@ -216,6 +292,10 @@ function drawZoneBuilding(a) {
   if (zt === ZR) {
     if (s === 1 && l <= 2) {
       const wall = pick(R_WALL, r), roof = pick(R_ROOF, r);
+      const rw = roadSide(ax, ay), rs = rw < 0 ? -1 : rotDir(rw);
+      if (!NIGHT && LOD >= 1 && (rs === 1 || rs === 2) && r() < 0.32) {   // piscina no quintal
+        flat(ax + 0.03, ay + 0.03, ax + 0.24, ay + 0.34, 0.2, '#e7dfcc'); flat(ax + 0.05, ay + 0.06, ax + 0.21, ay + 0.31, 0.3, '#3cb8e8');
+      }
       if (l === 1) {
         const ax2 = r() < 0.5;
         box(ax + 0.24, ay + 0.26, ax + 0.76, ay + 0.74, 0, 9, wall); windows(ax + 0.24, ay + 0.26, ax + 0.76, ay + 0.74, 0, 9, 1, 3, WIN_DARK, seed, litP);
@@ -231,13 +311,21 @@ function drawZoneBuilding(a) {
         houseDetails(ax + 0.5, ay + 0.52, ax + 0.9, ay + 0.9, 13, w2, r);
         gable(ax + 0.47, ay + 0.49, ax + 0.93, ay + 0.93, 13, 7, w2, pick(R_ROOF, r), false);
       }
+      if (rs >= 0 && r() < 0.65 && LOD >= 1) {   // carro estacionado na garagem
+        const C = [[0.64, 0.02, 0.78, 0.2], [0.8, 0.64, 0.98, 0.78], [0.64, 0.8, 0.78, 0.98], [0.02, 0.64, 0.2, 0.78]][rs];
+        const col = CAR_COLORS[(seed >>> 2) % CAR_COLORS.length], along = rs === 1 || rs === 3;
+        box(ax + C[0], ay + C[1], ax + C[2], ay + C[3], 0.5, 3.2, col);
+        if (along) box(ax + C[0] + 0.04, ay + C[1] + 0.01, ax + C[2] - 0.05, ay + C[3] - 0.01, 3.2, 5.2, [60, 85, 110], col);
+        else box(ax + C[0] + 0.01, ay + C[1] + 0.04, ax + C[2] - 0.01, ay + C[3] - 0.05, 3.2, 5.2, [60, 85, 110], col);
+      }
       return;
     }
     if (s === 1 && l === 3) {
       const c = pick(APT, r);
       box(ax + 0.12, ay + 0.12, ax + 0.88, ay + 0.88, 0, 22, c); windows(ax + 0.12, ay + 0.12, ax + 0.88, ay + 0.88, 0, 22, 3, 4, WIN_DARK, seed, litP);
+      floorBands(ax + 0.12, ay + 0.12, ax + 0.88, ay + 0.88, 0, 22, 3, c);
       box(ax + 0.12, ay + 0.12, ax + 0.88, ay + 0.88, 22, 24, sh2(c, 0.85));
-      if (r() < 0.5) box(ax + 0.3, ay + 0.3, ax + 0.45, ay + 0.45, 24, 28, [150, 150, 150]);
+      rooftop(a, ax + 0.14, ay + 0.14, ax + 0.86, ay + 0.86, 24, r, l, false);
       return;
     }
     const F = s === 1 ? [0, 0, 0, 0, 5, 7, 10, 14, 18, 24, 30, 38][l] : Math.round([0, 0, 0, 0, 6, 9, 13, 18, 24, 31, 40, 52][l]);
@@ -308,6 +396,17 @@ function drawZoneBuilding(a) {
     fillQ('rgb(120,150,170)', u1, ay + i1, h, u1, ay + i0, h, u1, ay + i0, h + 6, u1, ay + i1, h + 6);
     _g.fillStyle = sh(c, 0.8); _g.beginPath(); mv(u0, ay + i1, h); ln(u1, ay + i1, h); ln(u1, ay + i1, h + 6); _g.closePath(); _g.fill();
   }
+  // pátio: pilhas de contêineres coloridos e um caminhão (v1.3)
+  if (LOD >= 1) {
+    const yx0 = ax + i1 * 0.72, yx1 = ax + i1 - 0.02, yy0 = ay + i1 * 0.55;
+    const CC = [[200, 70, 50], [40, 110, 170], [230, 170, 40], [60, 140, 80], [140, 140, 150]];
+    const nC = Math.max(1, Math.round((i1 - i0) * 2));
+    for (let k = 0; k < nC; k++) {
+      const vy = yy0 + k * 0.17; if (vy + 0.13 > ay + i1) break;
+      const stack = 1 + ((seed >>> k) & 1);
+      for (let st = 0; st < stack; st++) box(yx0, vy, yx1, vy + 0.13, st * 5, st * 5 + 5, CC[(seed + k * 3 + st) % CC.length]);
+    }
+  }
   // tanques e chaminés
   const tx = ax + i1 * 0.86, ty = ay + i0 + 0.25;
   if (l >= 3) cyl(tx, ty, 0.14 * s, 0, 16 + l * 2, [200, 200, 196]);
@@ -335,18 +434,26 @@ function resTower(a, ax, ay, s, F, r, seed, litP, l) {
   const x0 = ax + ins, y0 = ay + ins, x1 = ax + s - ins, y1 = ay + s - ins;
   const c = l >= 7 && style === 0 ? pick(CONC, r) : pick(APT, r);
   const fh = 7, H = F * fh;
+  const lobby = l >= 6 && r() < 0.6;   // térreo com portaria de vidro
   if (F >= 14 && style !== 2) {
     const f1 = Math.round(F * 0.65), h1 = f1 * fh, d = (x1 - x0) * 0.14;
-    box(x0, y0, x1, y1, 0, h1, c); windows(x0, y0, x1, y1, 0, h1, f1, 4, WIN_DARK, seed, litP);
-    box(x0 + d, y0 + d, x1 - d, y1 - d, h1, H, c); windows(x0 + d, y0 + d, x1 - d, y1 - d, h1, H, F - f1, 4, WIN_DARK, seed + 9, litP);
-    roofStuff(a, x0 + d, y0 + d, x1 - d, y1 - d, H, r, l);
+    box(x0, y0, x1, y1, 0, h1, c); windows(x0, y0, x1, y1, lobby ? fh : 0, h1, lobby ? f1 - 1 : f1, 4, WIN_DARK, seed, litP); floorBands(x0, y0, x1, y1, 0, h1, f1, c);
+    if (lobby) storefront(x0, y0, x1, y1, fh, pick(AWN, r));
+    box(x0 + d, y0 + d, x1 - d, y1 - d, h1, H, c); windows(x0 + d, y0 + d, x1 - d, y1 - d, h1, H, F - f1, 4, WIN_DARK, seed + 9, litP); floorBands(x0 + d, y0 + d, x1 - d, y1 - d, h1, H, F - f1, c);
+    if (!NIGHT) flat(x0 + 0.01, y0 + 0.01, x1 - 0.01, y1 - 0.01, h1 + 0.2, sh(c, 1.0));   // terraço do recuo
+    rooftop(a, x0 + d, y0 + d, x1 - d, y1 - d, H, r, l, false);
   } else {
-    box(x0, y0, x1, y1, 0, H, c); windows(x0, y0, x1, y1, 0, H, F, 4, WIN_DARK, seed, litP);
-    if (style === 2 && !NIGHT && LOD >= 1) { // varandas
-      _g.fillStyle = sh(c, 1.15);
-      for (let f = 1; f < F; f += 1) { _g.beginPath(); q4(x0, y1, f * fh, x1, y1, f * fh, x1, y1 + 0.04, f * fh - 1, x0, y1 + 0.04, f * fh - 1); _g.fill(); }
-    }
-    roofStuff(a, x0, y0, x1, y1, H, r, l);
+    box(x0, y0, x1, y1, 0, H, c); windows(x0, y0, x1, y1, lobby ? fh : 0, H, lobby ? F - 1 : F, 4, WIN_DARK, seed, litP);
+    if (lobby) storefront(x0, y0, x1, y1, fh, pick(AWN, r));
+    if (style === 2 && !NIGHT && LOD >= 1) { // varandas com guarda-corpo de vidro
+      const p1 = new Path2D(), p2 = new Path2D();
+      for (let f = 1; f < F; f += 1) {
+        const z = f * fh; p1.moveTo(PX(x0, y1), PY(x0, y1, z)); p1.lineTo(PX(x1, y1), PY(x1, y1, z)); p1.lineTo(PX(x1, y1 + 0.05), PY(x1, y1 + 0.05, z - 1)); p1.lineTo(PX(x0, y1 + 0.05), PY(x0, y1 + 0.05, z - 1)); p1.closePath();
+        p2.moveTo(PX(x0, y1 + 0.05), PY(x0, y1 + 0.05, z - 1)); p2.lineTo(PX(x1, y1 + 0.05), PY(x1, y1 + 0.05, z - 1)); p2.lineTo(PX(x1, y1 + 0.05), PY(x1, y1 + 0.05, z + 2)); p2.lineTo(PX(x0, y1 + 0.05), PY(x0, y1 + 0.05, z + 2)); p2.closePath();
+      }
+      _g.fillStyle = sh(c, 1.15); _g.fill(p1); _g.fillStyle = 'rgba(200,225,240,0.35)'; _g.fill(p2);
+    } else floorBands(x0, y0, x1, y1, 0, H, F, c);
+    rooftop(a, x0, y0, x1, y1, H, r, l, false);
   }
 }
 function roofStuff(a, x0, y0, x1, y1, H, r, l) {
@@ -372,9 +479,10 @@ function comTower(a, ax, ay, s, F, r, seed, litP, l) {
       z += h; d += w * 0.12;
     }
     x0 += d - w * 0.12; y0 += d - w * 0.12; x1 -= d - w * 0.12; y1 -= d - w * 0.12;
-  } else if (style === 2) { // concreto com pilares
+  } else if (style === 2) { // concreto com pilares + térreo comercial
     const c = pick(CONC, r);
-    box(x0, y0, x1, y1, 0, H, c); windows(x0, y0, x1, y1, 0, H, F, 5, WIN_DARK, seed, litP, { wf: 0.7, hf: 0.6 });
+    box(x0, y0, x1, y1, 0, H, c); windows(x0, y0, x1, y1, fh, H, F - 1, 5, WIN_DARK, seed, litP, { wf: 0.7, hf: 0.6 });
+    floorBands(x0, y0, x1, y1, 0, H, F, c); storefront(x0, y0, x1, y1, fh, pick(AWN, r));
   } else { // torre com base
     const bh = 4 * fh, d = (x1 - x0) * 0.18;
     box(x0, y0, x1, y1, 0, bh, pick(CONC, r)); windows(x0, y0, x1, y1, 0, bh, 4, 5, WIN_GLASS, seed, litP);
@@ -382,6 +490,7 @@ function comTower(a, ax, ay, s, F, r, seed, litP, l) {
     x0 += d; y0 += d; x1 -= d; y1 -= d;
   }
   const w = x1 - x0;
+  if (l >= 7 && r() < 0.45) { rooftop(a, x0, y0, x1, y1, H, r, l, true); return; }
   if (l >= 9 && r() < 0.6) { // coroa + antena
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
     box(x0 + w * 0.2, y0 + w * 0.2, x1 - w * 0.2, y1 - w * 0.2, H, H + 12, sh2(gc, 0.8));
@@ -389,7 +498,7 @@ function comTower(a, ax, ay, s, F, r, seed, litP, l) {
   } else if (l >= 7) { // heliponto
     if (!NIGHT) { const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, sx = PX(cx, cy), sy = PY(cx, cy, H + 0.5); const rr = Math.min(w, 0.7) * 0.5; _g.fillStyle = '#6a6d72'; _g.beginPath(); _g.ellipse(sx, sy, rr * HW, rr * HH, 0, 0, 6.283); _g.fill(); _g.strokeStyle = '#ffd34d'; _g.lineWidth = 0.8; _g.stroke(); _g.fillStyle = '#fff'; _g.font = 'bold 6px sans-serif'; _g.textAlign = 'center'; _g.fillText('H', sx, sy + 2); }
     beacon(a, (x0 + x1) / 2, (y0 + y1) / 2, H + 2, '#30ff60');
-  } else box(x0 + w * 0.2, y0 + w * 0.25, x0 + w * 0.5, y0 + w * 0.5, H, H + 5, [140, 140, 140]);
+  } else rooftop(a, x0, y0, x1, y1, H, r, l, true);
 }
 
 // ---------- Edifícios de serviço ----------

@@ -45,6 +45,7 @@ function computeWaterProx() {
   const A = M.A; for (let i = 0; i < N2; i++) A[i] = G.terr[i] ? 1 : 0;
   blur(A, M.T, 4); blur(A, M.T, 3);
   for (let i = 0; i < N2; i++) M.wprox[i] = G.terr[i] ? 0 : clamp(A[i] * 900, 0, 255);
+  if (typeof BHT !== 'undefined' && BHT && typeof computeWaterDepth === 'function') { computeWaterDepth(); invalidateAll(); }
 }
 
 

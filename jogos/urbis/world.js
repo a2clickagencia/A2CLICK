@@ -213,9 +213,11 @@ function placeZone(i, zt, zd) {
   touch(i); G.type[i] = T_ZONE; G.zt[i] = zt; G.zd[i] = zd; G.lvl[i] = 0; G.tree[i] = 0; G.own[i] = -1; G.rubT[i] = 0;
   markDirtyIdx(i); netDirty = true; return cost;
 }
+// v1.3: "Remover Zona" também funciona em lotes já construídos (demole o prédio e tira a zona)
 function dezone(i) {
-  if (G.type[i] !== T_ZONE || G.own[i] >= 0) return -1;
-  touch(i); G.type[i] = T_EMPTY; G.zt[i] = 0; G.zd[i] = 0; markDirtyIdx(i); netDirty = true; return 1;
+  if (G.type[i] !== T_ZONE) return -1;
+  if (G.own[i] >= 0) return clearTile(i, false);
+  touch(i); G.type[i] = T_EMPTY; G.zt[i] = 0; G.zd[i] = 0; G.lvl[i] = 0; markDirtyIdx(i); netDirty = true; return 1;
 }
 function nearWater(ax, ay, s) {
   for (let y = ay - 1; y <= ay + s; y++) for (let x = ax - 1; x <= ax + s; x++) if (inb(x, y) && G.terr[idx(x, y)]) return true;

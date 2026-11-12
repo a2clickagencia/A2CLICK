@@ -1091,3 +1091,482 @@ kbd {
 #atp .card-img img {
   object-position: left top;
 }
+
+.card-vazio .acoes {
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+
+.card-vazio .btn {
+  flex: 1;
+  padding-inline: .6em;
+}
+
+/* =====================================================================
+   Versão 2: cards centralizados, fichas sem rolagem, carrossel
+   ===================================================================== */
+.card-corpo {
+  justify-items: center;
+  text-align: center;
+}
+
+.card h2,
+.card-vazio h2 {
+  width: 100%;
+  margin: 0;
+  font-size: clamp(1.15rem,5.4vw,1.5rem);
+  white-space: nowrap;
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .card h2,
+  .card-vazio h2 {
+    font-size: clamp(1.1rem,2.6vw,1.5rem);
+  }
+}
+
+@media (min-width: 1100px) {
+  .card h2,
+  .card-vazio h2 {
+    font-size: clamp(1rem,1.38vw,1.4rem);
+  }
+}
+
+.card-vazio {
+  text-align: center;
+}
+
+.card-vazio .acoes {
+  justify-content: center;
+}
+
+.card-sub {
+  text-align: center;
+}
+
+.card-num {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+  width: 100%;
+  margin: 8px 0 0;
+  padding-top: 14px;
+  border-top: 2px solid var(--campo-3);
+  text-align: center;
+  font-size: .8rem;
+  line-height: 1.25;
+}
+
+.card-num span {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 5px;
+}
+
+.card-num b {
+  display: block;
+  margin: 0;
+  font: 400 clamp(1.05rem,1.45vw,1.35rem)/1 var(--display);
+  white-space: nowrap;
+}
+
+@media (min-width: 1100px) {
+  .card-num {
+    gap: 4px;
+    font-size: .76rem;
+  }
+
+  .card-num b {
+    font-size: clamp(.95rem,1.15vw,1.2rem);
+  }
+}
+
+/* ficha compacta: tudo cabe sem rolar */
+.ficha {
+  width: min(1000px,calc(100vw - 24px));
+  height: fit-content;
+  max-height: calc(100dvh - 24px);
+}
+
+.ficha-topo {
+  padding: 12px 16px 0;
+}
+
+.ficha-topo h2 {
+  font-size: clamp(1.15rem,2vw,1.5rem);
+}
+
+.fechar {
+  width: 44px;
+  height: 44px;
+}
+
+.abas {
+  padding: 10px 16px 0;
+}
+
+.abas button {
+  min-height: 44px;
+  padding: .55em 1.1em;
+  font-size: .95rem;
+}
+
+.paineis {
+  flex: 0 1 auto;
+  margin-top: 10px;
+  padding: 16px;
+}
+
+.painel h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.painel p {
+  margin: 0 0 10px;
+}
+
+.par {
+  display: grid;
+  gap: 16px 24px;
+  align-items: start;
+}
+
+@media (min-width: 820px) {
+  .par {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.par > .car-m {
+  align-self: start;
+}
+
+.par .fatos {
+  grid-template-columns: repeat(2,1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.painel > .fatos {
+  grid-template-columns: repeat(4,1fr);
+  margin: 0 0 16px;
+}
+
+@media (max-width: 719px) {
+  .painel > .fatos {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+.fatos div {
+  padding: 10px 12px;
+}
+
+.fatos b {
+  font-size: clamp(1.25rem,2.2vw,1.7rem);
+}
+
+.fatos span {
+  margin-top: 4px;
+  font-size: .85rem;
+  line-height: 1.3;
+}
+
+.lista div {
+  padding: 8px 12px;
+}
+
+.lista dt {
+  font-size: .95rem;
+}
+
+.lista dd {
+  margin: 1px 0 0;
+  font-size: .88rem;
+  line-height: 1.38;
+}
+
+.jogo {
+  width: min(100%,calc(min(54dvh,460px) * 1.6));
+  margin-inline: auto;
+}
+
+.jogo-apoio {
+  margin-top: 10px;
+}
+
+.jogo-apoio .nota {
+  font-size: .85rem;
+}
+
+.car-g {
+  width: min(100%,calc(min(56dvh,480px) * 1.6));
+  margin-inline: auto;
+}
+
+.car-m .car-slides {
+  aspect-ratio: 16 / 10;
+}
+
+.car-topo .car-s img {
+  object-position: left top;
+}
+
+.acoes-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.acoes-col .btn {
+  flex: none;
+  white-space: normal;
+  text-align: center;
+}
+
+.baixar {
+  gap: 10px;
+  padding: 14px 16px;
+}
+
+.baixar li {
+  margin-bottom: 8px;
+  font-size: .92rem;
+  line-height: 1.4;
+}
+
+.baixar code {
+  font-size: .68rem;
+}
+
+.versoes div {
+  padding: 9px 14px;
+}
+
+.versoes dd {
+  font-size: .88rem;
+  line-height: 1.38;
+}
+
+@media (max-height: 760px) {
+  .paineis { padding: 12px; }
+  .lista dd { font-size: .84rem; line-height: 1.32; }
+  .lista div { padding: 6px 10px; }
+  .fatos div { padding: 8px 10px; }
+}
+
+@media (max-width: 819px) {
+  .paineis {
+    overflow-y: auto;
+  }
+}
+
+.ficha .painel {
+  overflow: visible;
+}
+
+.paineis {
+  overflow-y: auto;
+}
+/* ---------- carrossel (usado no LABS e na página inicial) ---------- */
+.car {
+  position: relative;
+  display: block;
+  background: #0F1A16;
+  overflow: hidden;
+}
+
+.car-slides {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+.car-s {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  transition: opacity .7s ease;
+  pointer-events: none;
+}
+
+.car-s.is-ativo {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.car-s img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.car-s figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 14px;
+  background: rgba(10,18,15,.82);
+  color: #F2EFE4;
+  font-size: .86rem;
+  line-height: 1.35;
+}
+
+.car-ctl {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px;
+  pointer-events: none;
+}
+
+.car-ctl[hidden] {
+  display: none;
+}
+
+.car-ctl button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: rgba(10,18,15,.78);
+  color: #F2EFE4;
+  font: 700 1.2rem/1 sans-serif;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.car-ctl button:hover {
+  background: #0A120F;
+}
+
+.car-ctl button:focus-visible {
+  outline: 3px solid #F2EFE4;
+  outline-offset: 2px;
+}
+
+.car-pontos {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.car-pontos button {
+  width: 24px;
+  height: 44px;
+  background: none;
+  position: relative;
+}
+
+.car-pontos button::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 20px;
+  height: 4px;
+  background: rgba(242,239,228,.45);
+}
+
+.car-pontos button[aria-current="true"]::after {
+  background: #F2EFE4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .car-s {
+    transition: none;
+  }
+}
+
+.card-vazio h2 {
+  font-size: clamp(.95rem,4.2vw,1.2rem);
+}
+
+@media (min-width: 720px) {
+  .card-vazio h2 {
+    font-size: clamp(1rem,2.1vw,1.3rem);
+  }
+}
+
+@media (min-width: 1100px) {
+  .card-vazio h2 {
+    font-size: clamp(.75rem,.95vw,.95rem);
+  }
+}
+
+@media (max-width: 719px) {
+  .ficha {
+    max-height: calc(100dvh - 16px);
+  }
+
+  .paineis {
+    padding: 10px;
+  }
+
+  .par {
+    gap: 10px;
+  }
+
+  .lista div {
+    padding: 5px 9px;
+  }
+
+  .lista dt {
+    font-size: .88rem;
+  }
+
+  .lista dd {
+    font-size: .8rem;
+    line-height: 1.3;
+  }
+
+  .painel h3 {
+    margin-bottom: 6px;
+    font-size: .95rem;
+  }
+
+  .baixar .sha,
+  .baixar .aviso + .acoes + p {
+    display: none;
+  }
+
+  .baixar {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .baixar li {
+    margin-bottom: 4px;
+    font-size: .84rem;
+    line-height: 1.32;
+  }
+
+  .baixar .nota {
+    font-size: .82rem;
+  }
+
+  .acoes-col .btn {
+    min-height: 44px;
+    padding-block: .55em;
+  }
+}
+
+@media (max-width: 719px) {
+  .so-teclado {
+    display: none;
+  }
+}

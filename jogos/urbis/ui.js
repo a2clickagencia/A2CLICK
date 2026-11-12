@@ -273,7 +273,7 @@ function applyTiles(tool, tiles) {
     else if (tool === 'hwy') c = placeRoad(i, T_HWY);
     else if (tool === 'pline') c = placePline(i);
     else if (tool === 'dezone') c = dezone(i);
-    else if (tool === 'bulldoze') { const t = G.type[i]; if (t === T_EMPTY && !G.tree[i]) continue; if (t === T_BLD) { const d = BYID[G.bk[G.own[i]]]; if (d.once) delete G.built[d.key]; } c = clearTile(i, t === T_ZONE && G.own[i] >= 0); }
+    else if (tool === 'bulldoze') { const t = G.type[i]; if (t === T_EMPTY && !G.tree[i]) continue; if (t === T_BLD) { const d = BYID[G.bk[G.own[i]]]; if (d.once) delete G.built[d.key]; } c = clearTile(i, false); }   // v1.3: demolir remove o prédio E o zoneamento (antes a zona ficava e o prédio voltava a crescer)
     else if (tool === 'trees') { if (G.type[i] === T_EMPTY && !G.terr[i] && G.tree[i] < 3) { touch(i); G.tree[i] = Math.min(3, G.tree[i] + 2); markDirtyIdx(i); c = 3; } }
     else if (tool === 'tWater') { if (!G.terr[i] && (G.type[i] === T_EMPTY || G.type[i] === T_RUBBLE)) { touch(i); G.terr[i] = 1; G.tree[i] = 0; G.type[i] = T_EMPTY; markDirtyIdx(i); for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny)) markDirtyIdx(idx(nx, ny)); } c = 50; } }
     else if (tool === 'tLand') { if (G.terr[i] && G.type[i] === T_EMPTY) { touch(i); G.terr[i] = 0; markDirtyIdx(i); for (let d = 0; d < 4; d++) { const nx = x + DX[d], ny = y + DY[d]; if (inb(nx, ny)) markDirtyIdx(idx(nx, ny)); } c = 50; } }

@@ -82,8 +82,15 @@ function drawTraffic() {
   if (z < CAR_MIN_ZOOM) return;
   const tm = frameT, peds = z >= PED_MIN_ZOOM, pedMul = 1 - nightF * 0.7;
   const [x0, y0, x1, y1] = visibleGridBounds(1);
+  const sparkA = new Path2D(), sparkB = new Path2D(), boats = [];
   for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
     const i = y * N + x, t = G.type[i];
+    if (t === T_EMPTY && G.terr[i]) {   // v1.3: brilhos do sol na água e barcos
+      const h = hash32(i * 5 + 11), ph = frac(tm * 0.3 + (h & 1023) / 1024);
+      if (ph < 0.09 && nightF < 0.5) { const gx = x + ((h >>> 10) & 255) / 256, gy = y + ((h >>> 18) & 255) / 256; (ph < 0.045 ? sparkA : sparkB).rect(PX(gx, gy) - 1.6, PY(gx, gy, 0) - 0.5, 3.2, 1); }
+      if (WDEP && WDEP[i] >= 3 && (h % 89) === 0) boats.push(x, y, h);
+      continue;
+    }
     if (t === T_BLD) { if (peds && G.own[i] === i && PARK_KEYS[BYID[G.bk[i]].key]) parkWalkers(i, tm); continue; }
     if (t !== T_ROAD && t !== T_HWY && t !== T_BRIDGE) continue;
     if (!onScreen(PX(x + 0.5, y + 0.5), PY(x + 0.5, y + 0.5, 0), 60)) continue;
@@ -99,8 +106,31 @@ function drawTraffic() {
       else carsOnTile(x, y, i, T_ROAD, m, CARS, tm, z, null);
     }
   }
+  g.fillStyle = 'rgba(255,255,255,0.85)'; g.fill(sparkA); g.fillStyle = 'rgba(255,255,255,0.45)'; g.fill(sparkB);
+  for (let k = 0; k < boats.length; k += 3) drawBoat(g, boats[k], boats[k + 1], boats[k + 2], tm);
   drawCarList(g, CARS, z);
   flushPeds(g, tm);
+}
+// v1.3: barcos (veleiros e lanchas) navegando em águas profundas, com rastro
+function drawBoat(g, x, y, h, tm) {
+  const alongX = h & 1, sail = (h >>> 1) & 1, ph = tm * 0.05 + (h & 255);
+  const off = Math.sin(ph) * 1.4, vel = Math.cos(ph) >= 0 ? 1 : -1;
+  const gx = x + 0.5 + (alongX ? off : 0), gy = y + 0.5 + (alongX ? 0 : off), ax = alongX ? vel : 0, ay = alongX ? 0 : vel;
+  const bob = Math.sin(tm * 2 + h) * 0.4;
+  // rastro
+  g.strokeStyle = 'rgba(255,255,255,0.5)'; g.lineWidth = 0.8; g.beginPath();
+  for (const sd of [-1, 1]) { g.moveTo(PX(gx - ax * 0.12, gy - ay * 0.12), PY(gx - ax * 0.12, gy - ay * 0.12, 0)); g.lineTo(PX(gx - ax * 0.55 - ay * sd * 0.14, gy - ay * 0.55 + ax * sd * 0.14), PY(gx - ax * 0.55 - ay * sd * 0.14, gy - ay * 0.55 + ax * sd * 0.14, 0)); }
+  g.stroke();
+  const L = sail ? 0.24 : 0.2, Wd = 0.08;
+  const bx0 = alongX ? gx - L / 2 : gx - Wd / 2, bx1 = alongX ? gx + L / 2 : gx + Wd / 2, by0 = alongX ? gy - Wd / 2 : gy - L / 2, by1 = alongX ? gy + Wd / 2 : gy + L / 2;
+  vbox(1, bx0, by0, bx1, by1, bob, bob + 2.2, sail ? [245, 245, 240] : [200, 60, 50], [235, 225, 205]);
+  if (!sail) vbox(2, gx - 0.03 - ax * 0.03, gy - 0.03 - ay * 0.03, gx + 0.03 - ax * 0.03, gy + 0.03 - ay * 0.03, bob + 2.2, bob + 4, [240, 240, 240]);
+  flushBatch(g);
+  if (sail) {
+    const mx = PX(gx, gy), my = PY(gx, gy, bob + 2);
+    g.strokeStyle = '#6b5a45'; g.lineWidth = 0.6; g.beginPath(); g.moveTo(mx, my); g.lineTo(mx, my - 13); g.stroke();
+    g.fillStyle = 'rgba(255,255,255,0.95)'; g.beginPath(); g.moveTo(mx + 0.4, my - 13); g.lineTo(mx + 0.4, my - 1); g.lineTo(mx + 6 * (alongX ? vel : -vel), my - 2); g.closePath(); g.fill();
+  }
 }
 // carros no viaduto: desenhados depois dos objetos, mas escondidos se um prédio à frente os cobre
 function drawElevatedTraffic() {

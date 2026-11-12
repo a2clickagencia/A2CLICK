@@ -13,6 +13,7 @@
 # (ou outro endereço) e o site aponta para ele por aqui. Trocar de versão é mudar só esta linha (veja o README).
 # O Release do GitHub (arquivo Urbis-Setup.exe) precisa existir antes de este arquivo ir ao ar; veja o manual.
 /baixar/urbis    https://github.com/a2clickagencia/A2CLICK/releases/latest/download/Urbis-Setup.exe  302
+/baixar/urbis-atualizacao    https://github.com/a2clickagencia/A2CLICK/releases/latest/download/Urbis-Atualizacao-1.3.0.zip  302
 /urbis           /labs#urbis  302
 /cabecudos       /labs#cabecudos  302
 /atp             /labs#atp  302

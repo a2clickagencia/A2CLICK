@@ -116,24 +116,66 @@
     });
   }
 
-  // ---------- galerias: o clique troca a foto grande; sem JavaScript a miniatura abre a imagem ----------
-  $$('[data-galeria]').forEach(function (g) {
-    var grande = $('[data-grande]', g);
-    var legenda = $('[data-legenda]', g);
-    var minis = $$('.mini a', g);
-    minis.forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        var base = a.getAttribute('data-base');
-        grande.src = base + '-1280w.webp';
-        grande.srcset = base + '-640w.webp 640w, ' + base + '-1280w.webp 1280w';
-        grande.alt = a.getAttribute('data-alt') || '';
-        if (legenda) legenda.textContent = a.getAttribute('data-alt') || '';
-        minis.forEach(function (m) { m.removeAttribute('aria-current'); });
-        a.setAttribute('aria-current', 'true');
+  // ---------- carrossel: setas, pontos e troca automática (pausa ao passar o mouse, focar ou tocar) ----------
+  (function () {
+    var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    Array.prototype.slice.call(document.querySelectorAll('[data-car]')).forEach(function (c) {
+      var slides = Array.prototype.slice.call(c.querySelectorAll('.car-s'));
+      var ctl = c.querySelector('.car-ctl');
+      if (slides.length < 2 || !ctl) return;
+      var i = 0, tempo = parseInt(c.getAttribute('data-auto'), 10) || 0, t = null, parado = reduz, solto = false;
+      function btn(txt, rot, fn) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.textContent = txt; b.setAttribute('aria-label', rot);
+        b.addEventListener('click', fn);
+        return b;
+      }
+      var pontos = document.createElement('div');
+      pontos.className = 'car-pontos';
+      var bp = slides.map(function (s, n) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.setAttribute('aria-label', 'Imagem ' + (n + 1) + ' de ' + slides.length);
+        b.addEventListener('click', function () { ir(n); parar(true); });
+        pontos.appendChild(b);
+        return b;
       });
+      var anterior = btn('‹', 'Imagem anterior', function () { ir(i - 1); parar(true); });
+      var proximo = btn('›', 'Próxima imagem', function () { ir(i + 1); parar(true); });
+      ctl.appendChild(anterior); ctl.appendChild(pontos); ctl.appendChild(proximo);
+      var pausa = null;
+      if (tempo && !reduz) {
+        pausa = btn('❚❚', 'Pausar a troca automática', function () { parar(!solto); });
+        ctl.appendChild(pausa);
+      }
+      ctl.hidden = false;
+      function ir(n) {
+        i = (n + slides.length) % slides.length;
+        slides.forEach(function (s, k) {
+          var on = k === i;
+          s.classList.toggle('is-ativo', on);
+          s.setAttribute('aria-hidden', on ? 'false' : 'true');
+          bp[k].setAttribute('aria-current', on ? 'true' : 'false');
+        });
+      }
+      function rodar() {
+        clearInterval(t);
+        if (tempo && !parado && !solto && !document.hidden) t = setInterval(function () { ir(i + 1); }, tempo);
+      }
+      function parar(sim) {
+        solto = sim;
+        if (pausa) { pausa.textContent = sim ? '▶' : '❚❚'; pausa.setAttribute('aria-label', sim ? 'Retomar a troca automática' : 'Pausar a troca automática'); }
+        rodar();
+      }
+      c.addEventListener('mouseenter', function () { parado = true; rodar(); });
+      c.addEventListener('mouseleave', function () { parado = reduz; rodar(); });
+      c.addEventListener('focusin', function () { parado = true; rodar(); });
+      c.addEventListener('focusout', function () { parado = reduz; rodar(); });
+      c.addEventListener('touchstart', function () { parado = true; rodar(); }, { passive: true });
+      document.addEventListener('visibilitychange', rodar);
+      ir(0);
+      rodar();
     });
-  });
+  })();
 
   // o instalador é só para Windows
   var avisoSistema = $('#aviso-sistema');
