@@ -73,12 +73,13 @@
     f.addEventListener('close', function () { if (ultimo && ultimo.focus) ultimo.focus(); });
   });
 
-  // atalhos de endereço: /labs#cabecudos e /labs#urbis abrem a ficha
+  // atalhos de endereço: /labs#cabecudos, #urbis, #atp e #togado abrem a ficha
   function porEndereco() {
     var h = location.hash;
     if (h === '#cabecudos') abrir('ficha-cabecudos', 'jogar');
     else if (h === '#urbis') abrir('ficha-urbis', 'baixar');
     else if (h === '#atp') abrir('ficha-atp', 'visao');
+    else if (h === '#togado') abrir('ficha-togado', 'visao');
   }
   porEndereco();
 
