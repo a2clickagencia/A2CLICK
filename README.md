@@ -45,7 +45,7 @@ Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta
 - Fonte da página: `build/labs_page.py` (fora do repositório publicado), `src/css/labs.css` e `src/js/labs.js`. Edite e rode o gerador e o `python3 tools/build.py`. Quem edita só o `labs.html` pode alterar textos direto.
 - Botão "LABS" no topo do site, ao lado do WhatsApp, e faixa "Entrar no A² LABS" no fim da página inicial.
 - `_headers` tem um bloco `/labs` com a CSP que libera o jogo (`frame-src https://cabecudosfcfinal.netlify.app`).
-- Endereços diretos: `/labs#cabecudos`, `/labs#urbis`, `/labs#atp` e `/labs#togado` abrem a ficha; `/cabecudos`, `/urbis`, `/atp`, `/togado` e `/baixar/urbis` estão no `_redirects`.
+- Endereços diretos: `/labs#cabecudos`, `#urbis`, `#atp`, `#togado` e `#novus` abrem a ficha; `/cabecudos`, `/urbis`, `/atp`, `/togado`, `/novus` e `/baixar/urbis` estão no `_redirects`. Os cards são quadrados (3 por linha) com telas que trocam sozinhas; o tempo de cada um fica em `data-tempo` no `labs.html`.
 
 ### Instalador do Urbis (78 MB)
 

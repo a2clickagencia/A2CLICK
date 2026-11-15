@@ -375,280 +375,6 @@ p {
   }
 }
 
-/* ---------- vitrine de projetos ---------- */
-.cards {
-  display: grid;
-  gap: 16px;
-  padding-bottom: 24px;
-}
-
-@media (min-width: 720px) {
-  .cards {
-    grid-template-columns: repeat(2,1fr);
-  }
-}
-
-@media (min-width: 1100px) {
-  .cards {
-    grid-template-columns: repeat(4,1fr);
-  }
-
-  .card h2 {
-    font-size: clamp(1.15rem,1.6vw,1.45rem);
-  }
-}
-
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--campo-2);
-  scroll-margin-top: calc(var(--barra) + 16px);
-}
-
-.card-img {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  background: var(--pinho);
-}
-
-.card-img img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: opacity .45s ease,transform .8s ease;
-}
-
-.card-img .b {
-  opacity: 0;
-}
-
-.card-corpo {
-  display: grid;
-  gap: 10px;
-  padding: 20px 22px 24px;
-}
-
-.card h2 {
-  font-size: clamp(1.4rem,1.9vw,1.75rem);
-}
-
-.card-sub {
-  margin: 0;
-  color: var(--nota);
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-.card-num {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin: 6px 0 0;
-  font-size: .95rem;
-  color: var(--nota);
-}
-
-.card-num b {
-  font: 400 1.3rem/1 var(--display);
-  color: var(--giz);
-  margin-right: .25em;
-}
-
-/* a prévia: aparece ao passar o mouse ou focar; em tela de toque fica sempre visível, abaixo da imagem */
-.previa {
-  display: grid;
-  gap: 14px;
-  padding: 0 22px 22px;
-}
-
-.previa ul {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: .98rem;
-  line-height: 1.4;
-}
-
-.previa li {
-  padding-left: 14px;
-  position: relative;
-}
-
-.previa li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: .55em;
-  width: 6px;
-  height: 6px;
-  background: var(--giz);
-}
-
-.previa .acoes {
-  gap: 10px;
-}
-
-.previa .btn {
-  min-height: 46px;
-  padding: .7em 1.2em;
-  font-size: .95rem;
-}
-
-@media (max-width: 719px) {
-  .previa li:nth-child(n+4) {
-    display: none;
-  }
-}
-
-@media (hover: hover) and (min-width: 720px) {
-  .card-vitrine {
-    min-height: 540px;
-  }
-
-  .card-vitrine .previa {
-    position: absolute;
-    inset: 33% 0 0 0;
-    align-content: end;
-    padding: 22px;
-    background: var(--pinho);
-    transform: translateY(101%);
-    transition: transform .35s cubic-bezier(.2,.7,.2,1);
-  }
-
-  .card-vitrine .card-corpo {
-    flex: 1;
-    align-content: start;
-  }
-
-  .card-vitrine:hover .previa,
-  .card-vitrine:focus-within .previa {
-    transform: none;
-  }
-
-  .previa ul {
-    font-size: .92rem;
-  }
-
-  .previa .acoes {
-    flex-wrap: nowrap;
-  }
-
-  .previa .btn {
-    padding-inline: .9em;
-    white-space: nowrap;
-  }
-
-  .card-vitrine:hover .card-img img,
-  .card-vitrine:focus-within .card-img img {
-    transform: scale(1.04);
-  }
-
-  .card-vitrine:hover .card-img .b,
-  .card-vitrine:focus-within .card-img .b {
-    opacity: 1;
-  }
-
-  .card-vitrine:hover .card-corpo,
-  .card-vitrine:focus-within .card-corpo {
-    visibility: hidden;
-  }
-}
-
-.card-vazio {
-  justify-content: center;
-  padding: 28px 22px;
-  background: transparent;
-  border: 2px dashed var(--campo-3);
-  gap: 12px;
-}
-
-.card-vazio h2 {
-  font-size: clamp(1.25rem,1.6vw,1.5rem);
-}
-
-.card-vazio p {
-  margin: 0;
-  color: var(--nota);
-}
-
-.card-vazio .acoes {
-  margin-top: 8px;
-}
-
-/* ---------- provas (o que diferencia, em três linhas) ---------- */
-.provas {
-  display: grid;
-  gap: 18px 40px;
-  margin: 0;
-  padding: 22px 0 4px;
-}
-
-@media (min-width: 900px) {
-  .provas {
-    grid-template-columns: repeat(3,1fr);
-  }
-}
-
-.provas dt,
-.provas dd {
-  margin: 0;
-}
-
-.provas b {
-  display: block;
-  font: 400 clamp(1.4rem,2.4vw,2rem)/1.1 var(--display);
-  color: var(--giz);
-}
-
-.provas p {
-  margin: 4px 0 0;
-  color: var(--nota);
-  font-size: .98rem;
-  line-height: 1.45;
-  max-width: 40ch;
-}
-
-/* ---------- contato (uma faixa) ---------- */
-.contato {
-  margin-top: 32px;
-  padding-block: 32px;
-  background: var(--pinho);
-}
-
-.contato .wrap {
-  display: grid;
-  gap: 18px 40px;
-  align-items: center;
-}
-
-.contato h2 {
-  font-size: clamp(1.5rem,2.8vw,2.3rem);
-}
-
-.contato p {
-  margin: 8px 0 0;
-  color: var(--nota);
-}
-
-.numeros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-@media (min-width: 960px) {
-  .contato .wrap {
-    grid-template-columns: 1fr auto;
-  }
-}
-
 /* ---------- ficha do projeto (janela) ---------- */
 .ficha {
   width: min(1120px,calc(100vw - 24px));
@@ -1081,108 +807,11 @@ kbd {
   html {
     scroll-behavior: auto;
   }
-
-  .card-img img,
-  .card-vitrine .previa {
-    transition: none;
-  }
-}
-
-#atp .card-img img {
-  object-position: left top;
-}
-
-.card-vazio .acoes {
-  flex-wrap: nowrap;
-  gap: 10px;
-}
-
-.card-vazio .btn {
-  flex: 1;
-  padding-inline: .6em;
 }
 
 /* =====================================================================
    Versão 2: cards centralizados, fichas sem rolagem, carrossel
    ===================================================================== */
-.card-corpo {
-  justify-items: center;
-  text-align: center;
-}
-
-.card h2,
-.card-vazio h2 {
-  width: 100%;
-  margin: 0;
-  font-size: clamp(1.15rem,5.4vw,1.5rem);
-  white-space: nowrap;
-  text-align: center;
-}
-
-@media (min-width: 720px) {
-  .card h2,
-  .card-vazio h2 {
-    font-size: clamp(1.1rem,2.6vw,1.5rem);
-  }
-}
-
-@media (min-width: 1100px) {
-  .card h2,
-  .card-vazio h2 {
-    font-size: clamp(1rem,1.38vw,1.4rem);
-  }
-}
-
-.card-vazio {
-  text-align: center;
-}
-
-.card-vazio .acoes {
-  justify-content: center;
-}
-
-.card-sub {
-  text-align: center;
-}
-
-.card-num {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 8px;
-  width: 100%;
-  margin: 8px 0 0;
-  padding-top: 14px;
-  border-top: 2px solid var(--campo-3);
-  text-align: center;
-  font-size: .8rem;
-  line-height: 1.25;
-}
-
-.card-num span {
-  display: grid;
-  justify-items: center;
-  align-content: start;
-  gap: 5px;
-}
-
-.card-num b {
-  display: block;
-  margin: 0;
-  font: 400 clamp(1.05rem,1.45vw,1.35rem)/1 var(--display);
-  white-space: nowrap;
-}
-
-@media (min-width: 1100px) {
-  .card-num {
-    gap: 4px;
-    font-size: .76rem;
-  }
-
-  .card-num b {
-    font-size: clamp(.95rem,1.15vw,1.2rem);
-  }
-}
-
 /* ficha compacta: tudo cabe sem rolar */
 .ficha {
   width: min(1000px,calc(100vw - 24px));
@@ -1492,22 +1121,6 @@ kbd {
   }
 }
 
-.card-vazio h2 {
-  font-size: clamp(.6rem,3.3vw,.95rem);
-}
-
-@media (min-width: 720px) {
-  .card-vazio h2 {
-    font-size: clamp(.8rem,1.95vw,1.3rem);
-  }
-}
-
-@media (min-width: 1100px) {
-  .card-vazio h2 {
-    font-size: clamp(.6rem,.95vw,.8rem);
-  }
-}
-
 @media (max-width: 719px) {
   .ficha {
     max-height: calc(100dvh - 16px);
@@ -1571,16 +1184,76 @@ kbd {
   }
 }
 
-/* 5 cards: os 4 projetos ficam lado a lado e "O próximo experimento" vira uma faixa na linha de baixo */
-@media (min-width:720px) {
-  .card-vazio { grid-column: 1 / -1; }
-  .card-vazio h2 { font-size: clamp(1.1rem, 2.4vw, 1.4rem); }
-  .card-vazio p { max-width: 60ch; margin-inline: auto; }
+
+/* =====================================================================
+   Versão 3: quadrados iguais, 3 por linha, com telas em movimento
+   ===================================================================== */
+.cards { display: grid; gap: 16px; padding-bottom: 8px; }
+@media (min-width: 720px) { .cards { grid-template-columns: repeat(2,1fr); } }
+@media (min-width: 1100px) { .cards { grid-template-columns: repeat(3,1fr); gap: 20px; } }
+
+.card { position: relative; display: flex; flex-direction: column; aspect-ratio: 1 / 1; overflow: hidden; background: var(--campo-2); scroll-margin-top: calc(var(--barra) + 16px); }
+.card-show { position: relative; flex: none; aspect-ratio: 16 / 10; overflow: hidden; background: var(--pinho); }
+.card-show img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.06); transition: opacity .9s ease, transform 6s linear; }
+.card-show img.is-ativo { opacity: 1; transform: scale(1); }
+#atp .card-show img { object-position: left top; }
+.card-barra { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--giz); }
+.card-barra.anda { animation: card-encher var(--tempo,4s) linear forwards; }
+@keyframes card-encher { to { width: 100%; } }
+.card-abrir { position: absolute; inset: 0 0 auto 0; aspect-ratio: 16 / 10; z-index: 1; border: 0; background: transparent; cursor: pointer; }
+.card-tag { position: absolute; z-index: 2; left: 12px; top: 12px; padding: .35em .7em; background: rgba(15,26,22,.86); color: var(--tinta); font: 700 .78rem/1.2 var(--texto); letter-spacing: .02em; pointer-events: none; }
+.card-info { flex: 1; display: grid; align-content: center; justify-items: center; gap: 6px; padding: 14px 18px 18px; text-align: center; }
+.card-info h2 { font-size: clamp(1.15rem,1.7vw,1.45rem); white-space: nowrap; }
+.card-sub { margin: 0; color: var(--nota); font-size: .95rem; line-height: 1.35; max-width: 34ch; }
+.card-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.card-acoes .btn { min-height: 44px; padding: .6em 1.2em; font-size: .95rem; }
+@media (hover: hover) {
+  .card:hover .card-show img.is-ativo { transform: scale(1.03); }
+  .card:hover .card-tag { background: var(--giz); color: var(--tinta-escura); }
 }
-@media (min-width:960px) {
-  .card-vazio { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px 32px; padding: 22px 28px; text-align: left; }
-  .card-vazio h2 { width: auto; font-size: clamp(1.1rem, 1.5vw, 1.35rem); text-align: left; }
-  .card-vazio p { margin: 0; }
-  .card-vazio .acoes { margin-top: 0; }
-  .card-vazio .btn { flex: none; min-width: 120px; }
+@media (max-width: 719px) { .card { aspect-ratio: auto; } }
+
+/* o sexto quadrado: chamada para novos projetos */
+.card-cta { justify-content: center; gap: 12px; padding: clamp(22px,3vw,34px); background: var(--giz); color: var(--tinta-escura); }
+.card-cta h2 { font-size: clamp(1.5rem,2.4vw,2.1rem); line-height: 1.08; }
+.cta-kicker { margin: 0; font: 700 .8rem/1.2 var(--texto); letter-spacing: .12em; text-transform: uppercase; }
+.card-cta .cta-kicker { color: rgba(22,35,31,.75); }
+.cta-txt { margin: 0; font-size: 1rem; line-height: 1.45; }
+.btn-pinho { background: var(--pinho); color: var(--tinta); }
+.btn-pinho:hover { background: #0F1A16; }
+
+/* WhatsApp do Pedro e do Igor, sempre juntos e do mesmo tamanho */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+.btn-zap { justify-content: flex-start; min-height: 56px; padding: .6em .9em; text-align: left; }
+.btn-zap span { display: grid; line-height: 1.15; }
+.btn-zap small { font-size: .82em; white-space: nowrap; }
+@media (max-width: 380px) { .duo { grid-template-columns: 1fr; } }
+
+/* chamada para novos clientes (substitui a faixa de números) */
+.chamada { margin-top: 40px; padding-block: clamp(32px,5vw,64px); background: var(--pinho); }
+.chamada .wrap { display: grid; gap: 28px 48px; }
+.chamada .cta-kicker { color: var(--giz); }
+.chamada h2 { margin-top: 10px; font-size: clamp(1.6rem,3.4vw,2.8rem); max-width: 22ch; }
+.chamada-txt { margin: 14px 0 0; color: var(--nota); font-size: clamp(1.02rem,1.4vw,1.2rem); max-width: 52ch; }
+.chamada-tipos, .chamada-passos { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.chamada-tipos li, .chamada-passos li { display: grid; gap: 4px; padding: 14px 16px; background: var(--campo); }
+.chamada-tipos b, .chamada-passos b { font-size: 1.02rem; }
+.chamada-tipos span, .chamada-passos span { color: var(--nota); font-size: .94rem; line-height: 1.4; }
+.chamada-tipos li { border-left: 4px solid var(--giz); }
+.chamada-passos { counter-reset: passo; }
+.chamada-passos li { counter-increment: passo; grid-template-columns: auto 1fr; column-gap: 14px; }
+.chamada-passos li::before { content: counter(passo); grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; background: var(--giz); color: var(--tinta-escura); font: 400 1.1rem/1 var(--display); }
+.chamada-acao { display: grid; gap: 12px; align-content: start; }
+.chamada-acao p { margin: 0; }
+.chamada-acao .btn-tom { justify-self: start; }
+@media (min-width: 960px) {
+  .chamada .wrap { grid-template-columns: 1fr 1fr; }
+  .chamada-topo { grid-column: 1 / -1; }
+  .chamada-acao { grid-column: 1 / -1; grid-template-columns: auto minmax(0,520px) auto; align-items: center; gap: 16px 24px; }
 }
+
+/* rodapé de contato de cada ficha */
+.ficha-contato { display: grid; gap: 10px; align-items: center; padding: 12px 16px 14px; border-top: 2px solid var(--campo-2); }
+.ficha-contato p { margin: 0; font-size: .95rem; }
+.ficha-contato .btn-zap { min-height: 50px; }
+@media (min-width: 720px) { .ficha-contato { grid-template-columns: 1fr minmax(0,440px); } }

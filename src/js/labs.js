@@ -73,13 +73,14 @@
     f.addEventListener('close', function () { if (ultimo && ultimo.focus) ultimo.focus(); });
   });
 
-  // atalhos de endereço: /labs#cabecudos, #urbis, #atp e #togado abrem a ficha
+  // atalhos de endereço: /labs#cabecudos, #urbis, #atp, #togado e #novus abrem a ficha
   function porEndereco() {
     var h = location.hash;
     if (h === '#cabecudos') abrir('ficha-cabecudos', 'jogar');
     else if (h === '#urbis') abrir('ficha-urbis', 'baixar');
     else if (h === '#atp') abrir('ficha-atp', 'visao');
     else if (h === '#togado') abrir('ficha-togado', 'visao');
+    else if (h === '#novus') abrir('ficha-novus', 'jogar');
   }
   porEndereco();
 
@@ -175,6 +176,35 @@
       document.addEventListener('visibilitychange', rodar);
       ir(0);
       rodar();
+    });
+  })();
+
+
+  // ---------- telas dos cards: cada projeto troca no seu próprio ritmo ----------
+  (function () {
+    var reduz = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $$('[data-show]').forEach(function (c) {
+      var imgs = $$('img', c), barra = $('.card-barra', c);
+      if (imgs.length < 2 || reduz) return;
+      var i = 0, tempo = parseInt(c.getAttribute('data-tempo'), 10) || 4000, t = null, visivel = true;
+      c.style.setProperty('--tempo', tempo + 'ms');
+      function ir() {
+        imgs[i].classList.remove('is-ativo');
+        i = (i + 1) % imgs.length;
+        imgs[i].classList.add('is-ativo');
+        anda();
+      }
+      function anda() { if (!barra) return; barra.classList.remove('anda'); void barra.offsetWidth; barra.classList.add('anda'); }
+      function rodar() {
+        clearTimeout(t); clearInterval(t);
+        if (!visivel || document.hidden) { if (barra) barra.classList.remove('anda'); return; }
+        anda(); t = setInterval(ir, tempo);
+      }
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) { visivel = es[0].isIntersecting; rodar(); }).observe(c);
+      }
+      document.addEventListener('visibilitychange', rodar);
+      t = setTimeout(rodar, parseInt(c.getAttribute('data-atraso'), 10) || 0);
     });
   })();
 
