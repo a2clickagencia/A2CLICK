@@ -20,6 +20,12 @@
 /togado          /labs#togado  302
 /novus           /labs#novus  302
 /novus-ordo      /labs#novus  302
+/faunopolis      /labs#faunopolis  302
+/truco           /labs#truco  302
+/truco-universitario  /labs#truco  302
+/zap-universitario    /labs#truco  302
+# Instalador do Faunópolis (84 MB) no GitHub Releases do repositório a2clickagencia/faunopolis. Versão nova: troque esta linha.
+/baixar/faunopolis    https://github.com/a2clickagencia/faunopolis/releases/download/v7.1.0/Faunopolis-Setup-7.1.0.exe  302
 /laboratorio     /labs  301
 
 # Endereços antigos

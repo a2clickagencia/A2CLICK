@@ -73,7 +73,7 @@
     f.addEventListener('close', function () { if (ultimo && ultimo.focus) ultimo.focus(); });
   });
 
-  // atalhos de endereço: /labs#cabecudos, #urbis, #atp, #togado e #novus abrem a ficha
+  // atalhos de endereço: /labs#cabecudos, #urbis, #atp, #togado, #novus, #faunopolis e #truco abrem a ficha
   function porEndereco() {
     var h = location.hash;
     if (h === '#cabecudos') abrir('ficha-cabecudos', 'jogar');
@@ -81,6 +81,8 @@
     else if (h === '#atp') abrir('ficha-atp', 'visao');
     else if (h === '#togado') abrir('ficha-togado', 'visao');
     else if (h === '#novus') abrir('ficha-novus', 'jogar');
+    else if (h === '#faunopolis') abrir('ficha-faunopolis', 'jogar');
+    else if (h === '#truco' || h === '#zap') abrir('ficha-truco', 'jogar');
   }
   porEndereco();
 
@@ -211,4 +213,5 @@
   // o instalador é só para Windows
   var avisoSistema = $('#aviso-sistema');
   if (avisoSistema && !/Windows/i.test(navigator.userAgent)) avisoSistema.hidden = false;
+  if (!/Windows/i.test(navigator.userAgent)) $$('.aviso-win').forEach(function (el) { el.hidden = false; });
 })();
