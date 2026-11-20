@@ -24,8 +24,9 @@
 /truco           /labs#truco  302
 /truco-universitario  /labs#truco  302
 /zap-universitario    /labs#truco  302
-# Instalador do Faunópolis (84 MB) no GitHub Releases do repositório a2clickagencia/faunopolis. Versão nova: troque esta linha.
-/baixar/faunopolis    https://github.com/a2clickagencia/faunopolis/releases/download/v7.1.0/Faunopolis-Setup-7.1.0.exe  302
+# Instalador do Faunópolis (84 MB) no GitHub Releases do repositório a2clickagencia/faunopolis. O link "latest" sempre baixa a versão mais nova.
+/baixar/faunopolis    https://github.com/a2clickagencia/faunopolis/releases/latest/download/Faunopolis-Setup.exe  302
+/baixar/faunopolis-celular    https://faunopolis.a2clickagencia.workers.dev/#instalar  302
 /laboratorio     /labs  301
 
 # Endereços antigos

@@ -46,7 +46,7 @@ Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta
 - Botão "LABS" no topo do site, ao lado do WhatsApp, e faixa "Entrar no A² LABS" no fim da página inicial.
 - `_headers` tem um bloco `/labs` com a CSP que libera o jogo (`frame-src https://cabecudosfcfinal.netlify.app`).
 - Endereços diretos: `/labs#cabecudos`, `#urbis`, `#atp`, `#togado`, `#novus`, `#faunopolis` e `#truco` abrem a ficha; `/cabecudos`, `/urbis`, `/atp`, `/togado`, `/novus`, `/faunopolis`, `/truco`, `/zap-universitario`, `/baixar/urbis` e `/baixar/faunopolis` estão no `_redirects`.
-- **Faunópolis:** joga em https://faunopolis.a2clickagencia.workers.dev; o instalador do Windows (84 MB) fica no GitHub Releases de a2clickagencia/faunopolis e `/baixar/faunopolis` aponta direto para o `.exe` (o download começa na hora). Versão nova: troque a linha no `_redirects`. Imagens: `fauno-*.webp`.
+- **Faunópolis:** joga em https://faunopolis.a2clickagencia.workers.dev, no computador, no celular e no tablet (instalável pelo navegador e jogável sem internet). `/baixar/faunopolis` baixa direto o instalador do Windows (84 MB, GitHub Releases de a2clickagencia/faunopolis, sempre a versão mais nova), e `/baixar/faunopolis-celular` abre o jogo já no guia de instalação para Android, iPhone e iPad.
 - **Truco Universitário** ("Aqui é Zap"): joga em https://truco-universitario.pages.dev. Imagens: `truco-*.webp`. Os cards são quadrados (3 por linha) com telas que trocam sozinhas; o tempo de cada um fica em `data-tempo` no `labs.html`.
 
 ### Instalador do Urbis (78 MB)
