@@ -824,6 +824,11 @@
     form.addEventListener('submit', function (e) { e.preventDefault(); enviar(campo.value); });
   })();
 
+  /* ---------- Menu: marca o botão Preços na página de preços ---------- */
+  if (/^\/precos/.test(location.pathname)) {
+    todos('.btn-precos').forEach(function (b) { b.setAttribute('aria-current', 'page'); });
+  }
+
   /* ---------- Funciona offline (service worker) ---------- */
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function () {

@@ -3829,20 +3829,28 @@ a.numero small {
   color: var(--bg);
 }
 
-/* Menu: Preços com o quadradinho da marca */
-.nav .links .link-precos::before,
-.gaveta .link-precos::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  vertical-align: middle;
+/* Menu: botão Preços ao lado do LABS, no mesmo estilo */
+.nav .btn-precos .precos-ic {
+  display: grid;
+  place-items: center;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 4px;
   background: var(--giz);
+  color: #16231F;
+  font-size: .68rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.nav .links .link-precos {
-  font-weight: 700;
+.nav .btn-precos[aria-current="page"] {
+  box-shadow: inset 0 0 0 2px var(--giz);
+}
+
+@media (max-width: 559px) {
+  .nav .btn-precos {
+    display: none;
+  }
 }
 
 /* ==========================================================

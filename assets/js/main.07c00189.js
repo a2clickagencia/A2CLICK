@@ -735,6 +735,9 @@ raiz.querySelector('.assist-fechar').addEventListener('click', function () { abr
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !painel.hidden) abrir(false); });
 form.addEventListener('submit', function (e) { e.preventDefault(); enviar(campo.value); });
 })();
+if (/^\/precos/.test(location.pathname)) {
+todos('.btn-precos').forEach(function (b) { b.setAttribute('aria-current', 'page'); });
+}
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
 window.addEventListener('load', function () {
 navigator.serviceWorker.register('/sw.js').catch(function () {});
