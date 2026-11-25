@@ -4834,3 +4834,11 @@ a.numero small {
   background: currentColor;
   transform: translateX(-35%) rotate(-24deg);
 }
+
+/* Títulos dos produtos: uma linha sempre que couber; se quebrar, a primeira linha vai cheia */
+.pl h3,
+.combo h3 {
+  text-wrap: wrap;
+  font-size: clamp(.98rem, 1.28vw, 1.18rem);
+  line-height: 1.15;
+}

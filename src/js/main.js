@@ -674,6 +674,36 @@
     if (alvo) { alvo.classList.add('aberto'); var v = alvo.querySelector('.pl-ver'); if (v) { v.setAttribute('aria-expanded', 'true'); v.textContent = 'Fechar'; } }
   })();
 
+  /* ---------- Preços: título de cada produto numa linha só ----------
+     Diminui a letra só o necessário para caber; abaixo de 12px, deixa quebrar (com a primeira linha cheia). */
+  (function titulosEmUmaLinha() {
+    var titulos = todos('.pl h3, .combo h3').filter(function (h) { return !h.querySelector('img'); });
+    if (!titulos.length) return;
+    function ajustar() {
+      titulos.forEach(function (h) {
+        h.style.fontSize = '';
+        h.style.whiteSpace = 'nowrap';
+        var base = parseFloat(getComputedStyle(h).fontSize);
+        var largura = h.clientWidth;
+        if (h.scrollWidth > largura) {
+          var novo = Math.floor(base * largura / h.scrollWidth * 10) / 10;
+          if (novo >= 12) h.style.fontSize = novo + 'px';
+          else h.style.whiteSpace = '';
+        }
+        if (h.style.fontSize && h.scrollWidth > h.clientWidth) h.style.fontSize = (parseFloat(h.style.fontSize) - .5) + 'px';
+      });
+    }
+    var espera;
+    function depois() { clearTimeout(espera); espera = setTimeout(ajustar, 80); }
+    window.addEventListener('resize', depois);
+    if ('ResizeObserver' in window) {
+      var obs = new ResizeObserver(depois);
+      todos('.pl-grade, .combo-grade').forEach(function (g) { obs.observe(g); });
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustar);
+    ajustar();
+  })();
+
   /* ---------- Página de preços: mensal ou anual ---------- */
   (function periodo() {
     var grupo = document.querySelector('.pr-periodo');
