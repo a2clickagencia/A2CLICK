@@ -2,7 +2,7 @@
    Páginas: busca na rede primeiro; sem internet, usa a cópia guardada ou a página offline.
    Demais arquivos: entrega a cópia guardada na hora e atualiza em segundo plano
    (stale-while-revalidate). VERSAO e GUARDAR são atualizados por tools/build.py. */
-const VERSAO = 'a2-5e3affcba4';
+const VERSAO = 'a2-5b39677338';
 const GUARDAR = [
   '/',
   '/precos',

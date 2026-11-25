@@ -3866,15 +3866,21 @@ a.numero small {
   margin-top: 18px;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .pr-topo-grade {
-    grid-template-columns: 1.1fr .9fr;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 48px;
     align-items: end;
   }
 }
 
 .pr-topo h1 {
-  font-size: clamp(2rem, 4.6vw, 3.8rem);
+  font-size: clamp(1.3rem, 5.6vw, 3.6rem);
+}
+
+.pr-topo h1 span {
+  display: block;
+  white-space: nowrap;
 }
 
 .pr-atalhos {

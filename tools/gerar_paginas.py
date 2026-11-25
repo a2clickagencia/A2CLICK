@@ -141,7 +141,7 @@ def precos():
     <div class="wrap">
       <nav class="migalhas" aria-label="Você está em"><a href="/">Início</a> <span aria-hidden="true">›</span> <span aria-current="page">Preços</span></nav>
       <div class="pr-topo-grade">
-        <h1 id="h1">Preço claro, sem letra miúda.</h1>
+        <h1 id="h1"><span>Preço claro,</span> <span>sem letra miúda.</span></h1>
         <p class="lede">Sites, cuidado mensal, marca, sistemas, jogos e Perfil no Google. Tudo com o que está incluso e como pagar, para você escolher com calma.</p>
       </div>
       <nav class="pr-atalhos" aria-label="Nesta página"><a href="#sites">Sites</a><a href="#cuidado">Cuidado mensal</a><a href="#marca">Marca</a><a href="#sistemas">Sistemas</a><a href="#jogos">Jogos</a><a href="#combos">Combos</a><a href="#extras">Extras</a><a href="#pagamento">Pagamento</a></nav>
