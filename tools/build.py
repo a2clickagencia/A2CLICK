@@ -142,7 +142,7 @@ def js_com_hash():
 def atualizar_sw(nome_js):
     sw = RAIZ / 'sw.js'
     texto = ler(sw)
-    guardar = ['/', '/quem-somos', '/labs', '/offline', '/assets/js/' + nome_js,
+    guardar = ['/', '/precos', '/quem-somos', '/labs', '/offline', '/assets/js/' + nome_js,
                '/assets/fonts/stretch-pro-latin.woff2', '/assets/fonts/bricolage-grotesque-latin.woff2',
                '/assets/img/logo/a2click-horizontal-negativo.svg', '/assets/img/favicon.svg']
     impressao = hashlib.sha256(''.join(ler(p) for p in PAGINAS).encode('utf-8') + nome_js.encode()).hexdigest()[:10]

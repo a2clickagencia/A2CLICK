@@ -38,6 +38,17 @@ Números de WhatsApp: Pedro `5519996022246`, Igor `5519988659584`. Aparecem nas 
 Fotos novas: exporte em WebP (qualidade ~82) nas mesmas larguras dos arquivos atuais e mantenha os nomes.
 Se trocar uma fonte, mude também o nome do arquivo (as fontes ficam guardadas por 1 ano no navegador).
 
+## Preços, perguntas de balcão e assistente virtual (novembro de 2026)
+
+- **Tabela única:** `tools/dados.py` guarda os preços (sites, cuidado mensal, marca, sistemas, jogos, combos, extras), as perguntas de balcão e o que o assistente sabe.
+  Mudou um valor? Rode `python3 tools/gerar_paginas.py` e depois `python3 tools/build.py`. Ele atualiza a página `/precos`, as perguntas da página inicial (e o FAQPage do Google), `assets/dados/assistente.json` e `functions/api/_conhecimento.js`.
+- **Página `/precos`:** aba "Preços" no menu. Conteúdo gerado entre `<!-- @precos -->` e `<!-- /@precos -->`.
+- **Página inicial:** "O que a gente faz" (abas, com preço em cada uma) e "Veja o seu negócio no Google" ficam lado a lado (`.ld-*` no CSS). Perguntas de balcão compactas, com busca e assuntos (gerado entre `<!-- @faq -->` e `<!-- /@faq -->`).
+- **Assistente virtual:** botão "Tire sua dúvida" no canto (em `partials/flutuante.html`, código em `src/js/main.js`). Responde na hora com as respostas prontas de `assets/dados/assistente.json`.
+  Para perguntas fora dessas, usa a IA do Claude pela função `functions/api/assistente.js` (Cloudflare Pages Functions), **só se** existir a variável secreta `ANTHROPIC_API_KEY` no projeto do Cloudflare Pages (Settings → Variables and secrets). Sem ela, o assistente indica o WhatsApp do Pedro ou do Igor.
+  Opcional: `ASSISTENTE_MODELO` (padrão `claude-opus-5-5`; `claude-haiku-5-5` custa bem menos). Defina um limite de gastos no console da Anthropic.
+- **A² LABS** não foi alterado. O `build.py` reescreve o fim de linha do `labs.html`; antes de enviar, rode `git checkout -- labs.html assets/js/labs.*` se não mexeu no LABS.
+
 ## A² LABS (/labs)
 
 Página própria, com menu próprio e cores invertidas (fundo verde-campo, tinta clara, giz dourado). É uma vitrine de cards, nesta ordem: Cabeçudos FC, ATP, Truco Universitário, Togado, Faunópolis, Urbis, Novus Ordo e, por último, o card de chamada para clientes ("O próximo pode ser o seu"). Cada card tem duas tarjas no canto superior: o tipo do projeto e o estado (`<span class="card-status" data-estado="concluido|correcoes|avaliacao">`, com bolinha verde, amarela ou azul): ao passar o mouse, o card mostra uma prévia (pontos principais e botões); em tela de toque a prévia fica sempre visível. "Ver detalhes" abre uma **ficha** com abas (Cabeçudos FC: Jogar, O jogo, Modos e controles, Por dentro; Urbis: Baixar, Galeria, A cidade, Versões). O Cabeçudos FC joga dentro da ficha, carregado só ao clicar. O ATP é um sistema fechado (login): a ficha mostra telas de demonstração, sem dados de alunos, e o botão "Acessar" leva a https://atp-app-two.vercel.app/. O Togado (app para aprender Direito) abre em https://togado.pages.dev/ pelo botão "Acessar"; a ficha tem as abas Visão geral, Como se estuda, Gamificação, Galeria e Versões. As imagens do Togado (`togado-*.webp`) são ilustrações feitas a partir da documentação da v1.0, não telas do app.

@@ -578,6 +578,252 @@
     });
   })();
 
+  /* ---------- Sem acento e em minúsculas (busca das perguntas e assistente) ---------- */
+  function normal(texto) {
+    return String(texto).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  /* ---------- Perguntas de balcão: busca, assuntos e "ver todas" ---------- */
+  (function balcao() {
+    var lista = $('faq-lista');
+    if (!lista) return;
+    var itens = todos('details', lista);
+    var busca = $('faq-busca');
+    var chips = todos('.balcao-chips button');
+    var mais = lista.querySelector('.balcao-mais');
+    var vazio = lista.querySelector('.balcao-vazio');
+    var VISIVEIS = 5;
+    var assunto = '';
+    var tudo = false;
+    todos('.balcao-busca, .balcao-chips, .balcao-ajuda .link-assist').forEach(function (el) { el.hidden = false; });
+    todos('.balcao-ajuda .so-sem-js').forEach(function (el) { el.hidden = true; });
+    var textos = itens.map(function (d) { return normal(d.textContent); });
+
+    function aplicar() {
+      var termos = normal(busca ? busca.value : '').split(/\s+/).filter(function (t) { return t.length > 1; });
+      var filtrando = termos.length || assunto;
+      var achados = 0;
+      itens.forEach(function (d, i) {
+        var ok = (!assunto || d.getAttribute('data-cat') === assunto) &&
+          termos.every(function (t) { return textos[i].indexOf(t) !== -1; });
+        if (ok) achados++;
+        d.hidden = !ok || (!filtrando && !tudo && achados > VISIVEIS);
+      });
+      if (vazio) vazio.hidden = achados > 0;
+      if (mais) {
+        mais.hidden = filtrando || tudo || itens.length <= VISIVEIS;
+        mais.textContent = 'Ver todas as perguntas (' + itens.length + ')';
+      }
+    }
+    chips.forEach(function (b) {
+      b.addEventListener('click', function () {
+        assunto = b.getAttribute('data-cat');
+        chips.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        aplicar();
+      });
+    });
+    if (busca) busca.addEventListener('input', aplicar);
+    if (mais) mais.addEventListener('click', function () { tudo = true; aplicar(); });
+    // Uma resposta aberta por vez, para a seção não crescer demais
+    itens.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (d.open) itens.forEach(function (o) { if (o !== d) o.open = false; });
+      });
+    });
+    aplicar();
+  })();
+
+  /* ---------- Página de preços: mensal ou anual ---------- */
+  (function periodo() {
+    var grupo = document.querySelector('.pr-periodo');
+    if (!grupo) return;
+    grupo.hidden = false;
+    var botoes = todos('button', grupo);
+    botoes.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var p = b.getAttribute('data-periodo');
+        botoes.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+        todos('[data-mensal]', $('cuidado')).forEach(function (el) { el.textContent = el.getAttribute('data-' + p); });
+      });
+    });
+  })();
+
+  /* ---------- Assistente virtual ----------
+     Respostas prontas (assets/dados/assistente.json) quando a pergunta é conhecida; para o resto,
+     pergunta à IA em /api/assistente. Sem IA configurada, sugere falar com o Pedro ou o Igor. */
+  (function assistente() {
+    var raiz = $('assist');
+    if (!raiz) return;
+    var botao = raiz.querySelector('.assist-btn');
+    var painel = $('assist-painel');
+    var caixa = raiz.querySelector('.assist-msgs');
+    var sugestoes = raiz.querySelector('.assist-sug');
+    var form = raiz.querySelector('.assist-form');
+    var campo = $('assist-in');
+    var base = null;
+    var ia = true;            // vira false se /api/assistente não estiver disponível
+    var historico = [];
+    var ocupado = false;
+    var SUGESTOES = ['Quanto custa um site?', 'Como posso pagar?', 'Quanto custa manter o site?', 'Vocês fazem logo?', 'Quanto tempo leva?', 'Falar com uma pessoa'];
+    var SINONIMOS = {
+      valor: 'custa', valores: 'custa', preco: 'custa', precos: 'custa', investimento: 'custa', caro: 'custa', barato: 'custa', cobram: 'custa', cobra: 'custa', orcamento: 'custa',
+      pagamento: 'pagar', pago: 'pagar', parcela: 'pagar', parcelar: 'pagar', parcelado: 'pagar', cartao: 'pagar', pix: 'pagar', vezes: 'pagar', boleto: 'pagar',
+      demora: 'tempo', prazo: 'tempo', dias: 'tempo', rapido: 'tempo', pronto: 'tempo', entrega: 'tempo',
+      logotipo: 'logo', identidade: 'logo', branding: 'logo', marca: 'logo',
+      manutencao: 'manter', mensalidade: 'manter', mensal: 'manter', cuidado: 'manter', plano: 'manter', planos: 'manter',
+      atualizar: 'mudar', alterar: 'mudar', trocar: 'mudar', alteracao: 'mudar',
+      advogado: 'advocacia', advogados: 'advocacia', escritorio: 'advocacia', oab: 'advocacia', juridico: 'advocacia',
+      maps: 'google', mapa: 'google', pesquisa: 'google', aparecer: 'google', encontrado: 'google',
+      reposicionamento: 'posicionamento', reposicionar: 'posicionamento', estudo: 'posicionamento',
+      endereco: 'dominio', 'com.br': 'dominio', site: 'site', sites: 'site'
+    };
+    var PARADAS = ' a o e as os um uma uns umas de da do das dos que para pra pro com sem em no na nos nas eu me meu minha voce voces vcs ser sao tem ter isso esse essa por mais se ja sim nao ou como qual quais quero queria gostaria saber sobre la aqui ai '.split(' ');
+
+    botao.hidden = false;
+    todos('[data-abrir-assistente]').forEach(function (b) {
+      b.hidden = false;
+      b.addEventListener('click', function () { abrir(true); });
+    });
+
+    function carregar() {
+      if (base) return Promise.resolve(base);
+      return fetch('/assets/dados/assistente.json').then(function (r) { return r.json(); })
+        .then(function (d) { base = d.base; return base; })
+        .catch(function () { base = []; return base; });
+    }
+
+    function palavras(texto) {
+      return normal(texto).replace(/[^a-z0-9.\s]/g, ' ').split(/\s+/).filter(function (p) {
+        return /^\d/.test(p) || (p.length > 1 && PARADAS.indexOf(p) === -1);
+      }).map(function (p) { return SINONIMOS[p] || p; });
+    }
+
+    function procurar(pergunta) {
+      var q = normal(pergunta).replace(/[^a-z0-9.\s]/g, ' ').replace(/\s+/g, ' ').trim();
+      var termos = palavras(pergunta);
+      var melhor = null, nota = 0;
+      (base || []).forEach(function (item) {
+        var n = 0;
+        if (item.k) {
+          item.k.forEach(function (k) {
+            if ((' ' + q + ' ').indexOf(' ' + k + ' ') !== -1 || (k.length > 4 && q.indexOf(k) !== -1)) n += 3;
+          });
+        } else {
+          var alvo = palavras(item.p).join(' ');
+          var resp = palavras(item.r).join(' ');
+          termos.forEach(function (t) {
+            var raizT = t.slice(0, 5);
+            if ((' ' + alvo + ' ').indexOf(' ' + t + ' ') !== -1) n += 1.4;
+            else if (raizT.length > 3 && alvo.indexOf(raizT) !== -1) n += 1;
+            else if (raizT.length > 3 && resp.indexOf(raizT) !== -1) n += 0.25;
+          });
+          if (termos.length) n = n * (1 + 1 / termos.length) / 2 + n / 2;
+        }
+        if (n > nota) { nota = n; melhor = item; }
+      });
+      return nota >= 1.8 ? melhor : null;
+    }
+
+    function escapar(t) {
+      return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; });
+    }
+
+    function balao(html, quem) {
+      var m = document.createElement('div');
+      m.className = 'assist-m assist-' + quem;
+      m.innerHTML = html;
+      caixa.appendChild(m);
+      caixa.scrollTop = caixa.scrollHeight;
+      return m;
+    }
+
+    function digitando() {
+      return balao('<span class="assist-pontos" aria-label="Escrevendo"><i></i><i></i><i></i></span>', 'bot');
+    }
+
+    function mostrarSugestoes(lista) {
+      sugestoes.innerHTML = '';
+      lista.forEach(function (s) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = s;
+        b.addEventListener('click', function () { enviar(s); });
+        sugestoes.appendChild(b);
+      });
+      sugestoes.hidden = !lista.length;
+    }
+
+    var CONTATO = 'Quer falar com uma pessoa? O <b>Pedro</b> está no (19) 99602-2246 e o <b>Igor</b> no (19) 98865-9584. É só tocar nos nomes aqui embaixo.';
+
+    function responderLocal(pergunta) {
+      var achou = procurar(pergunta);
+      if (achou) return achou.r;
+      if (/pessoa|humano|atendente|whats|falar com/.test(normal(pergunta))) return CONTATO;
+      return null;
+    }
+
+    function perguntarIA() {
+      return fetch('/api/assistente', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ mensagens: historico.slice(-8) })
+      }).then(function (r) {
+        if (r.status === 503 || r.status === 404 || r.status === 405) ia = false;
+        if (!r.ok) throw new Error('ia');
+        return r.json();
+      }).then(function (d) {
+        return escapar(d.texto).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+      });
+    }
+
+    function enviar(texto) {
+      texto = String(texto || '').trim().slice(0, 300);
+      if (!texto || ocupado) return;
+      ocupado = true;
+      campo.value = '';
+      mostrarSugestoes([]);
+      balao(escapar(texto), 'eu');
+      historico.push({ papel: 'usuario', texto: texto });
+      var espera = digitando();
+      carregar().then(function () {
+        var local = responderLocal(texto);
+        if (local || !ia) return local || 'Essa eu não sei responder direitinho, e prefiro não chutar. ' + CONTATO;
+        return perguntarIA().catch(function () {
+          return 'Essa eu não sei responder direitinho, e prefiro não chutar. ' + CONTATO;
+        });
+      }).then(function (html) {
+        setTimeout(function () {
+          espera.remove();
+          var m = balao(html, 'bot');
+          historico.push({ papel: 'assistente', texto: m.textContent });
+          ocupado = false;
+          mostrarSugestoes(SUGESTOES.filter(function (s) { return s !== texto; }).slice(0, 3));
+        }, 420);
+      });
+    }
+
+    function abrir(sim) {
+      painel.hidden = !sim;
+      botao.setAttribute('aria-expanded', String(sim));
+      raiz.classList.toggle('aberto', sim);
+      if (sim) {
+        carregar();
+        if (!caixa.children.length) {
+          balao('Oi! Eu sou o assistente da <b>A2 Click</b>. Pergunte sobre preços, prazos, Google, cuidado mensal ou marca, que eu respondo na hora.', 'bot');
+          mostrarSugestoes(SUGESTOES);
+        }
+        if (window.matchMedia('(hover: hover)').matches) campo.focus();
+      } else {
+        botao.focus();
+      }
+    }
+
+    botao.addEventListener('click', function () { abrir(painel.hidden); });
+    raiz.querySelector('.assist-fechar').addEventListener('click', function () { abrir(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !painel.hidden) abrir(false); });
+    form.addEventListener('submit', function (e) { e.preventDefault(); enviar(campo.value); });
+  })();
+
   /* ---------- Funciona offline (service worker) ---------- */
   if ('serviceWorker' in navigator && location.protocol === 'https:') {
     window.addEventListener('load', function () {
