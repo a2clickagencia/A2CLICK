@@ -675,7 +675,8 @@
   })();
 
   /* ---------- Preços: título de cada produto numa linha só ----------
-     Diminui a letra só o necessário para caber; abaixo de 12px, deixa quebrar (com a primeira linha cheia). */
+     Diminui a letra só um pouco para caber (até 88% do tamanho normal). Se precisar diminuir mais que isso,
+     mantém o tamanho normal e deixa o título quebrar a linha. */
   (function titulosEmUmaLinha() {
     var titulos = todos('.pl h3, .combo h3').filter(function (h) { return !h.querySelector('img'); });
     if (!titulos.length) return;
@@ -687,7 +688,7 @@
         var largura = h.clientWidth;
         if (h.scrollWidth > largura) {
           var novo = Math.floor(base * largura / h.scrollWidth * 10) / 10;
-          if (novo >= 12) h.style.fontSize = novo + 'px';
+          if (novo >= Math.max(12, base * 0.88)) h.style.fontSize = novo + 'px';
           else h.style.whiteSpace = '';
         }
         if (h.style.fontSize && h.scrollWidth > h.clientWidth) h.style.fontSize = (parseFloat(h.style.fontSize) - .5) + 'px';
@@ -758,7 +759,7 @@
 
     function carregar() {
       if (base) return Promise.resolve(base);
-      return fetch('/assets/dados/assistente.json').then(function (r) { return r.json(); })
+      return fetch('/assets/dados/assistente.json', { cache: 'no-cache' }).then(function (r) { return r.json(); })
         .then(function (d) { base = d.base; return base; })
         .catch(function () { base = []; return base; });
     }
@@ -769,30 +770,87 @@
       }).map(function (p) { return SINONIMOS[p] || p; });
     }
 
-    function procurar(pergunta) {
-      var q = normal(pergunta).replace(/[^a-z0-9.\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    /* Distância entre duas palavras (quantas letras trocar), para aceitar erro de digitação */
+    function distancia(a, b) {
+      if (Math.abs(a.length - b.length) > 2) return 3;
+      var ant = [], i, j;
+      for (j = 0; j <= b.length; j++) ant[j] = j;
+      for (i = 1; i <= a.length; i++) {
+        var atual = [i];
+        for (j = 1; j <= b.length; j++) {
+          atual[j] = Math.min(ant[j] + 1, atual[j - 1] + 1, ant[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        }
+        ant = atual;
+      }
+      return ant[b.length];
+    }
+
+    /* Mesma palavra? Aceita plural, conjugação próxima (mesmo começo) e até 1 ou 2 letras erradas */
+    function parecida(a, b) {
+      if (a === b) return true;
+      if (a.length < 5 || b.length < 5) return false;   // palavras curtas só valem iguais ("como" não é "combo")
+      var curta = a.length < b.length ? a : b, longa = curta === a ? b : a;
+      if (longa.length - curta.length <= 2 && longa.indexOf(curta) === 0) return true;   // plural e conjugação: parcela/parcelar
+      var d = distancia(a, b);
+      return d <= 1 || (d <= 2 && Math.min(a.length, b.length) >= 8);
+    }
+
+    function soPalavras(texto) {
+      return normal(texto).replace(/[^a-z0-9.\s]/g, ' ').split(/\s+/).filter(Boolean);
+    }
+
+    /* A palavra-chave (uma ou várias palavras) aparece na pergunta? */
+    function temChave(k, lista, frase) {
+      if ((' ' + frase + ' ').indexOf(' ' + k + ' ') !== -1) return true;
+      var partes = k.split(' ');
+      if (partes.length === 1) {
+        if (k.length < 4) return false;
+        return lista.some(function (w) { return parecida(w, k); });
+      }
+      return partes.every(function (pt) {
+        return lista.some(function (w) { return w === pt || (pt.length >= 4 && parecida(w, pt)); });
+      });
+    }
+
+    /* Dá uma nota para cada resposta pronta e devolve a lista em ordem (melhor primeiro) */
+    function notas(pergunta) {
+      var frase = soPalavras(pergunta).join(' ');
+      var lista = frase.split(' ');
       var termos = palavras(pergunta);
-      var melhor = null, nota = 0;
+      var res = [];
       (base || []).forEach(function (item) {
-        var n = 0;
+        var n = 0, nomeou = false, exata = false;
         if (item.k) {
-          item.k.forEach(function (k) {
-            if ((' ' + q + ' ').indexOf(' ' + k + ' ') !== -1 || (k.length > 4 && q.indexOf(k) !== -1)) n += 3;
-          });
+          // A chave mais forte vale inteira; as outras que também batem somam pouco
+          // (evita que "parcela", "parcelar" e "parcelado" contem três vezes a mesma palavra)
+          var achadas = item.k.filter(function (k) { return temChave(k, lista, frase); }).map(function (k) {
+            if (k.indexOf(' ') !== -1) exata = true;
+            return 3 + (k.split(' ').length - 1) * 0.5;
+          }).sort(function (x, y) { return y - x; });
+          if (achadas.length) {
+            n = achadas[0] + (achadas.length - 1) * 0.3;
+            if (item.d || item.g) { n += 2; nomeou = true; }
+          }
         } else {
-          var alvo = palavras(item.p).join(' ');
+          var alvo = palavras(item.p);
           var resp = palavras(item.r).join(' ');
           termos.forEach(function (t) {
             var raizT = t.slice(0, 5);
-            if ((' ' + alvo + ' ').indexOf(' ' + t + ' ') !== -1) n += 1.4;
-            else if (raizT.length > 3 && alvo.indexOf(raizT) !== -1) n += 1;
+            if (alvo.indexOf(t) !== -1) n += 1.4;
+            else if (alvo.some(function (w) { return parecida(w, t); })) n += 1.1;
+            else if (raizT.length > 3 && alvo.join(' ').indexOf(raizT) !== -1) n += 1;
             else if (raizT.length > 3 && resp.indexOf(raizT) !== -1) n += 0.25;
           });
           if (termos.length) n = n * (1 + 1 / termos.length) / 2 + n / 2;
         }
-        if (n > nota) { nota = n; melhor = item; }
+        if (n > 0) res.push({ item: item, nota: n, nomeou: nomeou, exata: exata });
       });
-      return nota >= 1.8 ? melhor : null;
+      return res.sort(function (x, y) { return y.nota - x.nota; });
+    }
+
+    function procurar(pergunta) {
+      var r = notas(pergunta);
+      return r.length && r[0].nota >= 1.8 ? r[0].item : null;
     }
 
     function escapar(t) {
@@ -826,10 +884,64 @@
 
     var CONTATO = 'Quer falar com uma pessoa? O <b>Pedro</b> está no (19) 99602-2246 e o <b>Igor</b> no (19) 98865-9584. É só tocar nos nomes aqui embaixo.';
 
+    var ultimo = null;        // último produto de que se falou, para "e no Pix?", "dá para parcelar?"
+    var DUVIDA = 'Não tenho certeza se entendi. Você quis dizer:';
+
+    /* Perguntas de continuação sobre o último produto citado */
+    function continuar(pergunta, entendeuOutra) {
+      if (!ultimo || !ultimo.d) return null;
+      var q = normal(pergunta);
+      if (soPalavras(pergunta).length > 8) return null;
+      var d = ultimo.d, ap = d.ap ? 'a partir de ' : '';
+      if (/\bpix\b|a vista|desconto/.test(q)) {
+        if (d.mes) return 'A mensalidade do <b>' + d.n + '</b> (R$ ' + d.v + ') pode ser paga por Pix, boleto ou cartão. No plano anual sai R$ ' + d.anual + ': você paga 10 meses e leva 12.';
+        if (d.pix) return 'No Pix, o <b>' + d.n + '</b> sai por ' + ap + '<b>R$ ' + d.pix + '</b> (10% de desconto), pago em duas partes: metade na aprovação e metade na entrega.';
+        return 'O <b>' + d.n + '</b> tem orçamento fechado depois da conversa. O Pedro ou o Igor te passam o valor no Pix.';
+      }
+      if (/parcel|vezes|\b12x\b|cartao|credito|debito/.test(q)) {
+        if (d.mes) return 'A mensalidade do <b>' + d.n + '</b> pode ser no cartão, no Pix ou no boleto, com data fixa e sem fidelidade.';
+        return 'Dá sim: o <b>' + d.n + '</b> (' + ap + 'R$ ' + d.v + ') pode ser parcelado no cartão de crédito em até 12x, com a taxa da maquininha. No débito é o valor de tabela.';
+      }
+      if (/anual|por ano|o ano/.test(q) && d.mes) return 'No plano anual, o <b>' + d.n + '</b> sai por R$ ' + d.anual + ' (10 mensalidades, e você leva 12).';
+      if (!entendeuOutra && /\b(inclui|incluso|vem|tem o que|o que tem|detalhes?|mais sobre|esse|ele|dele|desse)\b/.test(q)) return ultimo.r;
+      return null;
+    }
+
     function responderLocal(pergunta) {
-      var achou = procurar(pergunta);
-      if (achou) return achou.r;
-      if (/pessoa|humano|atendente|whats|falar com/.test(normal(pergunta))) return CONTATO;
+      var q = normal(pergunta);
+      if (/pessoa|humano|atendente|whats|falar com/.test(q)) return { html: CONTATO };
+      var lista = notas(pergunta);
+      var produtos = lista.filter(function (x) { return x.nomeou && x.item.d; });
+
+      // Dois ou três produtos citados pelo nome: responde todos (comparação)
+      if (produtos.length >= 2) {
+        ultimo = produtos[0].item;
+        return { html: produtos.slice(0, 3).map(function (x) { return x.item.r; }).join('<br><br>'), item: ultimo };
+      }
+      // Um produto citado pelo nome
+      if (produtos.length === 1) {
+        ultimo = produtos[0].item;
+        var detalhe = /pix|parcel|vezes|12x|cartao|credito|anual/.test(q) ? continuar(pergunta) : null;
+        return { html: detalhe || ultimo.r, item: ultimo };
+      }
+      // "E no Pix?", "dá para parcelar?" logo depois de falar de um produto
+      var cont = continuar(pergunta, lista.length && lista[0].nota >= 1.8);
+      if (cont && (!lista.length || (!lista[0].exata && lista[0].nota < 4.5))) return { html: cont, item: ultimo };
+
+      if (lista.length && lista[0].nota >= 1.8) {
+        var melhor = lista[0];
+        if (melhor.item.d) ultimo = melhor.item;
+        var html = melhor.item.r;
+        // Duas perguntas numa só ("quanto custa e quanto tempo leva?"): responde as duas
+        var segunda = lista[1];
+        if (segunda && segunda.nota >= 2.6 && segunda.nota >= melhor.nota * 0.75 && segunda.item.r !== html && !segunda.item.d) {
+          html += '<br><br>' + segunda.item.r;
+        }
+        return { html: html, item: melhor.item };
+      }
+      // Quase entendeu: sugere as perguntas mais parecidas
+      var talvez = lista.filter(function (x) { return x.item.p && x.nota >= 0.9; }).slice(0, 3).map(function (x) { return x.item.p; });
+      if (talvez.length) return { duvida: talvez };
       return null;
     }
 
@@ -858,17 +970,28 @@
       var espera = digitando();
       carregar().then(function () {
         var local = responderLocal(texto);
-        if (local || !ia) return local || 'Essa eu não sei responder direitinho, e prefiro não chutar. ' + CONTATO;
-        return perguntarIA().catch(function () {
-          return 'Essa eu não sei responder direitinho, e prefiro não chutar. ' + CONTATO;
-        });
-      }).then(function (html) {
+        if (local && local.html) return local;
+        if (ia) {
+          return perguntarIA().then(function (h) { return { html: h }; }).catch(function () { return local || {}; });
+        }
+        return local || {};
+      }).then(function (res) {
+        var html = res.html, extras = null;
+        if (!html && res.duvida) {
+          html = DUVIDA;
+          extras = res.duvida.concat(['Falar com uma pessoa']);
+        }
+        if (!html) html = 'Essa eu não sei responder direitinho, e prefiro não chutar. ' + CONTATO;
         setTimeout(function () {
           espera.remove();
           var m = balao(html, 'bot');
           historico.push({ papel: 'assistente', texto: m.textContent });
           ocupado = false;
-          mostrarSugestoes(SUGESTOES.filter(function (s) { return s !== texto; }).slice(0, 3));
+          if (!extras && res.item && res.item.d) {
+            extras = res.item.d.mes ? ['Tem fidelidade?', 'Como é o plano anual?', 'Quanto custa um site?']
+              : ['E no Pix?', 'Dá para parcelar?', 'Quanto tempo leva?'];
+          }
+          mostrarSugestoes(extras || SUGESTOES.filter(function (s) { return s !== texto; }).slice(0, 3));
         }, 420);
       });
     }
