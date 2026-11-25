@@ -270,12 +270,56 @@ def precos():
 
 
 # ------------------------------------------------------------------ assistente
+def produtos_assistente():
+    """Uma resposta pronta para cada produto da tabela, para o assistente responder sozinho
+    perguntas como "o que vem no Sistema Profissional?" ou "e no Pix?" logo depois.
+    'd' guarda os números para as perguntas de continuação (Pix, parcelado, anual)."""
+    itens = []
+
+    def junta(lista):
+        lista = [i if i[1:2].isupper() else i[:1].lower() + i[1:] for i in lista]
+        return '; '.join(lista[:-1]) + ' e ' + lista[-1] if len(lista) > 1 else lista[0]
+
+    def projeto(x, ancora, grupo):
+        ap = 'a partir de ' if x.get('apartir') else ''
+        pix = (', ou R$ %s no Pix' % x['pix']) if x.get('pix') else ''
+        prazo = (' Prazo: %s.' % x['prazo']) if x.get('prazo') else ''
+        obs = (' ' + x['obs']) if x.get('obs') else ''
+        r = '<b>%s</b>: %sR$ %s%s. %s Inclui: %s.%s%s Bom para %s <a href="/precos#%s">Ver o plano</a>.' % (
+            x['nome'], ap, x['preco'], pix, x['desc'], junta(x['itens']), obs, prazo, x['bom'], ancora)
+        itens.append({'k': [normal(x['nome']), x['id'].replace('-', ' ')], 'r': r, 'g': grupo,
+                      'd': {'n': x['nome'], 'v': x['preco'], 'pix': x.get('pix', ''), 'ap': bool(x.get('apartir'))}})
+
+    for x in D.SITES:
+        projeto(x, x['id'], 'site')
+    for x in D.MARCA:
+        projeto(x, x['id'], 'marca')
+    for x in D.SISTEMAS:
+        projeto(x, x['id'], 'sistema')
+    for x in D.JOGOS:
+        projeto(x, x['id'], 'jogo')
+    for c in D.CUIDADO:
+        r = '<b>%s</b>: R$ %s por mês, ou R$ %s no plano anual (10 mensalidades por 12 meses). %s Inclui: %s. Bom para %s Sem fidelidade. <a href="/precos#%s">Ver o plano</a>.' % (
+            c['nome'], c['preco'], c['anual'], c['desc'], junta(c['itens']), c['bom'], c['id'])
+        itens.append({'k': [normal(c['nome']), c['id'].replace('-', ' ')], 'r': r, 'g': 'cuidado',
+                      'd': {'n': c['nome'], 'v': c['preco'], 'mes': True, 'anual': c['anual']}})
+    for c in D.COMBOS:
+        r = '<b>%s</b> (%s): R$ %s, ou R$ %s no Pix. Separado sairia R$ %s. <a href="/precos#combos">Ver os combos</a>.' % (
+            c['nome'], c['inclui'], c['preco'], c['pix'], c['soma'])
+        itens.append({'k': [normal(c['nome']), 'combo ' + normal(c['nome'])], 'r': r, 'g': 'combo',
+                      'd': {'n': c['nome'], 'v': c['preco'], 'pix': c['pix']}})
+    for nome, valor, desc in D.EXTRAS:
+        itens.append({'k': [normal(nome)], 'r': '<b>%s</b>: %s. %s' % (nome, valor, desc), 'g': 'extra'})
+    return itens
+
+
 def assistente():
     base = []
     for cat, q, r in D.PERGUNTAS:
         base.append({'p': q, 'r': r, 'c': normal(q)})
     for chaves, r in D.ASSISTENTE_EXTRA:
         base.append({'k': [normal(k) for k in chaves], 'r': r})
+    base += produtos_assistente()
     gravar('assets/dados/assistente.json', json.dumps({'v': 1, 'base': base}, ensure_ascii=False, separators=(',', ':')))
 
     linhas = ['# Agência A2 Click: o que o assistente pode dizer', '',
