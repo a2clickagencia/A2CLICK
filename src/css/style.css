@@ -4795,3 +4795,42 @@ a.numero small {
     transition: none;
   }
 }
+
+
+/* Preços: nomes dos sites desenhados (imagens) e demais produtos em maiúsculas */
+.pl h3,
+.combo h3 {
+  text-transform: uppercase;
+  letter-spacing: .01em;
+}
+
+.pl h3 picture {
+  display: block;
+}
+
+.pl-logo {
+  display: block;
+  width: auto;
+  height: clamp(15px, 1.45vw, 19px);
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+  margin-block: 4px 2px;
+}
+
+/* Acento agudo desenhado sobre A e U (a Stretch Pro não tem Á e Ú maiúsculos) */
+.agudo {
+  position: relative;
+  display: inline-block;
+}
+
+.agudo::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -.2em;
+  width: .3em;
+  height: .1em;
+  background: currentColor;
+  transform: translateX(-35%) rotate(-24deg);
+}

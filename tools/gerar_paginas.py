@@ -99,6 +99,24 @@ def lista(itens):
     return '<ul class="pl-lista">%s</ul>' % ''.join('<li>%s</li>' % i for i in itens)
 
 
+LOGOS = {  # nome desenhado (assets/img/precos/<id>-<cor>.webp): largura x altura
+    'site-start': (900, 68), 'site-essencial': (900, 55), 'site-profissional': (900, 46),
+}
+
+
+def nome_plano(p):
+    """Sites usam o nome desenhado; os outros produtos, o texto (em maiúsculas pelo CSS)."""
+    if p['id'] not in LOGOS:
+        # A Stretch Pro não tem Á nem Ú maiúsculos: o acento é desenhado pelo CSS (.agudo)
+        return re.sub(r'([áÁúÚ])', r'<span class="agudo">\1</span>', p['nome'])
+    w, h = LOGOS[p['id']]
+    base = '/assets/img/precos/' + p['id']
+    if p.get('destaque'):
+        return '<img class="pl-logo" src="%s-giz.webp" alt="%s" width="%d" height="%d" decoding="async">' % (base, p['nome'], w, h)
+    return ('<picture><source srcset="%s-claro.webp" media="(prefers-color-scheme: dark)">'
+            '<img class="pl-logo" src="%s-pinho.webp" alt="%s" width="%d" height="%d" decoding="async"></picture>') % (base, base, p['nome'], w, h)
+
+
 def cartao_plano(p, preco_html, rodape, chamada):
     """Cartão de plano. Com JavaScript, mostra só nome e preço; os detalhes abrem ao passar o mouse,
     no botão "Ver o que inclui" ou em "Comparar valores" (todos abertos)."""
@@ -115,7 +133,7 @@ def cartao_plano(p, preco_html, rodape, chamada):
   %s
   <div class="pl-acoes">%s<button type="button" class="pr-comparar pr-comparar-mini" aria-pressed="false" hidden>Comparar valores</button></div>
   </div></div>
-</article>''' % (d, p['id'], selo, p['nome'], preco_html, p['id'], p['id'], p['desc'], lista(p['itens']), p['bom'], rodape,
+</article>''' % (d, p['id'], selo, nome_plano(p), preco_html, p['id'], p['id'], p['desc'], lista(p['itens']), p['bom'], rodape,
                  zap('Quero o ' + p['nome'], chamada, 'btn ' + ('btn-giz' if d else 'btn-tinta') + ' largo'))
 
 
