@@ -2,14 +2,14 @@
    Páginas: busca na rede primeiro; sem internet, usa a cópia guardada ou a página offline.
    Demais arquivos: entrega a cópia guardada na hora e atualiza em segundo plano
    (stale-while-revalidate). VERSAO e GUARDAR são atualizados por tools/build.py. */
-const VERSAO = 'a2-3f44e360ec';
+const VERSAO = 'a2-f3a58ec800';
 const GUARDAR = [
   '/',
   '/precos',
   '/quem-somos',
   '/labs',
   '/offline',
-  '/assets/js/main.9901269a.js',
+  '/assets/js/main.65c16827.js',
   '/assets/fonts/stretch-pro-latin.woff2',
   '/assets/fonts/bricolage-grotesque-latin.woff2',
   '/assets/img/logo/a2click-horizontal-negativo.svg',
@@ -35,6 +35,22 @@ self.addEventListener('fetch', (e) => {
   if (url.origin !== location.origin) return;           // WhatsApp, Instagram etc. não passam por aqui
   if (url.pathname.startsWith('/portfolio/')) return;   // sites de clientes: sempre da rede
   if (url.pathname.startsWith('/jogos/') || url.pathname.startsWith('/baixar/')) return;   // jogos do LABS e download: sempre da rede
+
+  // Respostas do assistente: sempre a versão mais nova (cópia guardada só sem internet)
+  if (url.pathname.startsWith('/assets/dados/')) {
+    e.respondWith(
+      fetch(req, { cache: 'no-cache' })
+        .then((res) => {
+          if (res.ok) {
+            const copia = res.clone();
+            caches.open(VERSAO).then((c) => c.put(req, copia));
+          }
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
 
   if (req.mode === 'navigate') {
     e.respondWith(
