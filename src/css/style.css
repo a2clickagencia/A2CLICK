@@ -4617,3 +4617,181 @@ a.numero small {
 .pl-destaque .pl-de {
   color: color-mix(in srgb, var(--sobre-campo) 78%, transparent);
 }
+
+
+/* ==========================================================
+   Preços: cartões compactos (só nome e valor) que abrem ao passar o mouse
+   Sem JavaScript, os cartões aparecem completos.
+   ========================================================== */
+.pl-mais {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows .35s ease;
+}
+
+.pl-mais > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.pl-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin-top: 4px;
+}
+
+.pl-acoes .zap {
+  flex: 1 1 200px;
+}
+
+.precos-compacto .pl-grade {
+  align-items: start;
+}
+
+.precos-compacto .pl {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.precos-compacto .pl-mais {
+  grid-template-rows: 0fr;
+}
+
+.precos-compacto .pl-mais > div {
+  overflow: hidden;
+  padding-top: 0;
+  transition: padding-top .35s ease;
+}
+
+.precos-compacto .pl.aberto .pl-mais,
+.precos-compacto .pl:focus-within .pl-mais,
+.precos-compacto .comparando .pl-mais {
+  grid-template-rows: 1fr;
+}
+
+.precos-compacto .pl.aberto .pl-mais > div,
+.precos-compacto .pl:focus-within .pl-mais > div,
+.precos-compacto .comparando .pl-mais > div {
+  overflow: visible;
+  padding-top: 6px;
+}
+
+@media (hover: hover) {
+  .precos-compacto .pl:hover .pl-mais {
+    grid-template-rows: 1fr;
+  }
+  .precos-compacto .pl:hover .pl-mais > div {
+    padding-top: 6px;
+  }
+  .precos-compacto .pl:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 44px -26px rgba(0, 0, 0, .55);
+  }
+  .precos-compacto .pl:hover .pl-ver {
+    display: none;
+  }
+}
+
+.precos-compacto .pl.aberto .pl-ver,
+.precos-compacto .comparando .pl-ver {
+  display: inline-flex;
+}
+
+.pl-ver {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  min-height: 40px;
+  padding: .4em 1em;
+  border: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.pl-ver::after {
+  content: "+";
+  font-size: 1.2em;
+  line-height: 1;
+}
+
+.pl-ver[aria-expanded="true"]::after {
+  content: "−";
+}
+
+.pr-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  margin: -8px 0 18px;
+  color: var(--nota);
+  font-size: .95rem;
+}
+
+.pr-barra[hidden] {
+  display: none;
+}
+
+.pr-comparar {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  min-height: 44px;
+  padding: .55em 1.2em;
+  border: 2px solid var(--fg);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+}
+
+.pr-comparar::before {
+  content: "";
+  width: 14px;
+  height: 12px;
+  background:
+    linear-gradient(currentColor, currentColor) 0 0 / 4px 100% no-repeat,
+    linear-gradient(currentColor, currentColor) 5px 0 / 4px 100% no-repeat,
+    linear-gradient(currentColor, currentColor) 10px 0 / 4px 100% no-repeat;
+}
+
+.pr-comparar[aria-pressed="true"],
+.pr-comparar:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.pr-comparar-mini {
+  min-height: 40px;
+  padding: .4em .95em;
+  border-width: 1.5px;
+  border-color: color-mix(in srgb, currentColor 35%, transparent);
+  color: inherit;
+  font-size: .88rem;
+}
+
+.pl-destaque .pr-comparar-mini:hover,
+.pl-destaque .pr-comparar-mini[aria-pressed="true"] {
+  background: var(--sobre-campo);
+  color: var(--campo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-mais,
+  .pl-mais > div {
+    transition: none;
+  }
+}

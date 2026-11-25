@@ -100,17 +100,22 @@ def lista(itens):
 
 
 def cartao_plano(p, preco_html, rodape, chamada):
+    """Cartão de plano. Com JavaScript, mostra só nome e preço; os detalhes abrem ao passar o mouse,
+    no botão "Ver o que inclui" ou em "Comparar valores" (todos abertos)."""
     d = ' pl-destaque' if p.get('destaque') else ''
     selo = '<span class="pl-selo">Mais escolhido</span>' if p.get('destaque') else ''
     return '''<article class="pl%s" id="%s">%s
   <h3>%s</h3>
-  <p class="pl-desc">%s</p>
   %s
+  <button type="button" class="pl-ver" aria-expanded="false" aria-controls="%s-mais" hidden>Ver o que inclui</button>
+  <div class="pl-mais" id="%s-mais"><div>
+  <p class="pl-desc">%s</p>
   %s
   <p class="pl-bom"><b>Bom para:</b> %s</p>
   %s
-  %s
-</article>''' % (d, p['id'], selo, p['nome'], p['desc'], preco_html, lista(p['itens']), p['bom'], rodape,
+  <div class="pl-acoes">%s<button type="button" class="pr-comparar pr-comparar-mini" aria-pressed="false" hidden>Comparar valores</button></div>
+  </div></div>
+</article>''' % (d, p['id'], selo, p['nome'], preco_html, p['id'], p['id'], p['desc'], lista(p['itens']), p['bom'], rodape,
                  zap('Quero o ' + p['nome'], chamada, 'btn ' + ('btn-giz' if d else 'btn-tinta') + ' largo'))
 
 
@@ -151,6 +156,7 @@ def precos():
   <section class="sec pr-sec" id="sites" aria-labelledby="sites-t">
     <div class="wrap">
       <div class="pr-cab"><h2 id="sites-t">Sites.</h2><p class="lede">Feitos à mão, para o seu negócio aparecer no Google e receber o cliente no WhatsApp.</p></div>
+      <div class="pr-barra" hidden><span>Passe o mouse ou toque num plano para ver o que inclui.</span><button type="button" class="pr-comparar" aria-pressed="false">Comparar valores</button></div>
       <div class="pl-grade">
 %s
       </div>
@@ -162,6 +168,7 @@ def precos():
       <div class="pr-cab"><h2 id="cuidado-t">Cuidado mensal.</h2><p class="lede">Opcional. Você manda a mensagem e a gente atualiza o site, sem você precisar mexer em nada.</p>
         <div class="pr-periodo" role="group" aria-label="Ver valores" hidden><button type="button" data-periodo="mensal" aria-pressed="true">Mensal</button><button type="button" data-periodo="anual" aria-pressed="false">Anual <small>2 meses grátis</small></button></div>
       </div>
+      <div class="pr-barra" hidden><span>Passe o mouse ou toque num plano para ver o que inclui.</span><button type="button" class="pr-comparar" aria-pressed="false">Comparar valores</button></div>
       <div class="pl-grade">
 %s
       </div>
@@ -172,6 +179,7 @@ def precos():
   <section class="sec pr-sec" id="marca" aria-labelledby="marca-t">
     <div class="wrap">
       <div class="pr-cab"><h2 id="marca-t">Marca e identidade.</h2><p class="lede">Estudo de marca, posicionamento, cores, logo e manual. Para o cliente reconhecer você de longe e confiar de perto.</p></div>
+      <div class="pr-barra" hidden><span>Passe o mouse ou toque num plano para ver o que inclui.</span><button type="button" class="pr-comparar" aria-pressed="false">Comparar valores</button></div>
       <div class="pl-grade">
 %s
       </div>
@@ -186,6 +194,7 @@ def precos():
   <section class="sec pr-sec pr-alt" id="sistemas" aria-labelledby="sistemas-t">
     <div class="wrap">
       <div class="pr-cab"><h2 id="sistemas-t">Sistemas.</h2><p class="lede">Sistemas sob medida para academias, personal trainers, clínicas, agendamentos e o controle do seu negócio. Funcionam no celular, sem instalar nada.</p></div>
+      <div class="pr-barra" hidden><span>Passe o mouse ou toque num plano para ver o que inclui.</span><button type="button" class="pr-comparar" aria-pressed="false">Comparar valores</button></div>
       <div class="pl-grade">
 %s
       </div>
@@ -196,6 +205,7 @@ def precos():
   <section class="sec pr-sec" id="jogos" aria-labelledby="jogos-t">
     <div class="wrap">
       <div class="pr-cab"><h2 id="jogos-t">Jogos.</h2><p class="lede">Jogos 2D e 3D feitos à mão, para divulgar a sua marca, entreter ou vender. Rodam no navegador, no celular e no computador.</p></div>
+      <div class="pr-barra" hidden><span>Passe o mouse ou toque num plano para ver o que inclui.</span><button type="button" class="pr-comparar" aria-pressed="false">Comparar valores</button></div>
       <div class="pl-grade">
 %s
       </div>

@@ -633,6 +633,47 @@
     aplicar();
   })();
 
+  /* ---------- Página de preços: cartões compactos e "Comparar valores" ---------- */
+  (function cartoesPrecos() {
+    var grades = todos('.pl-grade');
+    if (!grades.length) return;
+    document.documentElement.classList.add('precos-compacto');
+    todos('.pr-barra, .pl-ver, .pr-comparar-mini').forEach(function (el) { el.hidden = false; });
+
+    function rotulo(b, aberto) {
+      b.setAttribute('aria-pressed', String(aberto));
+      b.textContent = aberto ? 'Fechar comparação' : 'Comparar valores';
+    }
+    function comparar(secao, aberto) {
+      secao.classList.toggle('comparando', aberto);
+      todos('.pr-comparar', secao).forEach(function (b) { rotulo(b, aberto); });
+      todos('.pl-ver', secao).forEach(function (b) { b.setAttribute('aria-expanded', String(aberto)); b.textContent = aberto ? 'Fechar' : 'Ver o que inclui'; });
+    }
+    todos('.pr-comparar').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var secao = b.closest('section');
+        var aberto = !secao.classList.contains('comparando');
+        comparar(secao, aberto);
+        if (aberto && b.classList.contains('pr-comparar-mini')) {
+          var barra = secao.querySelector('.pr-barra');
+          if (barra) barra.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    todos('.pl-ver').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cartao = b.closest('.pl');
+        var aberto = !cartao.classList.contains('aberto');
+        cartao.classList.toggle('aberto', aberto);
+        b.setAttribute('aria-expanded', String(aberto));
+        b.textContent = aberto ? 'Fechar' : 'Ver o que inclui';
+      });
+    });
+    // Quem chega por um link direto (/precos#site-profissional) já vê o plano aberto
+    var alvo = location.hash && document.querySelector('.pl' + location.hash);
+    if (alvo) { alvo.classList.add('aberto'); var v = alvo.querySelector('.pl-ver'); if (v) { v.setAttribute('aria-expanded', 'true'); v.textContent = 'Fechar'; } }
+  })();
+
   /* ---------- Página de preços: mensal ou anual ---------- */
   (function periodo() {
     var grupo = document.querySelector('.pr-periodo');
